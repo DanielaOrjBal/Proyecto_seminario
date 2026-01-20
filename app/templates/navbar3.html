@@ -1,0 +1,74 @@
+<nav class="navbar navbar-expand-lg custom-navbar">
+  <div class="container">
+    <a class="navbar-brand d-inline-flex align-items-center" href="{{ url_for('home') }}">
+      <img src="{{ url_for('static', filename='img/logo_vitaria.png') }}" alt="Logo" class="navbar-logo" />
+      <span class="navbar-title ms-2">VITARIA. SOS</span>
+    </a>
+
+    <!-- Botones alineados a la derecha -->
+    <button class="navbar-toggler custom-toggler" type="button" id="mobileMenuToggler">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="mobile-menu d-lg-none" id="mobileMenu">
+      <div class="mobile-menu-content">
+        <a data-bs-toggle="modal" data-bs-target="#logoutModal" class="btn btn-primary w-100 mb-2">
+          <i class="bi bi-reply-all-fill" onclick="location.reload()"></i>
+          <span lan-target="BtnRegresarDashboard">Regresar a página principal</span>
+        </a>
+      </div>
+      <div class="language-switch ms-3">
+          <button class="btn btn-sm btn-lang w-100" id="btn-es" onclick="CambiarIdioma('es')">
+            <img src="{{ url_for('static', filename='img/Colombian.png') }}" alt="Español" class="flag-icon">
+            ES
+          </button>
+          <button class="btn btn-sm btn-lang w-100" id="btn-en" onclick="CambiarIdioma('en')">
+            <img src="{{ url_for('static', filename='img/England.png') }}" alt="English" class="flag-icon">
+            EN
+          </button>
+          <button class="btn btn-sm btn-lang w-100" id="btn-fr" onclick="CambiarIdioma('fr')">
+            <img src="{{ url_for('static', filename='img/France.png') }}" alt="Français" class="flag-icon">
+            FR
+          </button>
+        </div>
+    </div>
+
+    <div class="desktop-menu d-none d-lg-flex">
+      <a data-bs-toggle="modal" data-bs-target="#logoutModal" class="btn btn-primary">
+          <i class="bi bi-reply-all-fill" onclick="location.reload()"></i>
+          <span lan-target="BtnRegresarDashboard">Regresar a página principal</span>
+      </a>
+      <div class="language-switch ms-3">
+          <button class="btn btn-sm btn-lang" id="btn-es" onclick="CambiarIdioma('es')">
+            <img src="{{ url_for('static', filename='img/Colombian.png') }}" alt="Español" class="flag-icon">
+            ES
+          </button>
+          <button class="btn btn-sm btn-lang" id="btn-en" onclick="CambiarIdioma('en')">
+            <img src="{{ url_for('static', filename='img/England.png') }}" alt="English" class="flag-icon">
+            EN
+          </button>
+          <button class="btn btn-sm btn-lang" id="btn-fr" onclick="CambiarIdioma('fr')">
+            <img src="{{ url_for('static', filename='img/France.png') }}" alt="Français" class="flag-icon">
+            FR
+          </button>
+      </div>
+    </div>
+    </div>
+  </div>
+</nav>
+<script>
+document.getElementById('mobileMenuToggler').addEventListener('click', function() {
+  const mobileMenu = document.getElementById('mobileMenu');
+  mobileMenu.classList.toggle('show');
+});
+
+// Cerrar menú al hacer click fuera
+document.addEventListener('click', function(event) {
+  const mobileMenu = document.getElementById('mobileMenu');
+  const toggler = document.getElementById('mobileMenuToggler');
+  
+  if (!mobileMenu.contains(event.target) && !toggler.contains(event.target)) {
+    mobileMenu.classList.remove('show');
+  }
+});
+</script>

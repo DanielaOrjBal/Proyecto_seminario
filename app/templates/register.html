@@ -1,0 +1,296 @@
+{% extends "layout2.html" %} {% include 'navbar2.html' %} {% block content %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/layout2.css') }}"
+/>
+<script src="{{ url_for('static', filename='js/traductor2.js') }}"></script>
+<script src="{{ url_for('static', filename='js/traductor_toast.js') }}"></script>
+<script src="{{ url_for('static', filename='js/alert.js') }}"></script>
+<script src="{{ url_for('static', filename='js/form.js') }}"></script>
+<style>
+.is-invalid {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+.invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: #dc3545;
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 1rem;
+}
+</style>
+<div class="container mt-3 d-flex">
+    <div
+      id="toast"
+      class="toast fade align-items-center text-white bg-success border-0 position-fixed top-5 start-50 translate-middle"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+      style="z-index: 2000;"
+    >
+    <div class="d-flex">
+        <!-- Aquí entra el mensaje -->
+        <div class="toast-body" id="toast-message"></div>
+        <!-- Botón de cerrar -->
+        <button
+          type="button"
+          class="btn-close btn-close-white me-2 m-auto"
+          onclick="hideToast()"
+        ></button>
+      </div>
+    </div>
+</div>
+
+
+<section id="Login" class="section">
+  <div class="container py-5 d-flex justify-content-center">
+    <div class="registro-form">
+      <form method="POST" action="{{ url_for('auth.register') }}">
+        <h1 class="form-title text-center" lan-target="TituloRegistrarUsuario">Registrar Usuario</h1>
+        
+        <h3 class="form-subtitle text-center fw-bold" lan-target="SubtituloDatosPersonales">Datos Personales</h3>
+          <div class="row">
+            <div class="col-md-6">
+              <!-- Columna izquierda -->
+              <div class="form-group">
+                <label class="form-label fw-bold" lan-target="LabelTipoDocumento">Tipo de Documento</label>
+                <select name="tipo_documento" class="form-control" required>
+                  <option lan-target="OptionSeleccionarDocumento">Seleccione tipo de documento</option>
+                  <option value="CC" lan-target="OptionCC">Cédula de ciudadanía</option>
+                  <option value="TI" lan-target="OptionTI">Tarjeta de Identidad</option>
+                  <option value="CE" lan-target="OptionCE">Cédula de Extranjería</option>
+                  <option value="PA" lan-target="OptionPA">Pasaporte</option>
+                </select>
+              </div>
+            </div>
+            <!-- Columna derecha -->
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label fw-bold" lan-target="LabelNumeroDocumento">Número de Documento</label>
+                <input
+                <input
+                  type="number"
+                  name="documento"
+                  class="form-control"
+                  lan-placeholder="PlaceholderNumeroDocumento"
+                  placeholder="Ingrese número sin espacios,comas o puntos"
+                  required
+                />
+              </div>
+              
+            </div>
+          </div>
+          <div class="row">
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold" lan-target="LabelPrimerNombre">Primer Nombre</label>
+                    <input
+                      type="text"
+                      name="primer_nombre"
+                      class="form-control"
+                      lan-placeholder="PlaceholderPrimerNombre"
+                      placeholder="Ingrese primer nombre"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold" lan-target="LabelSegundoNombre">Segundo Nombre</label>
+                    <input
+                      type="text"
+                      name="segundo_nombre"
+                      class="form-control"
+                      lan-placeholder="PlaceholderSegundoNombre"
+                      placeholder="Ingrese segundo nombre"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-md-6">
+                     <label class="form-label fw-bold" lan-target="LabelPrimerApellido">Primer Apellido</label>
+                    <input
+                      type="text"
+                      name="primer_apellido"
+                      class="form-control"
+                      lan-placeholder="PlaceholderPrimerApellido"
+                      placeholder="Ingrese primer Apellido"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold" lan-target="LabelSegundoApellido">Segundo Apellido</label>
+                    <input
+                      type="text"
+                      name="segundo_apellido"
+                      class="form-control"
+                      lan-placeholder="PlaceholderSegundoApellido"
+                      placeholder="Ingrese segundo Apellido"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label fw-bold" lan-target="LabelFechaNacimiento">Fecha de Nacimiento</label>
+                <input
+                  type="date"
+                  name="fecha_nacimiento"
+                  class="form-control"
+                  required
+                />
+              </div>
+          </div>
+          <h3 class="form-subtitle text-center fw-bold" lan-target="SubtituloDatosContacto">Datos de Contacto</h3>            
+          <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label fw-bold" lan-target="LabelDireccion">Dirección</label>
+                  <input
+                    type="text"
+                    name="direccion"
+                    class="form-control"
+                    lan-placeholder="PlaceholderDireccion"
+                    placeholder="Ingrese dirección de residencia"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label fw-bold" lan-target="LabelTelefono">Teléfono</label>
+                  <input
+                    type="number"
+                    name="telefono"
+                    class="form-control"
+                    lan-placeholder="PlaceholderTelefono"
+                    placeholder="Ingrese número sin espacios"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label fw-bold" lan-target="LabelCorreo">Correo Electrónico</label>
+              <input
+                type="email"
+                name="email"
+                class="form-control"
+                lan-placeholder="PlaceholderCorreo"
+                placeholder="Ingrese correo electrónico"
+                required
+              />
+            </div>
+            <h3 class="form-subtitle text-center fw-bold" lan-target="SubtituloDatosUsuario">Datos de Usuario</h3>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label fw-bold" lan-target="LabelUsuario">Usuario</label>
+              <input
+                type="text"
+                name="username"
+                class="form-control"
+                lan-placeholder="PlaceholderUsuarioRegistro"
+                placeholder="Ingrese el nombre de usuario que desees"
+                required
+              />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+               <label class="form-label fw-bold" lan-target="LabelContraseña">Contraseña</label>
+              <input
+                type="password"
+                name="password"
+                class="form-control"
+                lan-placeholder="PlaceholderContraseñaRegistro"
+                placeholder="Cree una contraseña"
+                required
+              />
+              <small class="form-text text-muted" lan-target="TextoRequisitosContraseña">
+                Mínimo 8 caracteres, una mayúscula, un número y un carácter especial
+              </small>
+            </div>
+          </div>
+        </div>
+        
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-user me-1"></i> <span lan-target="BotonRegistrar">Registrar</span>
+            </button>
+          </div>
+          </div>     
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    configurarValidacionTiempoReal();
+    const idioma = localStorage.getItem("vitaria_idioma") || "es";
+    CambiarIdioma(idioma);
+});
+
+document.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const form = e.target;
+  const submitBtn = form.querySelector('button[type="submit"]');
+  const originalText = submitBtn.innerHTML;
+
+
+  if (form.action.includes("/auth/register")) {
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> ' + t("BtnRegistrando");
+    submitBtn.disabled = true;
+
+    const formData = new FormData(form);
+    
+    try {
+      const response = await fetch(form.action, {
+        method: "POST",
+        body: formData,
+      });
+      
+      const result = await response.json();
+
+      showToast(result.msg, result.status);
+
+     if (result.status === "success") {
+        manejarExitoFormulario(result.msg);
+        sessionStorage.setItem("toastMessage", result.msg);
+        sessionStorage.setItem("toastType", result.status);
+        
+        setTimeout(() => {
+          window.location.href = "/user/dashboard";
+        }, 2000);
+      } else {
+          if (result.errores) {
+            // Mostrar errores en cada campo
+            mostrarErroresFormulario(result.errores);
+            // Mostrar mensaje general
+            showToast(result.msg, "error");
+          } else {
+            showToast(result.msg, result.status);
+          }
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+      }
+    } catch (error) {
+      console.error("Error al enviar el formulario:", error);
+      showToast("Ocurrió un error al procesar el registro.", "error");
+      // Restaurar botón en caso de error
+      submitBtn.innerHTML = originalText;
+      submitBtn.disabled = false;
+    }
+  }
+});
+</script>
+{% endblock %}

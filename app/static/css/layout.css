@@ -1,0 +1,210 @@
+#root {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(186deg,rgba(172, 222, 235, 1) 0%, rgba(218, 231, 245, 0.43) 100%);
+  background-size: cover;
+}
+#toast {
+  position: fixed !important;
+  z-index: 20000 !important;
+}
+.modal-backdrop {
+  z-index: 1050 !important;
+}
+.modal {
+  z-index: 1055 !important;
+}
+
+/* NAVBAR */
+.custom-navbar {
+  background-color: #fdfdfd; 
+  padding: 5px 20px;
+  box-shadow: 0px 1px 5px 2px #0000005e;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  margin-bottom: 5px;
+}
+/* === Botones de idioma === */
+.language-switch {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-lang {
+  background-color: #053e7a;
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  transition: all 0.3s ease;
+}
+
+.flag-icon {
+  width: 28px;
+  height: auto;
+  border-radius: 2px;
+}
+
+/* Hover por idioma */
+#btn-es:hover {
+  background: linear-gradient(180deg,rgba(255, 204, 0, 0.644) 10%, rgba(52, 149, 233, 0.658) 43%, rgba(226, 0, 26, 0.64) 95%);
+  border-color: #e2001a;
+}
+
+#btn-en:hover {
+  background:  linear-gradient(180deg,rgba(12, 57, 172, 0.76) 10%, rgba(196, 216, 234, 1) 43%, rgba(226, 0, 26, 0.64) 100%);
+  border-color: #00247d;
+}
+
+#btn-fr:hover {
+  background: linear-gradient(0deg,rgba(0, 85, 164, 0.88) 0%, rgba(196, 216, 234, 1) 23%, rgba(255, 255, 255, 0.65) 45%, rgba(248, 175, 170, 1) 78%, rgba(239, 65, 53, 0.91) 100%);
+  border-color: #ef4135;
+  color: #111;
+}
+
+.btn-lang.active {
+  color: #fff;
+  transform: scale(1.05);
+}
+
+#btn-es.active {
+  background: linear-gradient(180deg,rgba(255, 204, 0, 0.644) 10%, rgba(52, 149, 233, 0.658) 43%, rgba(226, 0, 26, 0.64) 95%);
+  border-color: #d80707;
+   color: #111;
+
+}
+
+#btn-en.active {
+  background: linear-gradient(180deg,rgba(12, 57, 172, 0.76) 10%, rgba(196, 216, 234, 1) 43%, rgba(226, 0, 26, 0.64) 100%);
+  border-color: #00247d;
+    color: #111;
+
+}
+
+#btn-fr.active {
+  background: linear-gradient(0deg,rgba(0, 85, 164, 0.88) 0%, rgba(196, 216, 234, 1) 23%, rgba(255, 255, 255, 0.65) 45%, rgba(248, 175, 170, 1) 78%, rgba(239, 65, 53, 0.91) 100%);
+  border-color: #ef4135;
+  color: #111;
+}
+
+.navbar-logo {
+  width: 100px;
+  height: auto;
+}
+
+.navbar-title {
+  font-family: 'Limelight', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  color: #222;
+}
+
+.btn-primary {
+  background-color: #053e7a !important;
+  border: none;
+  font-weight: 500;
+  padding: 8px 15px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #49AB87 !important;
+}
+
+
+/* FOOTER */
+.custom-footer {
+  background-color: white; 
+  padding: 10px;
+  margin-top: auto;
+  font-family: Arial, sans-serif;
+  box-shadow: 0px 5px 10px 2px #0000005e;
+}
+
+/* Logo */
+.logo {
+  width: 10vw;
+  height: auto;
+  object-fit: contain;
+  margin-left: auto;
+}
+
+/* Títulos */
+.footer-title {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 5px;
+  color: #111;
+}
+
+/* Links */
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 5px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  color: #111;
+  font-size: 14px;
+  transition: color 0.3s;
+}
+
+.footer-links a:hover {
+  color: #0056b3;
+}
+
+/* Redes sociales */
+.social-icon {
+  font-size: 20px;
+  color: #111;
+  transition: color 0.3s;
+}
+
+.social-icon:hover {
+  color: #0056b3;
+}
+
+/* Copyright */
+.footer-copy {
+  font-size: 12px;
+  margin-top: 10px;
+  color: #333;
+}
+
+/* Contacto */
+.footer-contact {
+  font-size: 14px;
+  color: #111;
+}
+.modal-header {
+  border-bottom: none;
+  background-color: #053e7a;
+  color: white;
+}
+
+
+@media (max-width: 991px) {
+  .custom-navbar .navbar-collapse .d-flex {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+  }
+  .btn-primary {
+    width: 50%; 
+    text-align: center;
+  }
+}

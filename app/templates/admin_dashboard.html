@@ -1,0 +1,1827 @@
+{% extends "layout2.html" %}
+{% include 'navbar3.html' %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+<script src="{{ url_for('static', filename='js/contador.js') }}"></script>
+<script src="{{ url_for('static', filename='js/traductor_toast.js') }}"></script>
+<script src="{{ url_for('static', filename='js/alert.js') }}"></script>
+
+
+<section id="content" class="section ">
+
+  <div class="dashboard">
+  
+    <!-- offcanvas -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="sidebarOffcanvasLabel" lan-target="TituloPerfilAdmin">Perfil de Administrador</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        <div class="sidebar-header text-center">
+          <img src="{{ url_for('static', filename='img/login.png') }}" alt="Admin" class="sidebar-avatar">
+        </div>
+        <ul class="sidebar-menu list-unstyled">
+          <li><a id="consultar_cuenta_offcanvas" href="#" class="text">Mi cuenta</a></li>
+        </ul>
+        <ul class="sidebar-menu list-unstyled">
+          <li><a data-bs-toggle="modal" data-bs-target="#logoutModal" class="text">Cerrar Sesión</a></li>
+        </ul>
+      </div>
+    </div>
+    <button class="btn btn-primary d-lg-none m-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas">
+    ☰ Menú
+    </button>
+
+
+    <!-- sidebar  -->
+    <div class="sidebar"> 
+      <div class="sidebar-header text-center"> 
+        <img src="{{ url_for('static', filename='img/login.png') }}" alt="Admin" class="sidebar-avatar"> 
+        <h5 class="mt-2" lan-target="TituloPerfilAdmin">Perfil de Administrador</h5> 
+      </div> 
+      <ul class="sidebar-menu list-unstyled"> 
+        <li>
+        <a id="consultar_cuenta_sidebar" href="#" class="text" lan-target="BtnMiCuenta">Mi cuenta</a>
+    </li>
+      </ul> 
+      <ul class="sidebar-menu list-unstyled"> 
+        <li>
+        <a data-bs-toggle="modal" data-bs-target="#logoutModal" class="text" lan-target="BtnCerrarSesion">Cerrar Sesión</a>
+      </li> 
+      </ul> 
+    </div>
+
+    <!-- Main content -->
+    <div id="main-content" class="main-content mb-4">
+      <div class="text-center justify-content-center align-items-center mb-4">
+        <div class="row justify-content-center">
+          <div class="col-auto">
+            <h2 class="navbar-title">
+              <span lan-target="BienvenidaUsuario">Bienvenid@</span>
+              <span class="ms-1">{{ username }}!</span>
+            </h2>
+          </div>
+        </div>
+        <h2 class="text" lan-target="PreguntaDashboard">¿Qué desea hacer?</h2>
+      </div>
+          <div class="container card-group">
+      <div class="row mb-5 g-4">
+
+        <!-- Servicio 1 -->
+        <div class="col-md-3 col-sm-6">
+          <div class="card h-100 text-center">
+            <div class="card-body">
+              <img src="{{ url_for('static', filename='img/Register_case.png') }}" alt="btn1" class="card-img">
+              <a href="#" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#modalRegistrarCasoAdmin"lan-target="BtnRegistrarCaso" >Registrar Caso</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Servicio 2 -->
+        <div class="col-md-3 col-sm-6">
+          <div class="card h-100 text-center">
+            <div class="card-body">
+              <img src="{{ url_for('static', filename='img/Search_case.png') }}" alt="btn2" class="card-img">
+              <a href="#" id="consultar_casos" class="btn btn-primary mt-3" lan-target="BtnConsultarCasosAdmin">Consultar casos</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Servicio 3 -->
+        <div class="col-md-3 col-sm-6">
+          <div class="card h-100 text-center">
+            <div class="card-body">
+              <img src="{{ url_for('static', filename='img/Report.png') }}" alt="Servicio 3" class="card-img">
+              <a href="#" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#modalGenerarReporte" lan-target="BtnGenerarReporte">Generar reporte</a>              
+            </div>
+          </div>
+        </div>
+
+        <!-- Servicio 4 -->
+        <div class="col-md-3 col-sm-6">
+          <div class="card h-100 text-center">
+            <div class="card-body">
+              <img src="{{ url_for('static', filename='img/Search_user.png') }}" alt="Servicio 4" class="card-img">
+              <a id="gestionar_usuarios" href="#" class="btn btn-primary mt-3" lan-target="BtnConsultarUsuario">Consultar usuario</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+          <div class="card h-100 text-center">
+            <div class="card-body">
+              <img src="{{ url_for('static', filename='img/Search_disaster.png') }}" alt="Servicio 4" class="card-img">
+              <a id="consultar_desastres" href="#" class="btn btn-primary mt-3" lan-target="BtnConsultarDesastres">Consultar desastres</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal Registrar Caso -->
+<div class="modal fade" id="modalRegistrarCasoAdmin" tabindex="-1" aria-labelledby="modalRegistrarCasoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalRegistrarCasoLabel" lan-target="TituloRegistrarCaso">Registrar Caso</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+        <form id="registerCaseAdminForm" method="POST" action="{{ url_for('admin.register_case') }}">
+          
+          <div class="mb-3">
+            <label for="fk_usuario" class="form-label" lan-target="LabelUsuarioSeleccionar">Seleccionar usuario</label>
+            <select name="fk_usuario" id="fk_usuario" class="form-select" required>
+              <option value="" lan-target="SeleccionUsuario">Seleccione un usuario...</option>
+            </select>
+          </div>
+                    <!-- Fecha -->
+          <div class="mb-3">
+            <label for="fecha" class="form-label" lan-target="LabelFecha">Fecha</label>
+              <br>
+              <small id="fechahelp" class="form-text text-muted" lan-target="AyudaFecha" >Ingrese la fecha en la que ocurrieron los hechos</small></label>
+            <input type="date" name="fecha" class="form-control" required>
+          </div>
+
+          <!-- Descripción -->
+          <div class="mb-3">
+            <label for="descripcion" class="form-label" lan-target="LabelDescripcion">Descripción</label>
+            <br>
+            <small id="descripcionhelp" class="form-text text-muted" lan-target="AyudaDescripcion">Ingrese una descripción breve de los hechos que no supere los 2000 carácteres</small>
+            <textarea name="descripcion" id="descripcion" maxlength="2000" class="form-control" rows="3" required></textarea>
+            <div id="contador" class="form-text">0/2000 carácteres</div>
+            
+          </div>
+
+          <!-- Dirección -->
+          <div class="mb-3">
+            <label for="direccion" class="form-label"  lan-target="LabelDireccion">Dirección
+            </label>
+            <br>
+            <small id="direccionhelp" class="form-text text-muted" lan-target="AyudaDireccion">Ingrese dirección donde el hecho ocurrió</small>
+            <input type="text" name="direccion" id="direccion" class="form-control" required>
+          </div>
+
+
+          <!-- Personas afectadas -->
+          <div class="mb-3">
+            <label for="personas_afectadas" class="form-label" lan-target="LabelPersonas" >Personas afectadas</label>          
+            <br>
+            <small id="personasehelp" class="form-text text-muted"lan-target="AyudaPersonasAdmin" >Ingrese el número de personas del núcleo familiar afectadas por el desastre</small>
+            <input type="number" name="personas_afectadas" id="personas_afectadas" class="form-control" required>
+          </div>
+
+          <!-- Tipo de desastre -->
+          <div class="mb-3">
+            <label for="tipo_desastre" class="form-label" lan-target="LabelDesastre">Tipo de desastre
+              <br>
+              <small id="desastrehelp" class="form-text text-muted" lan-target="AyudaDesastre">Seleccione el desastre ocurrido</small>
+            </label>
+            <select name="tipo_desastre" id="tipo_desastre_admin" multiple class="form-control" required>
+              <option value="In" lan-target="DesastreIncendio">Incendio</option>
+              <option value="Inund" lan-target="DesastreInundacion">Inundación</option>
+              <option value="SI-T" lan-target="DesastreSismoTemblor">Sismo / Temblor</option>
+              <option value="Ter" lan-target="DesastreTerremoto">Terremoto</option>
+            </select>
+
+          </div>
+
+          <!-- Ciudad o Municipio -->
+          <div class="mb-3">
+            <label for="Ciudad" class="form-label" lan-target="LabelCiudad">Ciudad/Municipio</label>
+              <br>
+              <small id="ciudadhelp" class="form-text text-muted" lan-target="AyudaCiudad">Seleccione la ciudad o municipio donde ocurrieron o el más cercano al lugar de los hechos</small>
+            <select name="ciudad" id="ciudad_admin" multiple class="form-select" size="4" required>
+              <option value="AGD">Agua de Dios</option>
+              <option value="ALB">Albán</option>
+              <option value="ANA">Anapoima</option>
+              <option value="ANOL">Anolaima</option>
+              <option value="APU">Apulo</option>
+              <option value="ARB">Arbeláez</option>
+              <option value="BEL">Beltrán</option>
+              <option value="BIT">Bituima</option>
+              <option value="BOJ">Bojacá</option>
+              <option value="CAB">Cabrera</option>
+              <option value="CAC">Cachipay</option>
+              <option value="CAJ">Cajicá</option>
+              <option value="CAP">Caparrapí</option>
+              <option value="CAQ">Cáqueza</option>
+              <option value="CAR">Carmen de Carupa</option>
+              <option value="CHA">Chaguaní</option>
+              <option value="CHI">Chía</option>
+              <option value="CHP">Chipaque</option>
+              <option value="CHO">Choachí</option>
+              <option value="CHC">Chocontá</option>
+              <option value="COG">Cogua</option>
+              <option value="COT">Cota</option>
+              <option value="CUC">Cucunubá</option>
+              <option value="COL">El Colegio</option>
+              <option value="PEN">El Peñón</option>
+              <option value="ROS">El Rosal</option>
+              <option value="FAC">Facatativá</option>
+              <option value="FOM">Fómeque</option>
+              <option value="FOS">Fosca</option>
+              <option value="FUN">Funza</option>
+              <option value="FUQ">Fúquene</option>
+              <option value="FUS">Fusagasugá</option>
+              <option value="GAC">Gachalá</option>
+              <option value="GAN">Gachancipá</option>
+              <option value="GAT">Gachetá</option>
+              <option value="GAM">Gama</option>
+              <option value="GIR">Girardot</option>
+              <option value="GRA">Granada</option>
+              <option value="GUA">Guachetá</option>
+              <option value="GUD">Guaduas</option>
+              <option value="GUS">Guasca</option>
+              <option value="GUQ">Guataquí</option>
+              <option value="GUV">Guatavita</option>
+              <option value="GUSI">Guayabal de Síquima</option>
+              <option value="GUY">Guayabetal</option>
+              <option value="GUT">Gutiérrez</option>
+              <option value="JER">Jerusalén</option>
+              <option value="JUN">Junín</option>
+              <option value="LAC">La Calera</option>
+              <option value="LAM">La Mesa</option>
+              <option value="LAP">La Palma</option>
+              <option value="LPE">La Peña</option>
+              <option value="LVE">La Vega</option>
+              <option value="LEN">Lenguazaque</option>
+              <option value="MAC">Machetá</option>
+              <option value="MAD">Madrid</option>
+              <option value="MAN">Manta</option>
+              <option value="MED">Medina</option>
+              <option value="MOS">Mosquera</option>
+              <option value="NAR">Nariño</option>
+              <option value="NEM">Nemocón</option>
+              <option value="NIL">Nilo</option>
+              <option value="NIM">Nimaima</option>
+              <option value="NOC">Nocaima</option>
+              <option value="PAC">Pacho</option>
+              <option value="PAI">Paime</option>
+              <option value="PAN">Pandi</option>
+              <option value="PAR">Paratebueno</option>
+              <option value="PAS">Pasca</option>
+              <option value="PSA">Puerto Salgar</option>
+              <option value="PUL">Pulí</option>
+              <option value="QUE">Quebradanegra</option>
+              <option value="QET">Quetame</option>
+              <option value="QUI">Quipile</option>
+              <option value="RIC">Ricaurte</option>
+              <option value="SAT">San Antonio del Tequendama</option>
+              <option value="SBE">San Bernardo</option>
+              <option value="SCY">San Cayetano</option>
+              <option value="SFR">San Francisco</option>
+              <option value="SJR">San Juan de Rioseco</option>
+              <option value="SAS">Sasaima</option>
+              <option value="SES">Sesquilé</option>
+              <option value="SIB">Sibaté</option>
+              <option value="SIL">Silvania</option>
+              <option value="SIM">Simijaca</option>
+              <option value="SOA">Soacha</option>
+              <option value="SOP">Sopó</option>
+              <option value="SUB">Subachoque</option>
+              <option value="SUE">Suesca</option>
+              <option value="SUP">Supatá</option>
+              <option value="SUS">Susa</option>
+              <option value="SUT">Sutatausa</option>
+              <option value="TAB">Tabio</option>
+              <option value="TAU">Tausa</option>
+              <option value="TEN">Tenjo</option>
+              <option value="TNA">Tena</option>
+              <option value="TIB">Tibacuy</option>
+              <option value="TIR">Tibirita</option>
+              <option value="TOC">Tocaima</option>
+              <option value="TCP">Tocancipá</option>
+              <option value="TOP">Topaipí</option>
+              <option value="UBA">Ubalá</option>
+              <option value="UBQ">Ubaque</option>
+              <option value="UBT">Ubaté</option>
+              <option value="UNE">Une</option>
+              <option value="UTI">Útica</option>
+              <option value="VEN">Venecia</option>
+              <option value="VER">Vergara</option>
+              <option value="VIA">Vianí</option>
+              <option value="VGO">Villagómez</option>
+              <option value="VPN">Villapinzón</option>
+              <option value="VIL">Villeta</option>
+              <option value="VIO">Viotá</option>
+              <option value="YAC">Yacopí</option>
+              <option value="ZIPA">Zipaquirá</option>
+              <option value="ZIPC">Zipacón</option>
+            </select>
+          </div>
+
+          <!-- Footer -->
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" lan-target="BtnRegistrarCasoModal">Registrar Caso</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" lan-target="BtnCancelar">Cancelar</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Enviar Correo a Entidad -->
+<div class="modal fade" id="modalEnviarCorreo" tabindex="-1" aria-labelledby="modalEnviarCorreoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEnviarCorreoLabel" lan-target="TituloEnviarCorreo">Enviar Caso a Entidad Responsable</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <span lan-target="TextoInfoCorreo">Se enviará la información de este caso a la entidad correspondiente para su atención.</span>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong lan-target="LabelNumeroCaso">Número de Caso:</strong>
+                        <p id="correo-caso-id" class="text-primary"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <strong lan-target="LabelFechaEvento">Fecha del Evento:</strong>
+                        <p id="correo-caso-fecha"></p>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong lan-target="LabelTipoDesastre">Tipo de Desastre:</strong>
+                        <p id="correo-caso-desastre"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <strong lan-target="LabelMunicipio">Municipio:</strong>
+                        <p id="correo-caso-municipio"></p>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <strong lan-target="LabelDescripcion">Descripción:</strong>
+                    <p id="correo-caso-descripcion" class="border p-2 rounded bg-light"></p>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong lan-target="LabelDireccion">Dirección:</strong>
+                        <p id="correo-caso-direccion"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <strong lan-target="LabelPersonasAfectadas">Personas Afectadas:</strong>
+                        <p id="correo-caso-personas"></p>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <strong lan-target="LabelUsuarioReportante">Usuario Reportante:</strong>
+                    <p id="correo-caso-usuario"></p>
+                </div>
+                
+                <input type="hidden" id="casoIdEnviar">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" lan-target="BtnCancelar">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnConfirmarEnvioCorreo" lan-target="BtnConfirmarEnvioCorreo">
+                    <i class="fa fa-paper-plane me-1"></i> Confirmar Envío
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Datos -->
+<div class="modal fade" id="modalEditarDatos" tabindex="-1" aria-labelledby="modalEditarDatosLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalEditarDatosLabel" lan-target="TituloEditarDatos">
+          <i class="bi bi-pencil-fill"></i> Editar mis datos
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+        <form id="editDataForm" method="POST" action="{{ url_for('admin.update_account') }}">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label" lan-target="LabelPrimerNombre">Primer nombre</label>
+              <input type="text" name="pri_nom" id="pri_nom" class="form-control">
+            </div>
+            <div class="col-md-6 mb-3">
+               <label class="form-label" lan-target="LabelSegundoNombre">Segundo nombre</label>
+              <input type="text" name="seg_nom" id="seg_nom" class="form-control">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label" lan-target="LabelPrimerApellido">Primer apellido</label>
+              <input type="text" name="pri_ape" id="pri_ape" class="form-control" >
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label" lan-target="LabelSegundoApellido">Segundo apellido</label>
+              <input type="text" name="seg_ape" id="seg_ape" class="form-control">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" lan-target="LabelDireccionEditar">Dirección</label>
+            <input type="text" name="direccion_user" id="direccion_user" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label" lan-target="LabelCorreoEditar">Correo electrónico</label>
+            <input type="email" name="email" id="email" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label" lan-target="LabelTelefonoEditar">Telefono </label>
+            <input type="number" name="telefono" id="telefono" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label" lan-target="LabelEdadEditar">Edad</label>
+            <input type="number" name="edad" id="edad" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label" lan-target="LabelUsuarioEditar">Nombre de Usuario</label>
+            <input type="text" name="username" id="username" class="form-control">
+          </div>
+          <!-- Footer -->
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" lan-target="BtnGuardarCambios">Guardar cambios</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" lan-target="BtnCancelar">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Genererar Reporte Excel -->
+<div class="modal fade" id="modalGenerarReporte" tabindex="-1" aria-labelledby="modalmodalGenerarReporteLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalGenerarReporteLabel"  lan-target="TituloGenerarReporte">Generar Reporte de Casos Registrados</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+        <form id="generatereportForm" method="POST" action="{{ url_for('admin.generate_report') }}">
+          <h5 class="text" lan-target="TextoAdvertenciaReporte">El reporte ha generar contiene datos e información confidencial, no la comparta con personal no autorizado</h5>
+          <div class="mb-3">
+            <label for="FechaInicial" class="form-label" lan-target="LabelFechaInicial">Fecha Inicial</label>
+              <br>
+              <small id="fechahelp" class="form-text text-muted" lan-target="AyudaFechaInicial">Ingrese la fecha desde la que desea generar el reporte</small></label>
+            <input type="date" name="FechaInicial" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="FechaFinal" class="form-label" lan-target="LabelFechaFinal">Fecha Final</label>
+              <br>
+              <small id="fechahelp" class="form-text text-muted" lan-target="AyudaFechaFinal">Ingrese la fecha hasta la que desea generar el reporte</small></label>
+            <input type="date" name="FechaFinal" class="form-control" required>
+          </div>
+          <!-- Footer -->
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" lan-target="BtnGenerarReporteModal">Generar Reporte</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" lan-target="BtnCancelar">Cancelar</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal Cambiar Contraseña -->
+<div class="modal fade" id="adminChangePasswordModal" tabindex="-1" aria-labelledby="adminChangePasswordModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="UserchangePasswordModalLabel" lan-target="CambiarContraseña">Cambiar Contraseña</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <form id="adminChangePasswordForm" method="POST" action="{{ url_for('admin.change_password') }}">
+          <div class="mb-3">
+            <label for="adminActualPassword" class="form-label fw-bold" lan-target="ContraseñaActual">Contraseña Actual</label>
+            <input type="password" class="form-control" id="adminActualPassword" name="actual_password" required>
+          </div>
+          <div class="mb-3">
+            <label for="adminNewPassword" class="form-label fw-bold" lan-target="NuevaContraseña">Nueva contraseña</label>
+            <input type="password" class="form-control" id="adminNewPassword" name="new_password" required>
+          </div>
+          <div class="mb-3">
+            <label for="adminConfirmPassword" class="form-label fw-bold" lan-target="ConfirmarContraseña">Confirmar contraseña</label>
+            <input type="password" class="form-control" id="adminConfirmPassword" name="confirm_password" required>
+          </div>
+          <button type="submit" class="btn btn-primary w-100" lan-target="ActualizarContraseña">Actualizar contraseña</button>
+        </form>
+      </div>
+    </div> 
+  </div> 
+</div> 
+
+<!-- Modal para Modificar Usuario -->
+<div class="modal fade" id="modalModificarUsuario" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"lan-target="TituloModificarUsuario">Modificar Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formModificarUsuario">
+                    <input type="hidden" id="modificar_user_id" name="user_id">
+                    <div class="mb-3">
+                         <label for="modificar_nombre" class="form-label" lan-target="LabelNombreUsuario">Nombre de Usuario</label>
+                        <input type="text" class="form-control" id="modificar_nombre" name="nombre_usuario" required>
+                        <small class="form-text text-muted" lan-target="AyudaNombreUsuario">Entre 4 y 10 caracteres</small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modificar_rol" class="form-label"lan-target="LabelRol">Rol</label>
+                        <select class="form-select" id="modificar_rol" name="rol" required>
+                            <option value="User" lan-target="OpcionUsuario">Usuario</option>
+                            <option value="Admin" lan-target="OpcionAdministrador">Administrador</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modificar_contraseña" class="form-label" lan-target="LabelContraseña" >Contraseña</label>
+                        <input type="password" class="form-control" id="modificar_password" name="password" placeholder="Dejar vacío para mantener la actual">                        <small class="form-text text-muted" lan-target="AyudaContraseña">Mínimo 8 caracteres, una mayúscula, un número y un carácter especial</small> 
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" lan-target="BtnCancelar">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnGuardarCambios" lan-target="BtnGuardarCambios">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Eliminar Usuario -->
+<div class="modal fade" id="modalEliminarUsuario" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" lan-target="TituloEliminarUsuario">Eliminar Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p lan-target="TextoConfirmarEliminar">¿Está seguro que desea eliminar al usuario: <strong id="nombreUsuarioEliminar"></strong>?</p>
+                <p class="text-danger" lan-target="TextoAdvertenciaEliminar">Esta acción no se puede deshacer.</p>
+                <input type="hidden" id="eliminar_user_id" name="user_id">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" lan-target="BtnCancelar">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="btnConfirmarEliminar" lan-target="BtnEliminarUsuario">Eliminar Usuario</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de cierre de sesión -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header text-white">
+        <h5 class="modal-title" id="logoutModalLabel" lan-target="TituloCerrarSesion">Cierre de sesión</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body" lan-target="TextoCerrarSesion">
+        Está cerrando sessión. ¿Desea continuar?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" lan-target="BtnCancelar">Cancelar</button>
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-primary" lan-target="BtnCerrarSesionConfirmar" >Cerrar sesión</a>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/traductor3.js') }}"></script>
+<script src="{{ url_for('static', filename='js/contador.js') }}"></script>
+<script src="{{ url_for('static', filename='js/alert.js') }}"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const idioma = localStorage.getItem("vitaria_idioma") || "es";
+  const t = window.t;
+
+  const modalRegistrarCasoAdmin = document.getElementById("modalRegistrarCasoAdmin");
+  const botonConsultar = document.getElementById("consultar_casos");
+  const botonesCuenta = document.querySelectorAll("#consultar_cuenta_sidebar, #consultar_cuenta_offcanvas");
+  const botonGestionarUsuarios = document.getElementById("gestionar_usuarios");
+  const botonConsultarDesastres = document.getElementById("consultar_desastres");
+  const mainContent = document.getElementById("main-content");
+  const formReporte = document.getElementById("generatereportForm");
+  const btnGuardarCambios = document.getElementById('btnGuardarCambios');
+  const btnConfirmarEliminar = document.getElementById('btnConfirmarEliminar');
+
+  function getModalEliminarUsuario() {
+    return document.getElementById('modalEliminarUsuario');
+  }
+
+  function getNombreUsuarioEliminar() {
+      return document.getElementById('nombreUsuarioEliminar');
+  }
+
+  function getEliminarUserId() {
+      return document.getElementById('eliminar_user_id');
+  }
+
+  function getBtnConfirmarEliminar() {
+      return document.getElementById('btnConfirmarEliminar');
+  }
+
+  function cerrarModal(modalId) {
+        try {
+            const modalElement = document.getElementById(modalId);
+            if (modalElement) {
+                const modal = bootstrap.Modal.getInstance(modalElement);
+                if (modal) {
+                    modal.hide();
+                } else {
+                    const newModal = new bootstrap.Modal(modalElement);
+                    newModal.hide();
+                }
+            }
+        } catch (error) {
+            console.error(`Error cerrando modal ${modalId}:`, error);
+        }
+  }
+
+  function obtenerModal(modalId) {
+    const modalElement = document.getElementById(modalId);
+    return modalElement ? bootstrap.Modal.getInstance(modalElement) : null;
+}
+  function resetearFormulario(formId) {
+        const form = document.getElementById(formId);
+        if (form) {
+            setTimeout(() => {
+                form.reset();
+            }, 300);
+        }
+  }
+
+  async function cargarDatosCuenta() {
+    const dashboard = document.getElementById("content");
+  
+    dashboard.innerHTML = `
+    <div class="text-center mt-5">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p class="mt-3" lan-target="CargandoCuenta">Cargando datos de tu cuenta...</p>
+    </div>
+    `;
+
+    try {
+      const response = await fetch("/admin/manage-account");
+      const usuario = await response.json();
+
+      if (!usuario || Object.keys(usuario).length === 0) {
+        dashboard.innerHTML = `
+          <div class="text-center mt-5">
+          <h4 lan-target="CuentaNoEncontrada">No se encontraron datos de tu cuenta.</h4>
+          <a href="#" class="btn btn-primary mt-3" onclick="location.reload()">
+            <i class="bi bi-reply-all-fill"></i> <span lan-target="Volver">Volver</span>
+          </a>
+        </div>
+        `;
+      return;
+      }
+
+      
+      const perfilHTML = `
+          <div class="count">
+            <div class="text-center mb-4">
+            <h2 class="navbar-title" lan-target="MiCuentaAdmin">Mi Cuenta Administrativa</h2>
+            <h4 class="form-subtitle mb-3 fw-bold">${usuario.nombres} ${usuario.apellidos}</h4>  
+            <div class="row w-100 justify-content-center align-items-center">
+              <div class="col-md-6">
+                <div>
+                  <img src="{{ url_for('static', filename='img/avatar.png') }}" alt="Foto de perfil" class="profile-avatar">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="row text-align-items justify-content-center">
+                      <div class="col-md-6 text-align-items">
+                      <label class="form-label fw-bold text" lan-target="Nombres">Nombres:</label>
+                      <p class="text">${usuario.nombres}</p>
+                    </div>
+                    <div class="col-md-6 text-align-items">
+                      <label class="form-label fw-bold text" lan-target="Apellidos">Apellidos:</label>
+                      <p class="text">${usuario.apellidos}</p>
+                    </div>     
+                </div>
+                <div class="row text-align-items justify-content-center">
+                <div class="col-md-6">
+                  <label class="form-label fw-bold text mt-3" lan-target="NombreUsuario">Nombre de usuario:</label>
+                    <p class="text">${usuario.nombre_usuario}</p>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-bold mt-3 text" lan-target="RolUsuario">Rol de usuario:</label>
+                  <p class="text">${usuario.rol_usuario}</p>
+                </div>
+              </div>
+
+
+            </div>
+            <div class="row text-align-items justify-content-center">
+                  <div class="col-md-6 ">
+                    <label class="form-label fw-bold text" lan-target="Contraseña">Contraseña:</label>
+                    <p class="text">${usuario.contrasena_masked}</p>
+                  </div>
+                  <div class="col-md-6 mt-3">
+                  <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#adminChangePasswordModal">
+                      <span lan-target="CambiarContraseña">Cambiar contraseña</span>
+                    </button>
+                  </div>
+            </div>
+            <h4 class="form-subtitle text-center mb-3 fw-bold">Información de contacto y estado</h4>
+            <div class="w-75 mx-auto">
+          
+              <div class="row">
+                <div class="col-md-6 p-3">
+                  <label class="form-label fw-bold text" lan-target="NumeroDocumento">Número de documento:</label>
+                  <p class="text">${usuario.documento}</p>
+                  <label class="form-label fw-bold text" lan-target="Direccion">Dirección:</label>
+                  <p class="text">${usuario.direccion}</p>
+                  <label class="form-label fw-bold text" lan-target="CorreoElectronico">Correo electrónico:</label>
+                  <p class="text">${usuario.email}</p>
+                </div>
+                <div class="col-md-6 p-3 ">
+                  <label class="form-label fw-bold text" lan-target="Estado">Estado:</label>
+                  <p class="text">${usuario.estado_usuario}</p>
+                  <label class="form-label fw-bold text" lan-target="TipoDocumento">Tipo de documento:</label>
+                  <p class="text">${usuario.tipo_documento}</p>
+                  <label class="form-label fw-bold text" lan-target="Telefono">Teléfono:</label>
+                  <p class="text">${usuario.telefono}</p>
+                </div>
+              </div>
+            </div>
+              <div class="text-center mt-4">
+              <a href="#" class="btn btn-secondary me-2" data-bs-toggle="modal" data-bs-target="#modalEditarDatos">
+                <i class="bi bi-pencil-fill"></i> <span lan-target="EditarDatos">Editar datos</span>
+              </a>
+              <a href="#" class="btn btn-primary" onclick="location.reload()">
+                <i class="bi bi-reply-all-fill"></i> <span lan-target="Volver">Volver</span>
+            </a>
+            </div>
+          </div>   
+        `;
+      dashboard.innerHTML = perfilHTML;
+      CambiarIdioma(localStorage.getItem('vitaria_idioma'));
+
+      } catch (error) {
+        console.error("Error al obtener datos de cuenta:", error);
+        dashboard.innerHTML = `
+          <div class="text-center mt-5 text-danger">
+          <h4 lan-target="ErrorPerfil">❌ Error al cargar los datos del perfil.</h4>
+          <a href="#" class="btn btn-primary mt-3" onclick="location.reload()">
+            <span lan-target="Volver">Volver</span>
+          </a>
+        </div>
+        `;
+      }
+  }
+    async function cargarUsuarios() {
+        try {
+            const selectUsuario = document.getElementById("fk_usuario");
+            if (!selectUsuario) {
+                console.warn(" No se encontró el select con id='fk_usuario'");
+                return;
+            }
+
+            const response = await fetch("/admin/select_users", { cache: "no-store" });
+            if (!response.ok) {
+                console.error(" Error en la respuesta del servidor:", response.status);
+                selectUsuario.innerHTML = `<option value="">${t("ErrorCargarUsuarios")}</option>`;
+                return;
+            }
+
+            const usuarios = await response.json();
+            selectUsuario.innerHTML = `<option value="">${t("SeleccionUsuario")}</option>`;
+
+            if (!Array.isArray(usuarios) || usuarios.length === 0) {
+                selectUsuario.innerHTML = `<option value="">${t("NoUsuariosDisponibles")}</option>`;
+                return;
+            }
+
+            usuarios.forEach(u => {
+                const option = document.createElement("option");
+                option.value = u.id;
+                option.textContent = u.nombre;
+                selectUsuario.appendChild(option);
+            });
+
+        } catch (error) {
+            console.error("Error cargando usuarios:", error);
+            selectUsuario.innerHTML = `<option value="">${t("ErrorCargarUsuarios")}</option>`;
+        }
+    }
+
+    async function cargarDatosUsuario(userId) {
+        try {
+            const response = await fetch(`/admin/get_data_user/${userId}`);
+            const usuario = await response.json();
+
+            if (usuario.status === 'error') {
+            showToast(t("ToastErrorCargarDatosUsuario"), 'error');
+            return;
+        }
+        
+        const modificarUserId = document.getElementById('modificar_user_id');
+        const modificarNombre = document.getElementById('modificar_nombre');
+        const modificarRol = document.getElementById('modificar_rol');
+        const modificarPassword = document.getElementById('modificar_password');
+
+         if (!modificarUserId || !modificarNombre || !modificarRol || !modificarPassword) {
+            console.error(' No se encontraron todos los elementos del formulario:', {
+                modificar_user_id: !!modificarUserId,
+                modificar_nombre: !!modificarNombre,
+                modificar_rol: !!modificarRol,
+                modificar_password: !!modificarPassword
+            });
+            showToast(t("ToastErrorAbrirFormulario"), 'error');
+            return;
+        }
+        modificarUserId.value = usuario.id_usuario;
+        modificarNombre.value = usuario.nombre_usuario;
+        modificarRol.value = usuario.rol_usuario;
+        modificarPassword.value = '';
+            
+        } catch (error) {
+            console.error('Error cargando datos del usuario:', error);
+            showToast(t("ToastErrorCargarDatosUsuario"), "error");
+        }
+    }
+
+    async function manejarConsultarCasos(e) {
+        e.preventDefault();
+        mainContent.innerHTML = `
+            <div class="text-center mt-5">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p class="mt-3" lan-target="CargandoCasos">Cargando tus casos...</p>
+            </div>
+        `;
+
+        try {
+            const response = await fetch("/admin/query_cases");
+            const casos = await response.json();
+
+            if (!casos || casos.length === 0) {
+                mainContent.innerHTML = `
+                    <div class="text-center mt-5">
+                        <h4 lan-target="SinCasos">No se encontraron casos registrados.</h4>
+                        <a href="#" class="btn btn-primary mt-3" onclick="location.reload()">
+                            <i class="bi bi-reply-all-fill"></i><span lan-target="Volver">Volver</span>
+                        </a>
+                    </div>`;
+                return;
+            }
+
+            let tableHTML = `
+            <div class="d-flex justify-content-end">
+                  <div class="mx-4 mb-4">
+                          <a href="#" class="btn btn-primary" onclick="location.reload()">
+                              <i class="bi bi-reply-fill"></i> <span lan-target="VolverDashboard">Volver a dashboard</span>
+                          </a>
+                    </div>
+                </div>
+                <div class="table-container">
+                  <div class="text-center mb-4">
+                      <h2 class="table-title" lan-target="TituloCasosRegistrados">Casos registrados en el Sistema</h2>
+                  </div>
+                  <div class="table-responsive">
+                      <table class="table table-hover custom-table">
+                          <thead class="bg-dark">
+                              <tr>
+                                  <th lan-target="FechaEvento">Fecha del evento</th>
+                                  <th lan-target="NumeroCaso">Número de caso</th>
+                                  <th lan-target="DescripcionHechos">Descripción de los hechos</th>
+                                  <th lan-target="Direccion">Dirección</th>
+                                  <th lan-target="PersonasAfectadas">Número de personas afectadas</th>
+                                  <th lan-target="DesastreOcurrido">Desastre ocurrido</th>
+                                  <th lan-target="MunicipioCiudad">Municipio/Ciudad</th>
+                                  <th lan-target="TipoCaso">Tipo de Caso</th>
+                                  <th lan-target="EstadoCaso">Estado del caso</th>
+                                  <th >Id Usuario</th>
+                                  <th lan-target="NombreUsuario">Nombre de Usuario</th>
+                                  <th lan-target="NombreCompleto">Nombre Completo</th>
+                                  <th lan-target="EnviarCaso">Enviar Caso</th>
+                              </tr>
+                            </thead>
+                            <tbody>`;
+
+            casos.forEach(caso => {
+                tableHTML += `
+                    <tr>
+                        <td>${caso.fecha}</td>
+                        <td>${caso.id}</td>
+                        <td>${caso.descripcion}</td>
+                        <td>${caso.direccion}</td>
+                        <td>${caso.personas_afectadas}</td>
+                        <td>${caso.desastre}</td>
+                        <td>${caso.municipio}</td>
+                        <td>${caso.tipo_caso}</td>
+                        <td>${caso.estado}</td>
+                        <td>${caso.id_usuario}</td>
+                        <td>${caso.nombre_usuario}</td>
+                        <td>${caso.nombre_completo}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-primary btn-enviar-correo"
+                                    data-caso-id="${caso.id}"
+                                    data-caso-fecha="${caso.fecha}"
+                                    data-caso-descripcion="${caso.descripcion}"
+                                    data-caso-direccion="${caso.direccion}"
+                                    data-caso-personas="${caso.personas_afectadas}"
+                                    data-caso-desastre="${caso.desastre}"
+                                    data-caso-municipio="${caso.municipio}"
+                                    data-caso-tipo="${caso.tipo_caso}"
+                                    data-caso-usuario="${caso.nombre_completo}"
+                                    title="Enviar Caso">
+                                    <i class="fa fa-paper-plane me-1"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>`;
+            });
+
+            tableHTML += `
+                            </tbody>
+                        </table>
+                    </div>
+                </div>`;
+
+            mainContent.innerHTML = tableHTML;
+            CambiarIdioma(localStorage.getItem('vitaria_idioma'));
+
+        } catch (error) {
+            console.error("Error al obtener los casos:", error);
+            mainContent.innerHTML = `
+                <div class="text-center mt-5 text-danger">
+                <h4 lan-target="ErrorCasos">❌ Ocurrió un error al cargar tus casos.</h4>
+                <a href="#" class="btn btn-primary mt-3" onclick="location.reload()">
+                  <span lan-target="Volver">Volver</span>
+                </a>
+        </div>`;
+        }
+    }
+
+    async function manejarGestionarUsuarios(e) {
+        if (e && typeof e.preventDefault === 'function') {
+        e.preventDefault();
+      }
+        mainContent.innerHTML = `
+            <div class="text-center mt-5">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p class="mt-3" lan-target="CargandoUsuarios">Cargando Usuarios...</p>
+            </div>
+        `;
+
+        try {
+            const response = await fetch("/admin/manage_users");
+            const usuarios = await response.json();
+
+            if (!usuarios || usuarios.length === 0) {
+                mainContent.innerHTML = `
+                    <div class="text-center mt-5">
+                        <h4 lan-target="SinUsuarios">No se encontraron usuarios registrados.</h4>
+                        <a href="#" class="btn btn-primary mt-3" onclick="location.reload()">
+                            <i class="bi bi-reply-all-fill"></i> <span lan-target="Volver">Volver</span>
+                        </a>
+                    </div>`;
+                return;
+            }
+
+            let tableHTML = `
+                <div class="d-flex justify-content-end">
+                  <div class="mx-4 mb-4">
+                    <a href="#" class="btn btn-primary" onclick="location.reload()">
+                      <i class="bi bi-reply-fill"></i> <span lan-target="VolverDashboard">Volver a dashboard</span>
+                    </a>    
+                  </div>
+                </div>
+                <div class="table-container">
+                  <div class="text-center mb-4">
+                      <h2 class="table-title" lan-target="TituloUsuariosRegistrados">Usuarios registrados en el Sistema</h2>
+                  </div>
+                  <div class="table-responsive">
+                      <table class="table table-hover custom-table">
+                          <thead>
+                              <tr>
+                                  <th>Id Usuario</th>
+                                  <th lan-target="Documento">Documento</th>
+                                  <th lan-target="Nombres">Nombres</th>
+                                  <th lan-target="Apellidos">Apellidos</th>
+                                  <th lan-target="NombreUsuario">Usuario</th>
+                                  <th lan-target="RolUsuario">Rol</th>
+                                  <th lan-target="Estado">Estado</th>
+                                  <th lan-target="CorreoElectronico">Email</th>
+                                  <th lan-target="Telefono">Teléfono</th>
+                                  <th lan-target="Edad">Edad</th>
+                                  <th lan-target="Direccion">Dirección</th>
+                                  <th lan-target="Acciones">Acciones</th>
+                              </tr>
+                            </thead>
+                            <tbody>`;
+
+            usuarios.forEach(usuario => {
+                tableHTML += `
+                    <tr>
+                        <td>${usuario.id_usuario}</td>
+                        <td>${usuario.tipo_documento}: ${usuario.documento}</td>
+                        <td>${usuario.nombres}</td>
+                        <td>${usuario.apellidos}</td>
+                        <td>${usuario.nombre_usuario}</td>
+                        <td>
+                            <span class="badge ${usuario.rol_usuario === 'Administrador' ? 'bg-success' : 'bg-primary'}">
+                                ${usuario.rol_usuario}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge ${usuario.estado_usuario === 'Activo' ? 'bg-success' : 'bg-secondary'}">
+                                <i class="fas ${usuario.estado_usuario === 'Activo' ? 'fa-check-circle' : 'fa-times-circle'} me-1"></i>
+                                ${usuario.estado_usuario}
+                            </span>
+                        </td>
+                        <td>${usuario.email}</td>
+                        <td>${usuario.telefono}</td>
+                        <td>${usuario.edad}</td>
+                        <td>${usuario.direccion}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-warning btn-table btn-modificar" 
+                                        data-user-id="${usuario.id_usuario}"
+                                        data-bs-toggle="tooltip" 
+                                        title="Modificar Usuario">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-danger btn-table btn-eliminar"
+                                        data-user-id="${usuario.id_usuario}"
+                                        data-user-name="${usuario.nombre_usuario}"
+                                        data-bs-toggle="tooltip" 
+                                        title="Eliminar Usuario">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>`;
+            });
+
+            tableHTML += `
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center mt-4">
+                        <a href="#" class="btn btn-primary mt-3" onclick="location.reload()">
+                        <span lan-target="Volver">Volver</span>
+                      </a>
+                    </div>
+                </div>`;
+            
+                const modalEliminarHTML = `
+                <div class="modal fade" id="modalEliminarUsuario" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Eliminar Usuario</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>¿Está seguro que desea eliminar al usuario: <strong id="nombreUsuarioEliminar"></strong>?</p>
+                                <input type="hidden" id="eliminar_user_id">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn btn-danger" id="btnConfirmarEliminar">Eliminar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+                
+            tableHTML += modalEliminarHTML;
+
+            mainContent.innerHTML = tableHTML;
+            CambiarIdioma(localStorage.getItem('vitaria_idioma'));
+
+        } catch (error) {
+            console.error("Error al obtener los usuarios:", error);
+            mainContent.innerHTML = `
+                <div class="text-center mt-5 text-danger">
+                    <h4 lan-target="ErrorUsuarios">❌ Ocurrió un error al cargar los usuarios registrados.</h4>
+                    <a href="#" class="btn btn-primary mt-3" onclick="location.reload()">
+                      <span lan-target="Volver">Volver</span>
+                    </a>
+                </div>`;
+        }
+    }
+
+    async function manejarConsultarDesastres(e) {
+        const dashboard = document.getElementById("content");
+        e.preventDefault();
+        dashboard.innerHTML = `
+            <div class="text-center mt-5">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p class="mt-3" lan-target="CargandoDesastres">Cargando Información...</p>
+            </div>
+        `;
+
+        try {
+            const response = await fetch("/admin/query_disasters");
+            const desastres = await response.json();
+
+            if (!desastres || desastres.length === 0) {
+                dashboard.innerHTML = `
+                    <div class="text-center mt-5">
+                        <h4 lan-target="SinDesastres">No se encontró la información solicitada.</h4>
+                        <a href="#" class="btn btn-primary mt-3" onclick="location.reload()">
+                            <i class="bi bi-reply-all-fill"></i> <span lan-target="Volver">Volver</span>
+                        </a>
+                    </div>`;
+                return;
+            }
+
+            let tableHTML = `
+                <div class="desastre">
+                <div class="mx-4 mb-4">
+                        <a href="#" class="btn btn-primary" onclick="location.reload()">
+                            <i class="bi bi-reply-fill"></i> <span lan-target="VolverDashboard">Volver a dashboard</span>
+                        </a>
+                  </div>
+                  <div class="table-container">
+                    <div class="text-center mb-4">
+                        <h2 class="table-title"lan-target="TituloDesastresRegistrados">Información de desastres establecidos en el sistema</h2>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th lan-target="DesastreOcurrido">Desastre</th>
+                                    <th lan-target="Prioridad">Prioridad</th>
+                                    <th lan-target="IdEntidad">Id Entidad</th>
+                                    <th lan-target="NombreEntidadResponsable">Entidad Responsable</th>
+                                    <th lan-target="Descripcion">Descripción</th>
+                                    <th lan-target="NumeroContacto">Número de Contacto</th>
+                                    <th lan-target="CorreoElectronico">Email</th>
+                                </tr>
+                              </thead>
+                            <tbody>`;
+
+            desastres.forEach(desastre => {
+                const badgeClass = {
+                    'Alta': 'bg-danger',
+                    'Moderada': 'bg-warning',
+                    'Media': 'bg-info', 
+                    'Baja': 'bg-primary'
+                }[desastre.prioridad] || 'bg-secondary';
+
+                tableHTML += `
+                    <tr>
+                        <td>${desastre.id_desastre}</td>
+                        <td>${desastre.desastre}</td>
+                        <td>
+                            <span class="badge custom-badge ${badgeClass}">
+                                ${desastre.prioridad}
+                            </span>
+                        </td>
+                        <td>${desastre.id_entidad}</td>
+                        <td>${desastre.nombre_entidad}</td>
+                        <td>${desastre.descripcion}</td>
+                        <td>${desastre.numero_contacto}</td>
+                        <td>${desastre.correo}</td>
+                    </tr>`;
+            });
+
+            tableHTML += `
+                            </tbody>
+                        </table>
+                    </div>
+                  </div>
+                </div>`;
+
+            dashboard.innerHTML = tableHTML;
+            CambiarIdioma(localStorage.getItem('vitaria_idioma'));
+
+        } catch (error) {
+            console.error("Error al obtener los desastres:", error);
+            dashboard.innerHTML = `
+                <div class="text-center mt-5 text-danger">
+                    <h4 lan-target="ErrorDesastres">❌ Ocurrió un error al cargar la información registrada.</h4>
+                    <a href="#" class="btn btn-primary mt-3" onclick="location.reload()"
+                    <span lan-target="Volver">Volver</span>
+                    </a>
+                </div>`;
+        }
+    }
+
+    async function manejarRegistroCaso(form, submitBtn) {
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> ' + t("BtnRegistrandoCaso");
+        submitBtn.disabled = true;
+
+        try {
+            const formData = new FormData(form);
+            const response = await fetch("/admin/register_case", { 
+                method: "POST", 
+                body: formData 
+            });
+            const result = await response.json();
+
+            showToast(result.msg, result.status);
+
+            if (result.status === "success") {
+                cerrarModal("modalRegistrarCasoAdmin");
+                setTimeout(() => {
+                    if (botonConsultar) botonConsultar.click();
+                }, 800);
+            }
+        } catch (error) {
+            console.error("Error registrando caso:", error);
+            showToast(t("ToastErrorRegistrarCaso"), "error");
+        } finally {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        }
+    }
+
+    async function manejarEnvioCorreo(casoId, button) {
+      const originalText = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> ' + t("BtnEnviando");
+        button.disabled = true;
+      try {
+          const response = await fetch("/admin/enviar_correo_caso", {
+              method: "POST",
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ caso_id: casoId })
+          });
+          
+          const result = await response.json();
+
+          showToast(result.msg, result.status);
+          
+          if (result.status === "success") {
+              showToast(t("ToastCorreoEnviado"), "success");
+              cerrarModal("modalEnviarCorreo");
+          } else {
+              showToast(t("ToastErrorEnviarCorreo"), "error");
+          }
+          
+          return result;
+      } catch (error) {
+          console.error("Error enviando correo:", error);
+           showToast(t("ToastErrorEnviarCorreo"), "error");
+      } finally {
+            button.innerHTML = originalText;
+            button.disabled = false;
+        }
+    }
+
+    async function manejarCambioPassword(form, submitBtn) {
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = t("BtnActualizandoContraseña");
+        submitBtn.disabled = true;
+
+        try {
+            const formData = new FormData(form);
+            const response = await fetch("/admin/change_password", { 
+                method: "POST", 
+                body: formData 
+            });
+            const result = await response.json();
+
+            showToast(result.msg, result.status);
+
+            if (result.status === "success") {
+                cerrarModal("adminChangePasswordModal");
+                resetearFormulario("adminChangePasswordForm");
+                setTimeout(cargarDatosCuenta, 500);
+            }
+        } catch (error) {
+            console.error("Error cambiando contraseña:", error);
+            showToast(result.msg, result.status);
+        } finally {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        }
+    }
+
+    async function manejarEditarDatos(form, submitBtn) {
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = t("BtnActualizandoDatos");
+        submitBtn.disabled = true;
+
+        try {
+            const formData = new FormData(form);
+            const response = await fetch("/admin/update_account", { 
+                method: "POST", 
+                body: formData 
+            });
+            const result = await response.json();
+
+            showToast(result.msg, result.status);
+
+            if (result.status === "success") {
+                cerrarModal("modalEditarDatos");
+                resetearFormulario("editDataForm");
+                setTimeout(cargarDatosCuenta, 500);
+            }
+        } catch (error) {
+            console.error("Error actualizando datos:", error);
+            showToast(result.msg, result.error);
+        } finally {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        }
+    }
+
+    function mostrarDatosCasoEnModal(casoData) {
+      document.getElementById('correo-caso-id').textContent = casoData.id;
+      document.getElementById('correo-caso-fecha').textContent = casoData.fecha;
+      document.getElementById('correo-caso-desastre').textContent = casoData.desastre;
+      document.getElementById('correo-caso-municipio').textContent = casoData.municipio;
+      document.getElementById('correo-caso-descripcion').textContent = casoData.descripcion;
+      document.getElementById('correo-caso-direccion').textContent = casoData.direccion;
+      document.getElementById('correo-caso-personas').textContent = casoData.personas;
+      document.getElementById('correo-caso-usuario').textContent = casoData.usuario;
+      document.getElementById('casoIdEnviar').value = casoData.id;
+  }
+
+    async function manejarGenerarReporte(form, submitBtn) {
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = t("BtnGenerandoReporte");
+        submitBtn.disabled = true;
+
+        try {
+            const formData = new FormData(form);
+            const response = await fetch("/admin/generate_report", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!response.ok) {
+                const result = await response.json();
+
+                if (result.status === "warning") {
+                  showToast(result.msg, "warning");
+                } else if (result.status === "error") {
+                  showToast(result.msg || t("ToastErrorGenerarReporte"), "error");
+                } else {
+                  showToast(t("ToastErrorGenerarReporte"), "error");
+                }
+                console.warn("⚠ Respuesta no exitosa del servidor:", result);
+                return;
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "Reporte_Casos.xlsx";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+
+            cerrarModal("modalGenerarReporte");
+            showToast(t("ToastReporteGenerado"), "success");
+            
+        } catch (error) {
+            console.error("❌ Error al generar el reporte:", error);
+            showToast(t("ToastErrorGenerarReporte"), "error"); 
+        } finally {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        }
+    }
+    
+    async function manejarEliminacionUsuario(button) {
+      const userId = getEliminarUserId()?.value;
+      const userName = getNombreUsuarioEliminar()?.textContent;
+
+      if (!userId) {
+          showToast("Error: No se ha seleccionado un usuario válido", "error");
+          return;
+      }
+
+      const originalText = button.innerHTML;
+      button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> ' + (t("BtnDesactivando") || "Desactivando...");
+      button.disabled = true;
+
+      try {
+          console.log('Enviando solicitud DELETE para usuario ID:', userId);
+          
+          const response = await fetch('/admin/delete_user', {
+              method: 'DELETE',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                  user_id: userId
+              })
+          });
+
+          const result = await response.json();
+          console.log('Respuesta del servidor:', result);
+
+          if (result.status === 'success') {
+              showToast(t("ToastUsuarioDesactivado") || "Usuario desactivado correctamente", "success");
+              const modal = bootstrap.Modal.getInstance(getModalEliminarUsuario());
+              if (modal) modal.hide();
+              
+              setTimeout(() => {
+                  if (typeof manejarGestionarUsuarios === 'function') {
+                      manejarGestionarUsuarios();
+                  } else {
+                      location.reload();
+                  }
+              }, 1000);
+          } else {
+              showToast(result.msg || t("ToastErrorActualizarDatos") || "Error al desactivar usuario", "error");
+          }
+      } catch (error) {
+          console.error('Error desactivando usuario:', error);
+          showToast(t("ToastErrorInesperado") || "Error inesperado", "error");
+      } finally {
+          button.innerHTML = originalText;
+          button.disabled = false;
+      }
+  }
+  
+  console.log('=== DIAGNÓSTICO DE ELEMENTOS DEL MODAL ===');
+  console.log('modalEliminarUsuario:', document.getElementById('modalEliminarUsuario'));
+  console.log('nombreUsuarioEliminar:', document.getElementById('nombreUsuarioEliminar'));
+  console.log('eliminar_user_id:', document.getElementById('eliminar_user_id'));
+
+  // Verificar si el elemento existe con querySelector
+  console.log('Todos los elementos con id nombreUsuarioEliminar:', document.querySelectorAll('#nombreUsuarioEliminar'));
+  console.log('Contenido del modalEliminarUsuario:', document.getElementById('modalEliminarUsuario')?.innerHTML);
+
+  function manejarEventosBotones() {
+        document.addEventListener('click', function(e) {
+            
+          if (e.target.closest('.btn-modificar')) {
+                e.preventDefault();
+                const button = e.target.closest('.btn-modificar');
+                const userId = button.getAttribute('data-user-id');
+                console.log(' Botón modificar clickeado, userId:', userId);
+
+                const modalElement = document.getElementById('modalModificarUsuario');
+                if (!modalElement) {
+                    console.error(' Modal modalModificarUsuario no encontrado en el DOM');
+                    showToast(t("ToastErrorAbrirFormulario"), 'error');
+                    return;
+                }
+
+                cargarDatosUsuario(userId).then(() => {
+                    const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+                    modal.show();
+                });
+          }
+          if (e.target.closest('.btn-eliminar')) {
+              e.preventDefault();              
+              const button = e.target.closest('.btn-eliminar');
+              const userId = button.getAttribute('data-user-id');
+              const userName = button.getAttribute('data-user-name');
+              
+              console.log('Botón eliminar clickeado:', { userId, userName });
+
+              try {
+                  const nombreEl = document.getElementById('nombreUsuarioEliminar');
+                  const idEl = document.getElementById('eliminar_user_id');
+                  const modalEl = document.getElementById('modalEliminarUsuario');
+
+                  if (!modalEl) throw new Error('Modal no encontrado');
+                  if (!nombreEl) throw new Error('Elemento nombreUsuarioEliminar no encontrado');
+                  if (!idEl) throw new Error('Elemento eliminar_user_id no encontrado');
+
+                  nombreEl.textContent = userName || 'Usuario';
+                  idEl.value = userId || '';
+
+                  const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                  modal.show();
+                  
+              } catch (error) {
+                  console.error('Error al abrir modal de eliminación:', error);
+                  showToast(`Error: ${error.message}`, 'error');
+              }
+          }
+
+          if (e.target.closest('#btnConfirmarEliminar')) {
+            e.preventDefault();
+            console.log('Botón confirmar eliminación clickeado');
+            console.log('User ID a eliminar:', document.getElementById('eliminar_user_id').value);
+            
+            const button = e.target.closest('#btnConfirmarEliminar');
+            manejarEliminacionUsuario(button);
+        }
+
+          
+          if (e.target.closest('.btn-enviar-correo')) {
+            e.preventDefault();
+            const button = e.target.closest('.btn-enviar-correo');
+            
+            const casoData = {
+                id: button.getAttribute('data-caso-id'),
+                fecha: button.getAttribute('data-caso-fecha'),
+                descripcion: button.getAttribute('data-caso-descripcion'),
+                direccion: button.getAttribute('data-caso-direccion'),
+                personas: button.getAttribute('data-caso-personas'),
+                desastre: button.getAttribute('data-caso-desastre'),
+                municipio: button.getAttribute('data-caso-municipio'),
+                tipo: button.getAttribute('data-caso-tipo'),
+                usuario: button.getAttribute('data-caso-usuario')
+            };
+            
+            mostrarDatosCasoEnModal(casoData);
+            
+            const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalEnviarCorreo'));
+            modal.show();
+        }
+        
+        });
+    }
+    
+    function inicializarManejadoresFormularios() {
+        const formRegistroCaso = document.getElementById('registerCaseAdminForm');
+        if (formRegistroCaso) {
+            formRegistroCaso.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const submitBtn = formRegistroCaso.querySelector('button[type="submit"]');
+                manejarRegistroCaso(formRegistroCaso, submitBtn);
+            });
+        
+        }
+        const btnConfirmarEnvioCorreo = document.getElementById('btnConfirmarEnvioCorreo');
+        if (btnConfirmarEnvioCorreo) {
+          btnConfirmarEnvioCorreo.addEventListener('click', async function() {
+              const casoId = document.getElementById('casoIdEnviar').value;
+              const button = this;
+              
+              const originalText = button.innerHTML;
+              button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> ' + t("BtnEnviando");
+              button.disabled = true;
+              
+              try {
+                  await manejarEnvioCorreo(casoId, button);
+              } catch (error) {
+                  console.error('Error en el envío:', error);
+              } finally {
+                  button.innerHTML = originalText;
+                  button.disabled = false;
+              }
+          });
+        }
+        const formCambioPassword = document.getElementById('adminChangePasswordForm');
+        if (formCambioPassword) {
+            formCambioPassword.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const submitBtn = formCambioPassword.querySelector('button[type="submit"]');
+                manejarCambioPassword(formCambioPassword, submitBtn);
+            });
+        }
+        const formEditarDatos = document.getElementById('editDataForm');
+        if (formEditarDatos) {
+            formEditarDatos.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const submitBtn = formEditarDatos.querySelector('button[type="submit"]');
+                manejarEditarDatos(formEditarDatos, submitBtn);
+            });
+        }
+        const formGenerarReporte = document.getElementById('generatereportForm');
+        if (formGenerarReporte) {
+            formGenerarReporte.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const submitBtn = formGenerarReporte.querySelector('button[type="submit"]');
+                manejarGenerarReporte(formGenerarReporte, submitBtn);
+            });
+        }
+    }
+
+    if (botonConsultar) {
+        botonConsultar.addEventListener("click", manejarConsultarCasos);
+    }
+
+    if (botonGestionarUsuarios) {
+        botonGestionarUsuarios.addEventListener("click", manejarGestionarUsuarios);
+    }
+
+    if (botonConsultarDesastres) {
+        botonConsultarDesastres.addEventListener("click", manejarConsultarDesastres);
+    }
+
+    if (modalRegistrarCasoAdmin) {
+        modalRegistrarCasoAdmin.addEventListener("show.bs.modal", cargarUsuarios);
+    }
+
+    if (formReporte) {
+        formReporte.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData(formReporte);
+
+            try {
+                const response = await fetch("/admin/generate_report", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    const result = await response.json();
+                    showToast(t("ToastErrorGenerarReporte"), "error"); 
+                    return;
+                }
+                
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "Reporte_Casos.xlsx";
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+
+                const modal = bootstrap.Modal.getInstance(document.getElementById("modalGenerarReporte"));
+                if (modal) modal.hide();
+
+                showToast(t("ToastReporteGenerado"), "success");
+            } catch (error) {
+                console.error("❌ Error al generar el reporte:", error);
+                showToast(t("ToastErrorGenerarReporte"), "error"); 
+            }
+        });
+    }
+
+    if (btnGuardarCambios) {
+        btnGuardarCambios.addEventListener('click', async function() {
+            const formData = new FormData(document.getElementById('formModificarUsuario'));
+            const button = this;
+
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> ' + t("BtnActualizandoUsuario");
+            button.disabled = true;
+         
+            try {
+                const response = await fetch('/admin/update_user', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showToast(t("ToastUsuarioActualizado"), "success");
+                    bootstrap.Modal.getInstance(document.getElementById('modalModificarUsuario')).hide();
+                    setTimeout(() => {
+                        if (typeof manejarGestionarUsuarios === 'function') {
+                            manejarGestionarUsuarios();
+                        } else {
+                            location.reload();
+                        }
+                    }, 400);
+                } else {
+                    showToast(result.msg, 'error');
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }
+            } catch (error) {
+                console.error('Error actualizando usuario:', error);
+                showToast(t("ToastErrorActualizarDatos"), "error");
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }
+        });
+    }
+
+botonesCuenta.forEach(boton => {
+    boton.addEventListener("click", async (e) => {
+      e.preventDefault();
+      cargarDatosCuenta();
+  });
+});
+
+document.addEventListener("submit", async (e) => {
+   const formIds = [
+        'registerCaseAdminForm',
+        'adminChangePasswordForm', 
+        'editDataForm',
+        'generatereportForm'
+    ];
+    
+    e.preventDefault();
+    const form = e.target;
+
+    if (!form) {
+        console.error("Formulario no encontrado");
+        return;
+    }
+
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (!submitBtn) {
+        console.error("Botón de submit no encontrado en el formulario:", form.id);
+        return;
+    }
+
+    const originalText = submitBtn.innerHTML;
+    
+    try {
+        if (form.id === "registerCaseAdminForm") {
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> ' + t("BtnRegistrandoCaso");
+            submitBtn.disabled = true;
+
+            const formData = new FormData(form);
+            const response = await fetch("/admin/register_case", { 
+                method: "POST", 
+                body: formData 
+            });
+            const result = await response.json();
+
+            showToast(result.msg, result.status);
+
+            if (result.status === "success") {
+                const modal = bootstrap.Modal.getInstance(document.getElementById("modalRegistrarCasoAdmin"));
+                if (modal) modal.hide();
+                setTimeout(() => {
+                  document.getElementById("consultar_casos")?.click();
+          }, 400);
+            }
+        }
+
+        if (form.id === "adminChangePasswordForm") {
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> ' + t("BtnActualizandoContraseña");
+            submitBtn.disabled = true;
+
+            const formData = new FormData(form);
+            const response = await fetch("/admin/change_password", { method: "POST", body: formData });
+            const result = await response.json();
+
+            showToast(result.msg, result.status);
+
+            if (result.status === "success") {
+                showToast(t("ToastContraseñaActualizada"), "success");
+                const modal = bootstrap.Modal.getInstance(document.getElementById("adminChangePasswordModal"));
+                if (modal) modal.hide();
+                form.reset();
+                setTimeout(cargarDatosCuenta, 400);
+            }else {
+            showToast(t("ToastErrorActualizarContraseña"), "error");
+        }
+        }
+
+        if (form.id === "editDataForm") {
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> ' + t("BtnActualizandoDatos");
+            submitBtn.disabled = true;
+
+            const formData = new FormData(form);
+            const response = await fetch("/admin/update_account", { method: "POST", body: formData });
+            const result = await response.json();
+
+            showToast(result.msg, result.status);
+
+            if (result.status === "success") {
+                const modal = bootstrap.Modal.getInstance(document.getElementById("modalEditarDatos"));
+              if (modal) {
+                  modal.hide();
+              } else {
+                  console.error('No se pudo encontrar la instancia del modal');
+              }
+              form.reset();
+              setTimeout(cargarDatosCuenta, 400);
+            }
+        }
+    } catch (error) {  
+        console.error("Error al enviar el formulario:", error);
+        showToast(t("ToastErrorProcesarSolicitud"), "error"); 
+    } finally {
+        if (submitBtn && submitBtn.disabled) {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+        }
+    }
+});
+
+manejarEventosBotones();
+inicializarManejadoresFormularios();
+
+console.log('✅ Script de administrador cargado correctamente');
+}); 
+
+</script>
+
+{% endblock %}

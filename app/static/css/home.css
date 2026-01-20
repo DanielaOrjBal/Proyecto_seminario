@@ -1,0 +1,593 @@
+.section {
+  min-height: max-content; 
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(186deg,rgba(127, 195, 220, 1) 27%, rgba(182, 211, 242, 0.43) 85%); /* color de fondo con transparencia */
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 4px 5px 10px 0px #00000059;
+  margin-top: 20px;
+  padding: 2rem;
+  flex-wrap: wrap;
+}
+.section2 {
+  min-height: max-content; 
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(186deg,rgba(182, 211, 242, 0.43) 27%, rgba(127, 195, 220, 1)85%); /* color de fondo con transparencia */
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 4px 5px 10px 0px #00000059;
+  margin-top: 20px;
+  padding: 2rem;
+  flex-wrap: wrap;
+}
+
+/* TITULOS GENERALES */
+.title {
+  font-family: "Limelight", system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: clamp(24px, 4vw, 70px);
+  line-height: 1.5;
+  letter-spacing: 3px;
+  color: #222;
+}
+.content-text {
+  margin: 20px 0px;
+}
+
+.text {
+  font-size: clamp(20px, 1vw, 25px);
+}
+
+.Green-text {
+  color: #0a613d; /* verde */
+  font-style: italic;
+  font-size: clamp(25px, 1.5vw, 30px);
+  max-width: 100%;
+  word-break: break-word;
+}
+
+.Blue-text {
+  font-style: italic;
+  font-size: clamp(28px, 2vw, 32px);
+  background: linear-gradient(180deg, #000000, #1b5aad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  /* Compatibilidad: WebKit y Firefox */
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  font-weight: bold;
+}
+
+/* --------------------------------------------------------------------SECTION SERVICIOS-------------------------------------------------------------------*/
+.card-group {
+  justify-content: center;
+  align-items: center;
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  max-width: 350px;
+  height: 520px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.753) !important; /* capa semitransparente */
+  border-radius: 20px !important;
+  backdrop-filter: blur(10px) !important; /* efecto vidrio */
+  -webkit-backdrop-filter: blur(10px) !important; /* soporte Safari */
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 5px 5px 5px 1px #0000004f !important;
+  overflow: hidden;
+  padding: 1rem;
+}
+.card * {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.services-img {
+  width: 100%;
+  max-width: 250px;
+  object-fit: contain;
+  display: block;
+  margin: auto;
+}
+
+/* ---------------------------------------------------------------------SECTION NOSOTROS---------------------------------------------------------------------------------*/
+.carousel {
+  max-width: 100%;
+  margin: auto;
+  padding: 20px 0;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+
+}
+
+.we {
+  width: 100%;
+  max-width: 500px;
+  margin: 20px;
+  height: 600px;
+  background: rgba(255, 255, 255, 0.185);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(66, 61, 61, 0.3);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.we:hover {
+  transform: translateY(-8px);
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.we img {
+  width: clamp(120px, 25vw, 200px);
+  height: auto;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-top: 35px;
+  margin-bottom: 20px;
+}
+
+.logo-we {
+  width: 45%;
+  max-width: 180px;
+}
+
+/*---------------------------------------------------------------------------SECTION CONTACTO------------------------------------------------- */
+.contacto {
+  max-width: 1200px;
+  width: 90%;
+  height: max-content;
+  background:rgba(224, 254, 235, 0.56);
+  border-radius: 20px;
+  backdrop-filter: blur(10px); 
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 5px 5px 5px 1px #0000004f;
+  border-radius: 20px;
+}
+
+.contacto-form {
+  border-radius: 15px;
+  background: linear-gradient(180deg,  #c9e7c9, #80a880);
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.contacto-form input,
+.contacto-form textarea {
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  width: 100%;
+  padding: 0.5rem;
+}
+
+/*----------------------------------------------------------------------------------MEDIA QUERY----------------------------------------------------------------*/
+/*-----CELULARES-------------------*/
+@media (max-width: 600px) {
+  .title {
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+  }
+  .section {
+    padding: 20px;
+  }
+  .card {
+    max-width: 95%;
+    height: min-content;
+    justify-content: center;
+    align-items: center;
+  }
+  .services-img {
+    max-width: 180px;
+  }
+  .we {
+    max-width: 90%;
+    height: auto; 
+    padding: 1rem;
+  }
+
+  .we img {
+    width: 100px;
+    margin-top: 20px;
+  }
+
+  .we .card-body {
+    padding: 0.5rem 1rem;
+  }
+
+  .we .card-title {
+    font-size: 1.3rem;
+  }
+
+  .we .text {
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  .we p.text {
+    padding: 0 10px;
+  }
+  #contacto .contacto {
+    width: 95%;
+    padding: 1.5rem;
+  }
+  #contacto .row {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  #contacto h3.navbar-title {
+    font-size: 1.5rem;
+  }
+
+  #contacto h5 {
+    font-size: 1rem;
+    line-height: 1.5;
+    text-align: justify;
+    margin-bottom: 1rem;
+  }
+
+  .contacto-form {
+    padding: 1rem;
+  }
+
+  .contacto-form input,
+  .contacto-form textarea {
+    font-size: 0.95rem;
+  }
+
+  .contacto-form button {
+    width: 100%;
+    font-size: 1rem;
+  }
+}
+/*-----TABLETS-------------------*/
+@media (min-width: 601px) and (max-width: 767px) {
+  .title {
+    font-size: clamp(2rem, 4vw, 3rem);
+  }
+  #servicios .card-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: 1rem;
+}
+
+#servicios .row.mb-5.g-4 {
+  margin: 0 auto !important;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: 1.5rem;
+}
+  #servicios .col-md-4{
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  align-items: center;
+  }
+  #servicios .card {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+}
+  #servicios .col-md-3 {
+    flex: 0 0 47%;
+    max-width: 47%;
+    display: flex;
+    justify-content: center;
+  }
+  #servicios .services-img {
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  object-fit: contain;
+  margin: 1rem auto;
+  }
+  #servicios .card {
+    height: min-content;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+  }
+  .we {
+    max-width: 85%;
+    height: auto;
+    padding: 1rem;
+  }
+
+  .we img {
+    width: 130px;
+  }
+
+  .we .card-title {
+    font-size: 1.6rem;
+  }
+
+  .we .text {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .carousel {
+    flex-direction: column;
+    align-items: center;
+  }
+  #contacto .contacto {
+    width: 90%;
+    padding: 2rem;
+  }
+
+  #contacto .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+
+  #contacto .col-md-6 {
+    flex: 0 0 45%;
+    max-width: 45%;
+  }
+
+  #contacto h3.navbar-title {
+    font-size: 2rem;
+  }
+
+  #contacto h5 {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    text-align: justify;
+  }
+
+  .contacto-form {
+    padding: 1.5rem;
+  }
+
+  .contacto-form input,
+  .contacto-form textarea {
+    font-size: 1rem;
+  }
+
+  .contacto-form button {
+    font-size: 1rem;
+  }
+}
+/*-----MEDIDAS CONTROLADAS POR BOOTSTRAP TABLETS-------------------*/
+@media (min-width: 768px) and (max-width: 991px) {
+  .title {
+    font-size: clamp(2rem, 4vw, 3rem);
+  }
+
+  #servicios .card-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: 1.5rem;
+}
+
+#servicios .row.mb-5.g-4 {
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    gap: 1.5rem;
+  }
+
+  #servicios .col-md-4 {
+    flex: 0 0 48% !important;
+    max-width: 48% !important;
+    display: flex;
+    justify-content: center;
+  }
+
+  #servicios .card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    min-height: 480px;
+  }
+
+  #servicios .col-md-3 {
+    flex: 0 0 47%;
+    max-width: 47%;
+    display: flex;
+    justify-content: center;
+  }
+  #servicios .services-img {
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  object-fit: contain;
+  margin: 1rem auto;
+  }
+  .we {
+    max-width: 85%;
+    height: auto;
+    padding: 1rem;
+  }
+
+  .we img {
+    width: 130px;
+  }
+
+  .we .card-title {
+    font-size: 1.6rem;
+  }
+
+  .we .text {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .carousel {
+    flex-direction: column;
+    align-items: center;
+  }
+  #contacto .contacto {
+    width: 90%;
+    padding: 2rem;
+  }
+
+  #contacto .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+
+  #contacto .col-md-6 {
+    flex: 0 0 45%;
+    max-width: 45%;
+  }
+
+  #contacto h3.navbar-title {
+    font-size: 2rem;
+  }
+
+  #contacto h5 {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    text-align: justify;
+  }
+
+  .contacto-form {
+    padding: 1.5rem;
+  }
+
+  .contacto-form input,
+  .contacto-form textarea {
+    font-size: 1rem;
+  }
+
+  .contacto-form button {
+    font-size: 1rem;
+  }
+}
+/**---MEDIDAS FUERA DE BOOTSTRAP LAPTOPS---------------------------*/
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .title {
+    font-size: clamp(2.5rem, 3vw, 3.5rem);
+  }
+  .card {
+    height: min-content;
+    justify-content: center;
+    align-items: center;
+  }
+  .services-img {
+    max-width: 250px;
+  }
+  .we {
+    max-width: 450px;
+    height: auto;
+    padding: 2rem;
+  }
+
+  .we .text {
+    font-size: 1rem;
+  }
+
+  .we img {
+    width: 150px;
+  }
+  #contacto .contacto {
+    width: 90%;
+    padding: 2.5rem;
+  }
+
+  #contacto h3.navbar-title {
+    font-size: 2.2rem;
+  }
+
+  #contacto h5 {
+    font-size: 1.1rem;
+    line-height: 1.7;
+  }
+
+  .contacto-form {
+    padding: 2rem;
+  }
+
+  .contacto-form input,
+  .contacto-form textarea {
+    font-size: 1rem;
+  }
+
+  .contacto-form button {
+    font-size: 1.05rem;
+  }
+}
+/*-----COMPUTADORES-------------------*/
+@media (min-width: 1441px) {
+  .title {
+    font-size: clamp(3rem, 3vw, 4rem);
+  }
+  .text {
+    font-size: 1.2rem;
+  }
+  .services-img {
+    max-width: 300px;
+  }
+  .we {
+    max-width: 500px;
+    padding: 2rem;
+  }
+
+  .we img {
+    width: 180px;
+  }
+
+  .we .text {
+    font-size: 1.1rem;
+  }
+  #contacto .contacto {
+    max-width: 1300px;
+    padding: 3rem;
+  }
+
+  #contacto h3.navbar-title {
+    font-size: 2.5rem;
+  }
+
+  #contacto h5 {
+    font-size: 1.2rem;
+    line-height: 1.8;
+  }
+
+  .contacto-form {
+    padding: 2.5rem;
+  }
+
+  .contacto-form input,
+  .contacto-form textarea {
+    font-size: 1.1rem;
+  }
+
+  .contacto-form button {
+    font-size: 1.1rem;
+  }
+}

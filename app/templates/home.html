@@ -1,0 +1,138 @@
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+{% extends "layout.html" %}
+{% block content %}
+
+<!-- SECTION INICIO -->
+<section id="inicio" class="section mt-5">
+  <div class="container my-5">
+    <div class="row align-items-center">
+      <div class="col-md-6 text-center">
+        <h1 class="title" lan-target="InicioTitulo">De la adversidad a la prosperidad</h1>
+      </div>
+      <div class="col-md-6 text-center">
+        <img src="{{ url_for('static', filename='img/home.png') }}" alt="Imagen ilustrativa" class="img-fluid"/>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION SERVICIOS -->
+<section id="servicios" class="section2">
+  <div class="container py-5">
+    
+    <!-- 🔹 Título principal -->
+    <h2 class="navbar-title text-center my-5" lan-target="TituloDatosEstadisticos">Datos Estadísticos</h2>
+
+    <!-- 🔹 Primer grupo de tarjetas -->
+    <div class="container card-group">
+      <div class="row mb-5 g-4">
+        
+        <!-- Tarjeta 1 -->
+        <div class="col-md-4 d-flex">
+          <div class="card text-center h-100 w-100">
+            <div class="card-body d-flex flex-column justify-content-between">
+              <p class="text" lan-target="Texto1Dato1">
+                De acuerdo a cifras de la</p>
+                <span class="Green-text" lan-target="Greentext1">UNGRD</span>
+                <p class="text" lan-target="Texto2Dato1">
+                han habido más de
+                </p>
+                <span class="Blue-text" lan-target="Bluetext1">2 MIL</span> 
+                <p class="text" lan-target="Texto3Dato1">
+                  afectados por desastres naturales en lo que va del año
+                </p>
+                <span class="Green-text" lan-target="Bluetext2">2025</span> <br>
+              <img src="{{ url_for('static', filename='img/Dato1.jpg') }}" alt="Dato 1" class="services-img">
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjeta 2 -->
+        <div class="col-md-4 d-flex">
+          <div class="card text-center h-100 w-100">
+            <div class="card-body d-flex flex-column justify-content-between">
+              <img src="{{ url_for('static', filename='img/Dato2.jpg') }}" alt="Dato 2" class="services-img">
+              <p class="text">
+                <span lan-target="Texto1Dato2">Los desastres naturales más comunes son:</span><br>
+                <span class="Blue-text" lan-target="Texto2Dato2">Inundaciones Terremotos Deslizamientos de tierra</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjeta 3 -->
+        <div class="col-md-4 d-flex">
+          <div class="card text-center h-100 w-100">
+            <div class="card-body d-flex flex-column justify-content-between">
+              <p class="text">
+                <span lan-target="Texto1Dato3">Más del</span>
+                <span class="Blue-text text-md" lan-target="Texto2Dato3">62%</span><br>
+                <span lan-target="Texto3Dato3">de la población de Cundinamarca es propensa a ser víctima de</span><br>
+                <span class="Blue-text" lan-target="Texto4Dato3">eventos catastróficos</span>
+              </p>
+              <img src="{{ url_for('static', filename='img/Dato3.png') }}" alt="Dato 3" class="services-img">
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 🔹 Título intermedio -->
+    <h2 class="navbar-title text-center my-5" lan-target="TituloNuestrosServicios">Nuestros Servicios</h2>
+
+    <!-- 🔹 Segundo grupo de tarjetas -->
+    <div class="container card-group">
+      <div class="row mb-5 g-4">
+
+        <!-- Servicio 1 -->
+        <div class="col-md-3 col-sm-6">
+          <div class="card h-100 text-center">
+            <div class="card-body">
+              <img src="{{ url_for('static', filename='img/Services1.png') }}" alt="Servicio 1" class="services-img">
+              <h4 class="mt-3" lan-target="Servicio1Titulo">Registro de desastre</h4>
+              <p class="text" lan-target="Servicio1Texto">Permite registrar de manera rápida el desastre ocurrido y los afectados.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Servicio 2 -->
+        <div class="col-md-3 col-sm-6">
+          <div class="card h-100 text-center">
+            <div class="card-body">
+              <img src="{{ url_for('static', filename='img/Services2.png') }}" alt="Servicio 2" class="services-img">
+              <h4 class="mt-3" lan-target="Servicio2Titulo">Clasificación de emergencias</h4>
+              <p class="text" lan-target="Servicio2Texto">Organiza las emergencias según el desastre y su prioridad.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Servicio 3 -->
+        <div class="col-md-3 col-sm-6">
+          <div class="card h-100 text-center">
+            <div class="card-body">
+              <img src="{{ url_for('static', filename='img/Services3.png') }}" alt="Servicio 3" class="services-img">
+              <h4 class="mt-3" lan-target="Servicio3Titulo">Notificación a autoridades</h4>
+              <p class="text" lan-target="Servicio3Texto">Envía alertas inmediatas a las entidades competentes.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Servicio 4 -->
+        <div class="col-md-3 col-sm-6">
+          <div class="card h-100 text-center">
+            <div class="card-body">
+              <img src="{{ url_for('static', filename='img/Services4.png') }}" alt="Servicio 4" class="services-img">
+              <h4 class="mt-3" lan-target="Servicio4Titulo">Generación de reportes</h4>
+              <p class="text" lan-target="Servicio4Texto">Crea reportes detallados con la información de cada caso registrado.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}

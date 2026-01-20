@@ -1,0 +1,96 @@
+<nav class="navbar navbar-expand-lg custom-navbar">
+  <div class="container">
+    <a class="navbar-brand d-inline-flex align-items-center" href="{{ url_for('home') }}">
+      <img src="{{ url_for('static', filename='img/logo_vitaria.png') }}" alt="Logo" class="navbar-logo" />
+      <span class="navbar-title ms-2">VITARIA. SOS</span>
+    </a>
+
+    <!-- Toggle responsive -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Links -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+
+      <!-- Botones -->
+      <div class="d-flex gap-2 ms-auto">
+        <a href="{{ url_for('auth.login') }}" class="btn btn-primary" lan-target="Ingresar">
+          <i class="bi bi-person-circle"></i> Ingresar
+        </a>
+        <a href="#" class="btn btn-primary" 
+        data-bs-toggle="modal" data-bs-target="#modalPoliticas" lan-target="Registrarse">
+          <i class="bi bi-person-fill"></i> Registrarse
+        </a>
+        <div class="language-switch ms-3">
+          <button class="btn btn-sm btn-lang" id="btn-es" onclick="CambiarIdioma('es')">
+            <img src="{{ url_for('static', filename='img/Colombian.png') }}" alt="Español" class="flag-icon">
+            ES
+          </button>
+          <button class="btn btn-sm btn-lang" id="btn-en" onclick="CambiarIdioma('en')">
+            <img src="{{ url_for('static', filename='img/England.png') }}" alt="English" class="flag-icon">
+            EN
+          </button>
+          <button class="btn btn-sm btn-lang" id="btn-fr" onclick="CambiarIdioma('fr')">
+            <img src="{{ url_for('static', filename='img/France.png') }}" alt="Français" class="flag-icon">
+            FR
+          </button>
+        </div>
+    </div>
+  </div>
+</nav>
+
+<div class="modal fade" id="modalPoliticas" tabindex="-1" aria-labelledby="modalPoliticasLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header text-white">
+        <h5 class="modal-title" id="modalPoliticasLabel" lan-target="Política de Tratamiento de datos">Política de Tratamiento de datos</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <h3 lan-target="Estimado Usuario">Estimado Usuario</h3>
+        <p lan-target="IntroPolitica">
+          En cumplimiento de la normativa vigente sobre protección de datos personales, le informamos que sus datos serán tratados de acuerdo con nuestra Política de Tratamiento de Datos Personales redactada a continuación:
+        </p>
+
+          <h5 lan-target="Responsable del tratamiento">1. Reponsable del tratamiento:</h5>
+          <p lan-target="TextoResponsable">
+            Vitaria SOS es responsable del tratamiento de los datos personales suministrados por los usuarios, conforme a lo dispuesto en la Ley 1581 de 2012 y demás normas que la modifiquen o complementen.
+          </p>
+          <h5 lan-target="Finalidades del Tratamiento">2. Finalidades del Tratamiento:</h5>
+          <ul>
+          <li><span lan-target="Finalidad1">Gestionar el registro, autenticación y acceso de usuarios a la plataforma.</span></li>
+          <li><span lan-target="Finalidad2">Administrar y mantener actualizada la información de los usuarios.</span></li>
+          <li><span lan-target="Finalidad3">Procesar solicitudes, reportes o casos relacionados con el uso del sistema.</span></li>
+          <li><span lan-target="Finalidad4">Enviar información relevante sobre actualizaciones, cambios o avisos del servicio.</span></li>
+          <li><span lan-target="Finalidad5">Realizar análisis estadísticos y de mejora continua del sistema.</span></li>
+        </ul>
+
+        <h5 lan-target="Derechos del Titular">3. Derechos del Titular:</h5>
+        <p>De acuerdo con la ley, el titular de los datos personales tiene derecho a:</p>
+        <ul>
+          <li><span lan-target="Derecho1">Conocer, actualizar y rectificar sus datos.</span></li>
+          <li><span lan-target="Derecho2">Ser informado sobre el uso que se da a sus datos.</span></li>
+          <li><span lan-target="Derecho3">Revocar la autorización y/o solicitar la supresión de sus datos cuando no se respeten los principios, derechos y garantías constitucionales y legales.</span></li>
+        </ul>
+
+        <h5 lan-target="Autorización">4. Autorización:</h5>
+        <p lan-target="TextoAutorizacion">
+          Al aceptar esta Política, usted autoriza de manera libre, previa, expresa e informada el tratamiento de sus datos personales conforme a las finalidades descritas. El responsable garantiza que sus datos serán tratados de forma segura, confidencial y únicamente para los fines autorizados.
+        </p>
+
+        <h5 lan-target="Vigencia">5. Vigencia:</h5>
+        <p lan-target="TextoVigencia">
+          Esta Política entra en vigencia a partir de su publicación y permanecerá vigente mientras se mantenga la relación con el usuario o mientras sea necesario para el cumplimiento de las finalidades descritas.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" lan-target="Cancelar">Cancelar</button>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary" lan-target="Aceptar">Aceptar</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+

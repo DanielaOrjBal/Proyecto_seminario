@@ -1,0 +1,662 @@
+html, body {
+  height: 100%;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+}
+
+#toast {
+  transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+  z-index: 99999 !important;
+}
+
+/* NAVBAR */
+.custom-navbar {
+  background-color: #fdfdfd; 
+  box-shadow: 0px 1px 5px 2px #0000005e;
+  padding: 0.5rem 1rem;
+  z-index: 1100;
+}
+/* === Botones de idioma === */
+.language-switch {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-lang {
+  background-color: #053e7a;
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  transition: all 0.3s ease;
+}
+
+.flag-icon {
+  width: 28px;
+  height: auto;
+  border-radius: 2px;
+}
+
+/* Hover por idioma */
+#btn-es:hover {
+  background: linear-gradient(180deg,rgba(255, 204, 0, 0.644) 10%, rgba(52, 149, 233, 0.658) 43%, rgba(226, 0, 26, 0.64) 95%);
+  border-color: #e2001a;
+}
+
+#btn-en:hover {
+  background:  linear-gradient(180deg,rgba(12, 57, 172, 0.76) 10%, rgba(196, 216, 234, 1) 43%, rgba(226, 0, 26, 0.64) 100%);
+  border-color: #00247d;
+}
+
+#btn-fr:hover {
+  background: linear-gradient(0deg,rgba(0, 85, 164, 0.88) 0%, rgba(196, 216, 234, 1) 23%, rgba(255, 255, 255, 0.65) 45%, rgba(248, 175, 170, 1) 78%, rgba(239, 65, 53, 0.91) 100%);
+  border-color: #ef4135;
+  color: #111;
+}
+
+.btn-lang.active {
+  color: #fff;
+  transform: scale(1.05);
+}
+
+#btn-es.active {
+  background: linear-gradient(180deg,rgba(255, 204, 0, 0.644) 10%, rgba(52, 149, 233, 0.658) 43%, rgba(226, 0, 26, 0.64) 95%);
+  border-color: #d80707;
+  color: #111;
+}
+
+#btn-en.active {
+  background: linear-gradient(180deg,rgba(12, 57, 172, 0.76) 10%, rgba(196, 216, 234, 1) 43%, rgba(226, 0, 26, 0.64) 100%);
+  border-color: #00247d;
+    color: #111;
+
+}
+
+#btn-fr.active {
+  background: linear-gradient(0deg,rgba(0, 85, 164, 0.88) 0%, rgba(196, 216, 234, 1) 23%, rgba(255, 255, 255, 0.65) 45%, rgba(248, 175, 170, 1) 78%, rgba(239, 65, 53, 0.91) 100%);
+  border-color: #ef4135;
+  color: #111;
+}
+
+/* Logo */
+.navbar-logo {
+  width: 70px;
+  height: auto;
+}
+
+/* Título */
+.navbar-title {
+  font-family: 'Limelight', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  color: #222;
+}
+.mobile-menu {
+  position: absolute;
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  justify-content: center;
+  align-items: center;
+  z-index: 1099;
+}
+
+.mobile-menu.show {
+  display: inline-block;
+}
+
+.mobile-menu-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.offcanvas.offcanvas-start {
+  z-index: 1050;
+}
+.custom-toggler {
+  border: 1px solid #053e7a;
+  padding: 4px 8px;
+}
+
+/* Botón primario */
+.btn-primary {
+  background-color: #053e7a !important;
+  border: none;
+  font-weight: 500;
+  padding: 8px 15px;
+  transition: background-color 0.3s ease;
+  height: min-content;
+}
+
+.btn-primary:hover {
+  background-color: #49AB87 !important;
+}
+
+.navbar-toggler {
+  border: 1px solid #053e7a;
+  padding: 4px 8px;
+}
+
+.navbar-toggler:focus {
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 123, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.section {
+  min-height: max-content;
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(186deg,rgba(127, 195, 220, 1) 27%, rgb(182, 211, 242) 85%); /* color de fondo con transparencia */
+  border-radius: 12px;
+  box-shadow: 4px 5px 10px 0px #00000059;
+  margin: 15px 0;
+}
+
+
+/* FOOTER */
+/* FOOTER */
+.custom-footer {
+  background-color: white; 
+  padding: 10px;
+  margin-top: auto;
+  font-family: Arial, sans-serif;
+  box-shadow: 0px 5px 10px 2px #0000005e;
+}
+
+/* Logo */
+.logo {
+  width: 10vw;
+  height: auto;
+  object-fit: contain;
+  margin-left: auto;
+}
+
+/* Títulos */
+.footer-title {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 5px;
+  color: #111;
+}
+
+/* Links */
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 5px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  color: #111;
+  font-size: 14px;
+  transition: color 0.3s;
+}
+
+.footer-links a:hover {
+  color: #0056b3;
+}
+
+/* Redes sociales */
+.social-icon {
+  font-size: 20px;
+  color: #111;
+  transition: color 0.3s;
+}
+
+.social-icon:hover {
+  color: #0056b3;
+}
+
+/* Copyright */
+.footer-copy {
+  font-size: 12px;
+  margin-top: 10px;
+  color: #333;
+}
+
+/* Contacto */
+.footer-contact {
+  font-size: 14px;
+  color: #111;
+}
+
+/*------------------------------------------------------------------------LOGIN----------------------------------------------------------------*/
+.login-form {
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.753) !important; /* capa semitransparente */
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align:start;
+  align-items: center;
+  justify-content: center;
+  width: 40%;      
+  max-width: 400px; 
+
+}
+.img-form{
+  max-width: 10vw;
+  object-fit: contain;
+}
+
+/*-------------------------------------------------------------------------REGISTER----------------------------------------------------------------*/
+/* Contenedor del formulario */
+.registro-form {
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    max-width: 900px;
+    width: 100%;
+}
+
+/* Título */
+.form-title {
+  font-size: clamp(30px, 2vw, 35px);
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+    color: #053e7a;
+}
+
+.form-subtitle {
+  font-size: clamp(20px, 1vw, 25px);
+  background-color: #053e7a;
+  color: whitesmoke;
+  width:100%;
+}
+
+/* Grupos de inputs */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #000000;
+    font-size: clamp(15px, 0,9vw, 20px);
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #626266;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s;
+    margin-inline-end: 10px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #053e7a;
+}
+
+/* Botón */
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    background: #053e7a;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-submit:hover {
+    background: #0056b3;
+}
+
+.modal-header {
+  border-bottom: none;
+  background-color: #053e7a;
+  color: white;
+}
+body.dashboard-page {
+  display: block !important;
+  flex-direction: unset !important;
+  min-height: unset !important;
+}
+
+/* Evita margin:auto del footer cuando se usa dashboard */
+body.dashboard-page footer.custom-footer {
+  margin-top: 10px !important;
+}
+/*----------------------------------------------------------------------------------MEDIA QUERY----------------------------------------------------------------*/
+
+/*-----CELULARES-------------------*/
+@media (max-width: 600px) {
+   body {
+    display: block !important;
+    min-height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .container.mt-3.d-flex {
+    margin-top: 0 !important;
+     padding-top: 0 !important;
+  }
+  #Login.section {
+    padding: 1rem 1rem;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding-bottom: 0;
+    height: 98%;
+  }
+
+  #Login .container.py-5 {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    justify-content: center;
+  }
+  
+  .login-form {
+    margin: 0.25rem auto 0.5rem auto !important;
+    width: 100% !important;
+    max-width: 320px !important;
+  }
+
+  .img-form {
+    max-width: 120px;
+    margin-bottom: 1rem;
+    object-fit: contain;
+  }
+  .registro-form{
+    width: 95%;
+    margin-bottom: 10px;
+  }
+  .registro-form .form-group label {
+    display: inline-block;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 0.25rem !important;
+    white-space: normal;
+  }
+
+  .form-title {
+    font-size: 25px !important;
+  }
+  .form-subtitle {
+    font-size: 20px !important;
+  }
+  .form-group label {
+    font-size: 15px !important;
+  }
+
+  .form-group input,
+  .form-group select {
+    font-size: 15px !important;
+    padding: 0.5rem !important;
+    width: 100%;
+  }
+  .col-md-6 {
+    width: 100% !important;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+
+  .btn-primary {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+  }
+
+  /* Modal */
+  .modal-dialog {
+    max-width: 95%;
+    margin: 1rem auto;
+  }
+
+  .modal-body h3, .modal-body h5 {
+    font-size: 1rem;
+  }
+
+  .modal-body li a {
+    font-size: 0.9rem;
+  }
+
+  .modal-footer .btn {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+  footer.custom-footer {
+    margin-top: 0 !important;
+    position: relative !important;
+
+  }
+
+}
+/*-----TABLETS-------------------*/
+@media (min-width: 601px) and (max-width: 767px) {
+  body {
+    display: block !important;
+    min-height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .container.mt-3.d-flex {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+  #Login.section {
+    padding: 1rem 1rem;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding-bottom: 0;
+  }
+
+  #Login .container.py-5 {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  .login-form {
+    margin: 0.25rem auto 0.5rem auto !important;
+    width: 100% !important;
+    max-width: 350px !important;
+    width: 80%;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.45);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  .img-form {
+    max-width: 140px;
+    margin-bottom: 1rem;
+    object-fit: contain;
+  }
+  .registro-form{
+    width: 95%;
+    margin-bottom: 10px;
+  }
+  .registro-form .form-group label {
+    display: inline-block;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 0.25rem !important;
+    white-space: normal;
+  }
+
+  .form-title {
+    font-size: 30px !important;
+  }
+  .form-subtitle {
+    font-size: 25px !important;
+  }
+  .form-group label {
+    font-size: 18px !important;
+  }
+
+  .form-group input,
+  .form-group select {
+    font-size: 15px !important;
+    padding: 0.5rem !important;
+    width: 100%;
+  }
+  .col-md-6 {
+    width: 100% !important;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Modal */
+  .modal-dialog {
+    max-width: 85%;
+  }
+
+  .modal-body {
+    font-size: 1rem;
+  }
+  footer.custom-footer {
+    margin-top: 0 !important;
+    position: relative !important;
+
+  }
+  body {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+  }
+}
+/*-----MEDIDAS CONTROLADAS POR BOOTSTRAP TABLETS-------------------*/
+@media (min-width: 768px) and (max-width: 1024px) {
+  body {
+    display: block !important;
+    min-height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .container.mt-3.d-flex {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  #Login.section {
+    padding: 1rem 1rem;
+    height: 98%;
+  }
+
+  #Login .container.py-5 {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  .login-form {
+    width: 100% !important;
+    max-width: 380px !important;
+  }
+    footer.custom-footer {
+    margin-top: 10px !important;
+    position: relative !important;
+  }
+}
+/**---MEDIDAS FUERA DE BOOTSTRAP LAPTOPS---------------------------*/
+@media (min-width: 1025px) and (max-width: 1440px) {
+  body {
+    display: block !important;
+    min-height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .container.mt-3.d-flex {
+    margin-top: 0 !important;
+     padding-top: 0 !important;
+  }
+  .section {
+    margin: 3rem auto;
+    padding: 4rem;
+  }
+  #Login.section {
+    padding: 1rem 1rem;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding-bottom: 0;
+  }
+  .login-form {
+    width: 45%;
+    max-width: 420px;
+    padding: 2.5rem;
+  }
+
+  .img-form {
+    max-width: 150px;
+  }
+
+  .modal-dialog {
+    max-width: 70%;
+  }
+}
+/*-----COMPUTADORES-------------------*/
+@media (min-width: 1441px) {
+  body {
+    display: block !important;
+    min-height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .container.mt-3.d-flex {
+    margin-top: 0 !important;
+     padding-top: 0 !important;
+  }
+  #Login.section {
+    padding: 1rem 1rem;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding-bottom: 0;
+  }
+
+  .login-form {
+    width: 40%;
+    max-width: 450px;
+    padding: 2.5rem 3rem;
+  }
+
+  .modal-dialog {
+    max-width: 60%;
+  }
+
+  .modal-body h3, .modal-body h5 {
+    font-size: 1.2rem;
+  }
+
+  .modal-body li a {
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .custom-toggler {
+    display: none;
+  }
+  
+}
+
+
