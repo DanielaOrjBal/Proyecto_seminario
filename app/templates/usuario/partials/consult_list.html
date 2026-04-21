@@ -1,0 +1,181 @@
+<section class="section p-5 h-100">
+    <div class="container">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="subtitle2 mb-1">Mis casos registrados</h2>
+                        <p class="text-muted">Revise el historial de sus reportes, consulte el estado actual de la
+                            evaluación y acceda a los detalles de cada caso radicado en el sistema.</p>
+                    </div>
+                    <button class="btn btn-outline-secondary btn-sm" id="refreshBtn">
+                        <i class="bi bi-arrow-repeat"></i> Actualizar
+                    </button>
+                </div>
+
+                <!-- Buscador -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-search"></i></span>
+                            <input type="text" class="form-control" id="searchInput"
+                                placeholder="Buscar por número de caso o municipio">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla -->
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Nº CASO</th>
+                                <th>FECHA DEL EVENTO</th>
+                                <th>DESASTRE OCURRIDO</th>
+                                <th>MUNICIPIO / DIRECCIÓN</th>
+                                <th>AFECTADOS</th>
+                                <th>ESTADO</th>
+                            </tr>
+                        </thead>
+                        <tbody id="casosTableBody">
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">Cargando casos...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Paginación -->
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div id="paginationInfo" class="text-muted small"></div>
+                    <nav>
+                        <ul class="pagination pagination-sm mb-0" id="paginationControls"></ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    (function() {
+        let todosLosCasos = [];      // datos completos
+        let casosFiltrados = [];
+        let currentPage = 1;
+        const rowsPerPage = 5;
+
+        // Elementos DOM
+        const tbody = document.getElementById('casosTableBody');
+        const searchInput = document.getElementById('searchInput');
+        const paginationInfo = document.getElementById('paginationInfo');
+        const paginationControls = document.getElementById('paginationControls');
+        const refreshBtn = document.getElementById('refreshBtn');
+
+        const estadoColors = {
+            'Enviado': 'bg-info',
+            'Cerrado': 'bg-secondary',
+            'Pendiente': 'bg-warning',
+            'Registrado': 'bg-primary',
+        };
+
+        // Función para renderizar la tabla
+        function renderTable() {
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const pageCasos = casosFiltrados.slice(start, end);
+
+            if (pageCasos.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center">No se encontraron casos.</td></tr>';
+                paginationInfo.innerText = '';
+                paginationControls.innerHTML = '';
+                return;
+            }
+
+            // Construir filas
+            let html = '';
+            pageCasos.forEach(caso => {
+                const estado = caso.estado || 'Registrado';
+                const badgeClass = estadoColors[estado] || 'bg-secondary';
+                html += `
+                    <tr>
+                        <td><strong>#${caso.id}</strong></td>
+                        <td>${caso.fecha}</td>
+                        <td>${caso.desastre}</td>
+                        <td>${caso.municipio} ${caso.direccion ? ' - ' + caso.direccion : ''}</td>
+                        <td>${caso.personas_afectadas}</td>
+                        <td><span class="badge ${badgeClass}">${estado}</span></td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+
+            // Información de paginación
+            const total = casosFiltrados.length;
+            const totalPages = Math.ceil(total / rowsPerPage);
+            paginationInfo.innerText = `Mostrando ${start+1} a ${Math.min(end, total)} de ${total} casos`;
+
+            // Controles de paginación
+            paginationControls.innerHTML = '';
+            for (let i = 1; i <= totalPages; i++) {
+                const li = document.createElement('li');
+                li.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                li.innerHTML = `<a class="page-link" href="#" data-page="${i}">${i}</a>`;
+                paginationControls.appendChild(li);
+            }
+
+            // Eventos de los enlaces de página
+            document.querySelectorAll('.page-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const page = parseInt(link.getAttribute('data-page'));
+                    if (!isNaN(page) && page !== currentPage) {
+                        currentPage = page;
+                        renderTable();
+                    }
+                });
+            });
+        }
+
+        // Función para aplicar filtro
+        function aplicarFiltro() {
+            const term = searchInput.value.toLowerCase();
+            if (!term) {
+                casosFiltrados = [...todosLosCasos];
+            } else {
+                casosFiltrados = todosLosCasos.filter(caso => {
+                    return caso.id.toString().includes(term) || 
+                           (caso.municipio && caso.municipio.toLowerCase().includes(term));
+                });
+            }
+            currentPage = 1;
+            renderTable();
+        }
+
+        // Cargar casos desde la API
+        async function cargarCasos() {
+            try {
+                // Mostrar loading
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center"><div class="spinner-border text-primary" role="status"></div> Cargando...</td></tr>';
+                
+                const casos = await Auth.fetchJSON('/user/query_cases');
+                if (!casos) return; 
+
+                todosLosCasos = casos;
+                casosFiltrados = [...casos];
+                aplicarFiltro(); 
+            } catch (error) {
+                console.error('Error al cargar casos:', error);
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Error al cargar los casos. Intente nuevamente.</td></tr>';
+            }
+        }
+
+        // Eventos
+        searchInput.addEventListener('input', aplicarFiltro);
+        refreshBtn.addEventListener('click', () => {
+            cargarCasos();
+        });
+
+        // Cargar al inicio
+        cargarCasos();
+    })();
+</script>

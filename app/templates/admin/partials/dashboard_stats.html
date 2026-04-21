@@ -1,0 +1,264 @@
+<section class="section p-5">
+    <h2 class="subtitle">Panel de control de administrador</h2>
+    <p class="text-muted">Resumen general del sistema y accesos rápidos a gestión.</p>
+    <div class="container mx-2 my-2">
+        <div class="row mb-5 g-4 justify-content-center">
+            <!-- info 1 -->
+            <div class="col-md-3 col-sm-6">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <div class="row justify-content-between">
+                            <div class="col-6 d-flex align-middle">
+                                <h5><b>Total de casos registrados</b></h5>
+                            </div>
+                            <div class="col-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="#053e7a" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="position-relative top-0 end-0 img-fluid w-50 w-md-25">
+                                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+                                </svg>
+                            </div>
+                        </div>
+                        <h2 class="text-start mt-2">
+                            {{ total_casos }}
+                        </h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- info 2 -->
+            <div class="col-md-3 col-sm-6">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <div class="row justify-content-between">
+                            <div class="col-6 d-flex align-middle">
+                                <h5><b>Total de casos enviados</b></h5>
+                            </div>
+                            <div class="col-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="#053e7a" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="position-relative top-0 end-0 img-fluid w-50 w-md-25">
+                                    <path
+                                        d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" />
+                                    <path d="m21.854 2.147-10.94 10.939" />
+                                </svg>
+                            </div>
+                        </div>
+                        <h2 class="text-start mt-2">
+                            {{ casos_enviados }}
+                        </h2>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- info 3 -->
+            <div class="col-md-3 col-sm-6">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <div class="row justify-content-between">
+                            <div class="col-6 d-flex align-middle">
+                                <h5><b>Total de casos cerrados</b></h5>
+                            </div>
+                            <div class="col-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="#053e7a" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="position-relative top-0 end-0 img-fluid w-50 w-md-25">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <path d="m15 9-6 6" />
+                                    <path d="m9 9 6 6" />
+                                </svg>
+                            </div>
+                        </div>
+                        <h2 class="text-start mt-2">
+                            {{ casos_cerrados }}
+                        </h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- info 4 -->
+            <div class="col-md-3 col-sm-6">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <div class="row justify-content-between">
+                            <div class="col-6 d-flex align-middle">
+                                <h5><b>Total de usuarios registrados</b></h5>
+                            </div>
+                            <div class="col-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="#053e7a" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="position-relative top-0 end-0 img-fluid w-50 w-md-25">
+                                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                                    <circle cx="12" cy="7" r="4" />
+                                </svg>
+                            </div>
+                        </div>
+                        <h2 class="text-start mt-2">
+                            {{ usuarios_registrados }}
+                        </h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container my-3">
+        <div class="row mb-5 g-4">
+            <!-- info 1 -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="subtitle2">Estadísticas de casos</h3>
+                        <div id="casosChart" width="400" height="200"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- info 2 -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="subtitle2">Estadísticas de usuarios</h3>
+                        <div id="usuariosChart" width="400" height="200"></div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- info 3 -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="subtitle2">Estadísticas de reportes</h3>
+                        <div id="reportesChart" width="400" height="200"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+</section>
+<script>
+(function () {
+
+    function crearPieChart(id, labels, data, titulo) {
+        const options = {
+            chart: {
+                type: 'pie',
+                height: 300
+            },
+            series: data,
+            labels: labels,
+            title: {
+                text: titulo,
+                align: 'center'
+            },
+            legend: {
+                position: 'bottom'
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return val + " registros";
+                    }
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                formatter: function (val) {
+                    return val.toFixed(1) + "%";
+                }
+            }
+        };
+
+        const chart = new ApexCharts(document.querySelector("#" + id), options);
+        chart.render();
+    }
+
+    function crearBarChart(id, labels, data, titulo) {
+        const options = {
+            chart: {
+                type: 'bar',
+                height: 300
+            },
+            series: [{
+                name: titulo,
+                data: data
+            }],
+            xaxis: {
+                categories: labels
+            },
+            title: {
+                text: titulo,
+                align: 'center'
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 6,
+                    columnWidth: '50%'
+                }
+            },
+            dataLabels: {
+                enabled: true
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return val + " registros";
+                    }
+                }
+            }
+        };
+
+        const chart = new ApexCharts(document.querySelector("#" + id), options);
+        chart.render();
+    }
+
+    function initCharts() {
+
+        // 🔥 1. CASOS (PIE)
+        crearPieChart(
+            "casosChart",
+            ['Incendio', 'Inundación', 'Sismo'],
+            [
+                {{ casos_incendio }},
+                {{ casos_inundacion }},
+                {{ casos_sismo }}
+            ],
+            "Tipos de desastre"
+        );
+
+        // 🔥 2. USUARIOS (PIE)
+        crearPieChart(
+            "usuariosChart",
+            ['Activos', 'Inactivos'],
+            [
+                {{ usuarios_registrados }},
+                {{ usuarios_inactivos }}
+            ],
+            "Estado de usuarios"
+        );
+
+        // 🔥 3. REPORTES (BAR)
+        crearBarChart(
+            "reportesChart",
+            ['Enviados', 'Cerrados', 'Total'],
+            [
+                {{ casos_enviados }},
+                {{ casos_cerrados }},
+                {{ total_casos }}
+            ],
+            "Estado de reportes"
+        );
+    }
+
+    document.addEventListener("DOMContentLoaded", initCharts);
+
+})();
+</script>

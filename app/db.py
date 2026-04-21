@@ -6,7 +6,7 @@ class Conexion:
                  host="localhost",
                  user="root",
                  password="root",
-                 database="proyecto"):
+                 database="proyecto_final"):
         self.config = {
             "host": host,
             "user": user,

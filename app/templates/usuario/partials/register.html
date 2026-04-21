@@ -1,0 +1,294 @@
+<script src="{{ url_for('static', filename='js/form.js') }}"></script>
+<section class="section p-5">
+
+    <div class="row g-4">
+        <!-- Columna izquierda: recomendaciones -->
+        <div class="col-md-4">
+            <div class="card bg-light border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="fw-semibold">Recomendaciones</h5>
+                     <hr class="my-3">
+                    <ul class="list-unstyled">
+                        <li class="mb-3">
+                            <strong>1. Información precisa</strong><br>
+                            Describa el hecho con claridad para facilitar la validación del caso por parte del equipo
+                            encargado.
+                        </li>
+                        <li class="mb-3">
+                            <strong>2. Datos completos</strong><br>
+                            Incluya fecha, ubicación, número de personas afectadas y el tipo de desastre
+                            correspondiente.
+                        </li>
+                        <li class="mb-3">
+                            <strong>3. Seguimiento del trámite</strong><br>
+                            Una vez registrado, podrá consultar el avance del caso desde el panel principal del usuario o desde el panel para consulta de casos.
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Columna derecha: formulario -->
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="subtitle2 mb-3">Registrar Nuevo Caso</h3>
+                    <p class="text-muted">Ingrese la información del evento para crear el caso de forma clara, completa
+                        y ordenada.</p>
+                    <hr class="my-3">
+                    <form id="registerCaseForm" method="POST" action="{{ url_for('user.register_case') }}">
+                        <!-- Fecha -->
+                        <div class="mb-3">
+                            <label for="fecha" class="form-label fw-semibold">Fecha</label>
+                            <input type="date" name="fecha" id="fecha" class="form-control" min="2000-01-01" required>
+                            <div class="form-text">Ingrese la fecha en la que ocurrieron los hechos</div>
+                        </div>
+
+                        <!-- Descripción -->
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label fw-semibold">Descripción</label>
+                            <textarea name="descripcion" id="descripcion" maxlength="2000" class="form-control" rows="4"
+                                required></textarea>
+                            <div id="contador" class="form-text">0/2000 caracteres</div>
+                        </div>
+
+                        <!-- Dirección -->
+                        <div class="mb-3">
+                            <label for="direccion" class="form-label fw-semibold">Dirección</label>
+                            <input type="text" name="direccion" id="direccion" class="form-control" required>
+                            <div class="form-text">Ingrese dirección donde el hecho ocurrió (Ej. Calle 12 # 8-40, Barrio
+                                Centro)</div>
+                        </div>
+
+                        <!-- Personas afectadas -->
+                        <div class="mb-3">
+                            <label for="personas_afectadas" class="form-label fw-semibold">Personas afectadas</label>
+                            <input type="number" name="personas_afectadas" id="personas_afectadas" class="form-control"
+                                min="1" max="25" required>
+                            <div class="form-text">Ingrese el número de personas de su núcleo familiar afectadas por el
+                                desastre (Ej. 4)</div>
+                        </div>
+
+                        <!-- Tipo de desastre -->
+                        <div class="mb-3">
+                            <label for="tipo_desastre" class="form-label fw-semibold">Tipo de desastre</label>
+                            <select name="tipo_desastre" id="tipo_desastre" class="form-select" required>
+                                <option value="">Seleccione una opción</option>
+                                <option value="In">Incendio</option>
+                                <option value="Inund">Inundación</option>
+                                <option value="SI-T">Sismo / Temblor</option>
+                            </select>
+                            <div class="form-text">Seleccione el desastre ocurrido</div>
+                        </div>
+
+                        <!-- Ciudad/Municipio -->
+                        <div class="mb-3">
+                            <label for="ciudad" class="form-label fw-semibold">Ciudad/Municipio</label>
+                            <select name="ciudad" id="ciudad" multiple class="form-select" size="4" required>
+                                <option value="AGD">Agua de Dios</option>
+                                <option value="ALB">Albán</option>
+                                <option value="ANA">Anapoima</option>
+                                <option value="ANOL">Anolaima</option>
+                                <option value="APU">Apulo</option>
+                                <option value="ARB">Arbeláez</option>
+                                <option value="BEL">Beltrán</option>
+                                <option value="BIT">Bituima</option>
+                                <option value="BOJ">Bojacá</option>
+                                <option value="CAB">Cabrera</option>
+                                <option value="CAC">Cachipay</option>
+                                <option value="CAJ">Cajicá</option>
+                                <option value="CAP">Caparrapí</option>
+                                <option value="CAQ">Cáqueza</option>
+                                <option value="CAR">Carmen de Carupa</option>
+                                <option value="CHA">Chaguaní</option>
+                                <option value="CHI">Chía</option>
+                                <option value="CHP">Chipaque</option>
+                                <option value="CHO">Choachí</option>
+                                <option value="CHC">Chocontá</option>
+                                <option value="COG">Cogua</option>
+                                <option value="COT">Cota</option>
+                                <option value="CUC">Cucunubá</option>
+                                <option value="COL">El Colegio</option>
+                                <option value="PEN">El Peñón</option>
+                                <option value="ROS">El Rosal</option>
+                                <option value="FAC">Facatativá</option>
+                                <option value="FOM">Fómeque</option>
+                                <option value="FOS">Fosca</option>
+                                <option value="FUN">Funza</option>
+                                <option value="FUQ">Fúquene</option>
+                                <option value="FUS">Fusagasugá</option>
+                                <option value="GAC">Gachalá</option>
+                                <option value="GAN">Gachancipá</option>
+                                <option value="GAT">Gachetá</option>
+                                <option value="GAM">Gama</option>
+                                <option value="GIR">Girardot</option>
+                                <option value="GRA">Granada</option>
+                                <option value="GUA">Guachetá</option>
+                                <option value="GUD">Guaduas</option>
+                                <option value="GUS">Guasca</option>
+                                <option value="GUQ">Guataquí</option>
+                                <option value="GUV">Guatavita</option>
+                                <option value="GUSI">Guayabal de Síquima</option>
+                                <option value="GUY">Guayabetal</option>
+                                <option value="GUT">Gutiérrez</option>
+                                <option value="JER">Jerusalén</option>
+                                <option value="JUN">Junín</option>
+                                <option value="LAC">La Calera</option>
+                                <option value="LAM">La Mesa</option>
+                                <option value="LAP">La Palma</option>
+                                <option value="LPE">La Peña</option>
+                                <option value="LVE">La Vega</option>
+                                <option value="LEN">Lenguazaque</option>
+                                <option value="MAC">Machetá</option>
+                                <option value="MAD">Madrid</option>
+                                <option value="MAN">Manta</option>
+                                <option value="MED">Medina</option>
+                                <option value="MOS">Mosquera</option>
+                                <option value="NAR">Nariño</option>
+                                <option value="NEM">Nemocón</option>
+                                <option value="NIL">Nilo</option>
+                                <option value="NIM">Nimaima</option>
+                                <option value="NOC">Nocaima</option>
+                                <option value="PAC">Pacho</option>
+                                <option value="PAI">Paime</option>
+                                <option value="PAN">Pandi</option>
+                                <option value="PAR">Paratebueno</option>
+                                <option value="PAS">Pasca</option>
+                                <option value="PSA">Puerto Salgar</option>
+                                <option value="PUL">Pulí</option>
+                                <option value="QUE">Quebradanegra</option>
+                                <option value="QET">Quetame</option>
+                                <option value="QUI">Quipile</option>
+                                <option value="RIC">Ricaurte</option>
+                                <option value="SAT">San Antonio del Tequendama</option>
+                                <option value="SBE">San Bernardo</option>
+                                <option value="SCY">San Cayetano</option>
+                                <option value="SFR">San Francisco</option>
+                                <option value="SJR">San Juan de Rioseco</option>
+                                <option value="SAS">Sasaima</option>
+                                <option value="SES">Sesquilé</option>
+                                <option value="SIB">Sibaté</option>
+                                <option value="SIL">Silvania</option>
+                                <option value="SIM">Simijaca</option>
+                                <option value="SOA">Soacha</option>
+                                <option value="SOP">Sopó</option>
+                                <option value="SUB">Subachoque</option>
+                                <option value="SUE">Suesca</option>
+                                <option value="SUP">Supatá</option>
+                                <option value="SUS">Susa</option>
+                                <option value="SUT">Sutatausa</option>
+                                <option value="TAB">Tabio</option>
+                                <option value="TAU">Tausa</option>
+                                <option value="TEN">Tenjo</option>
+                                <option value="TNA">Tena</option>
+                                <option value="TIB">Tibacuy</option>
+                                <option value="TIR">Tibirita</option>
+                                <option value="TOC">Tocaima</option>
+                                <option value="TCP">Tocancipá</option>
+                                <option value="TOP">Topaipí</option>
+                                <option value="UBA">Ubalá</option>
+                                <option value="UBQ">Ubaque</option>
+                                <option value="UBT">Ubaté</option>
+                                <option value="UNE">Une</option>
+                                <option value="UTI">Útica</option>
+                                <option value="VEN">Venecia</option>
+                                <option value="VER">Vergara</option>
+                                <option value="VIA">Vianí</option>
+                                <option value="VGO">Villagómez</option>
+                                <option value="VPN">Villapinzón</option>
+                                <option value="VIL">Villeta</option>
+                                <option value="VIO">Viotá</option>
+                                <option value="YAC">Yacopí</option>
+                                <option value="ZIPA">Zipaquirá</option>
+                                <option value="ZIPC">Zipacón</option>
+                            </select>
+                            <div class="form-text">Seleccione la ciudad o municipio donde ocurrieron o el más cercano al
+                                lugar de los hechos</div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary">Registrar Caso</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    (function() {
+        // ----- Contador de caracteres -----
+        const descripcion = document.getElementById('descripcion');
+        const contador = document.getElementById('contador');
+
+        if (descripcion && contador) {
+            const actualizarContador = () => {
+                const max = descripcion.getAttribute('maxlength') || 2000;
+                const len = descripcion.value.length;
+                const porcentaje = (len / max) * 100;
+
+                contador.innerHTML = `${len}/${max}`;
+
+                contador.classList.remove('text-success', 'text-warning', 'text-danger');
+
+                if (porcentaje < 80) {
+                    contador.classList.add('text-success');
+                } else if (porcentaje < 100) {
+                    contador.classList.add('text-warning');
+                } else {
+                    contador.classList.add('text-danger');
+                }
+            };
+
+            descripcion.addEventListener('input', actualizarContador);
+            actualizarContador();
+        }
+
+        // ----- Configurar validación en tiempo real para este formulario -----
+        if (typeof configurarValidacionTiempoRealCaso === 'function') {
+            configurarValidacionTiempoRealCaso();
+        } else {
+            console.warn("La función configurarValidacionTiempoRealCaso no está definida. ¿Se cargó form.js correctamente?");
+        }
+
+        // ----- Envío del formulario (ya existente) -----
+        const form = document.getElementById('registerCaseForm');
+        if (form) {
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Registrando...';
+
+                try {
+                    const formData = new FormData(this);
+                    const result = await Auth.fetchFormData(this.action, formData);
+
+                    if (!result) return;
+
+                    if (result.status === 'success') {
+                        showToast(result.msg, 'success');
+                        const consultLink = document.querySelector('.nav-link[data-section="consult"]');
+                        if (consultLink) {
+                            consultLink.click();
+                        } else {
+                            const dashboardLink = document.querySelector('.nav-link[data-section="dashboard"]');
+                            if (dashboardLink) dashboardLink.click();
+                        }
+                    } else {
+                        showToast(result.msg || 'Error al registrar el caso', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showToast('Error al conectar con el servidor', 'error');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }
+            });
+        }
+    })();
+</script>

@@ -1,0 +1,274 @@
+<section class="section p-5">
+    <div class="container">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold">Mi Cuenta</h2>
+                    <h4 class="text-muted" id="fullName"></h4>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-5 text-center">
+                        <img src="{{ url_for('static', filename='img/avatar.png') }}" alt="Avatar"
+                            class="img-fluid rounded-circle mb-3" style="width: 150px;">
+                        <h5 id="userNameDisplay" class="text-center"></h5>
+                        <p class="text-muted small" id="userRoleDisplay"></p>
+                        <hr>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-primary" data-bs-toggle="modal"
+                                data-bs-target="#modalEditarDatos">
+                                Editar datos
+                            </button>
+                            <button class="btn btn-outline-secondary" data-bs-toggle="modal"
+                                data-bs-target="#UserchangePasswordModal">
+                                Cambiar contraseña
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Columna derecha: datos detallados -->
+                    <div class="col-md-7">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="mb-3">
+                                    <label class="fw-semibold text-secondary">Nombres</label>
+                                    <p id="nombres" class="border-bottom pb-1"></p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="fw-semibold text-secondary">Apellidos</label>
+                                    <p id="apellidos" class="border-bottom pb-1"></p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="fw-semibold text-secondary">Nombre de usuario</label>
+                                    <p id="nombre_usuario" class="border-bottom pb-1"></p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="fw-semibold text-secondary">Documento</label>
+                                    <p id="documento" class="border-bottom pb-1"></p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="fw-semibold text-secondary">Tipo de documento</label>
+                                    <p id="tipo_documento" class="border-bottom pb-1"></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="mb-3">
+                                    <label class="fw-semibold text-secondary">Correo electrónico</label>
+                                    <p id="email" class="border-bottom pb-1"></p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="fw-semibold text-secondary">Teléfono</label>
+                                    <p id="telefono" class="border-bottom pb-1"></p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="fw-semibold text-secondary">Dirección</label>
+                                    <p id="direccion" class="border-bottom pb-1"></p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="fw-semibold text-secondary">Edad</label>
+                                    <p id="edad" class="border-bottom pb-1"></p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="fw-semibold text-secondary">Estado</label>
+                                    <p id="estado" class="border-bottom pb-1"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Editar Datos -->
+    <div class="modal fade" id="modalEditarDatos" tabindex="-1" aria-labelledby="modalEditarDatosLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEditarDatosLabel">Editar mis datos</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editDataForm" method="POST" action="{{ url_for('user.update_account') }}">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Primer nombre</label>
+                                <input type="text" name="pri_nom" id="edit_pri_nom" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Segundo nombre</label>
+                                <input type="text" name="seg_nom" id="edit_seg_nom" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Primer apellido</label>
+                                <input type="text" name="pri_ape" id="edit_pri_ape" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Segundo apellido</label>
+                                <input type="text" name="seg_ape" id="edit_seg_ape" class="form-control">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Dirección</label>
+                            <input type="text" name="direccion_user" id="edit_direccion" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Correo electrónico</label>
+                            <input type="email" name="email" id="edit_email" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Teléfono</label>
+                            <input type="text" name="telefono" id="edit_telefono" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Edad</label>
+                            <input type="number" name="edad" id="edit_edad" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nombre de usuario</label>
+                            <input type="text" name="username" id="edit_username" class="form-control">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Cambiar Contraseña -->
+    <div class="modal fade" id="UserchangePasswordModal" tabindex="-1" aria-labelledby="UserchangePasswordModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="UserchangePasswordModalLabel">Cambiar contraseña</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="UserchangePasswordForm" method="POST" action="{{ url_for('user.change_password') }}">
+                        <div class="mb-3">
+                            <label class="form-label">Contraseña actual</label>
+                            <input type="password" class="form-control" name="actual_password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nueva contraseña</label>
+                            <input type="password" class="form-control" name="new_password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Confirmar contraseña</label>
+                            <input type="password" class="form-control" name="confirm_password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Actualizar contraseña</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    (function() {
+        // Función para mostrar los datos en el perfil
+        function renderUserData(usuario) {
+            document.getElementById('fullName').innerText = `${usuario.nombres} ${usuario.apellidos}`;
+            document.getElementById('userNameDisplay').innerText = usuario.nombre_usuario;
+            document.getElementById('userRoleDisplay').innerText = usuario.rol_usuario;
+
+            document.getElementById('nombres').innerText = usuario.nombres;
+            document.getElementById('apellidos').innerText = usuario.apellidos;
+            document.getElementById('nombre_usuario').innerText = usuario.nombre_usuario;
+            document.getElementById('documento').innerText = usuario.documento;
+            document.getElementById('tipo_documento').innerText = usuario.tipo_documento;
+            document.getElementById('email').innerText = usuario.email;
+            document.getElementById('telefono').innerText = usuario.telefono;
+            document.getElementById('direccion').innerText = usuario.direccion;
+            document.getElementById('edad').innerText = usuario.edad;
+            document.getElementById('estado').innerText = usuario.estado_usuario;
+        }
+
+        // Cargar datos desde API
+        async function cargarDatosCuenta() {
+            try {
+                const usuario = await Auth.fetchJSON('/user/manage-account');
+                if (!usuario) return;
+                renderUserData(usuario);
+            } catch (error) {
+                console.error('Error cargando datos:', error);
+                showToast('Error al cargar los datos de tu cuenta', 'error');
+            }
+        }
+
+        // Manejo de envío del formulario de edición
+        const editForm = document.getElementById('editDataForm');
+        if (editForm) {
+            editForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Guardando...';
+                try {
+                    const formData = new FormData(this);
+                    const result = await Auth.fetchFormData(this.action, formData);
+                    if (!result) return;
+                    if (result.status === 'success') {
+                        showToast(result.msg, 'success');
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('modalEditarDatos'));
+                        if (modal) modal.hide();
+                        // Limpiar el formulario después de guardar (opcional)
+                        this.reset();
+                        await cargarDatosCuenta();
+                    } else {
+                        showToast(result.msg || 'Error al actualizar datos', 'error');
+                    }
+                } catch (error) {
+                    console.error(error);
+                    showToast('Error al procesar la solicitud', 'error');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }
+            });
+        }
+
+        // Manejo de envío del formulario de cambio de contraseña
+        const passForm = document.getElementById('UserchangePasswordForm');
+        if (passForm) {
+            passForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Actualizando...';
+                try {
+                    const formData = new FormData(this);
+                    const result = await Auth.fetchFormData(this.action, formData);
+                    if (!result) return;
+                    if (result.status === 'success') {
+                        showToast(result.msg, 'success');
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('UserchangePasswordModal'));
+                        if (modal) modal.hide();
+                        this.reset();
+                    } else {
+                        showToast(result.msg || 'Error al cambiar contraseña', 'error');
+                    }
+                } catch (error) {
+                    console.error(error);
+                    showToast('Error al procesar la solicitud', 'error');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }
+            });
+        }
+
+        // Iniciar carga de datos
+        cargarDatosCuenta();
+    })();
+</script>

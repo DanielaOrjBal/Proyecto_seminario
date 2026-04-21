@@ -5,13 +5,96 @@ Vistas de administrador
 # app/routes/admin.py
 from flask import Blueprint, render_template, request, redirect, url_for, session,jsonify
 from app.controler.controler import Registro,Consulta,Eliminar,Actualizar,Enviar
-
+from app.models.caso import Caso
+from app.models.usuario import Usuario
+from functools import wraps
+from flask_jwt_extended import (
+    get_jwt_identity,
+    get_jwt,
+    verify_jwt_in_request
+)
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
+# ── Decorador para rutas HTML ───────────────────────────────────────────────
+def admin_html_required(fn):
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        try:
+            verify_jwt_in_request()
+        except Exception:
+            return redirect(url_for('auth.login'))
+
+        claims = get_jwt()
+        if claims.get('rol') != 'Admin':
+            return redirect(url_for('auth.login'))
+
+        return fn(*args, **kwargs)
+    return wrapper
+
+# ── Decorador para rutas ────────────────────────────────────────
+def admin_api_required(fn):
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        try:
+            verify_jwt_in_request()
+        except Exception:
+            return jsonify({
+                "status": "error",
+                "msg": "Sesión expirada. Por favor inicie sesión nuevamente."
+            }), 401
+
+        claims = get_jwt()
+        if claims.get('rol') != 'Admin':
+            return jsonify({
+                "status": "error",
+                "msg": "Acceso no autorizado."
+            }), 403
+
+        return fn(*args, **kwargs)
+    return wrapper
+
+# ── Rutas ───────────────────────────────────────────────────────────────────
+
+
 @admin_bp.route('/dashboard')
+@admin_html_required
 def dashboard():
-    return render_template('admin_dashboard.html', username = session["username"])
+    return render_template('admin/admin_dashboard.html')
+
+
+@admin_bp.route('/dashboard/stats')
+@admin_api_required                          
+def dashboard_stats():
+    user_id = get_jwt_identity()         
+    claims = get_jwt()
+    username = claims.get('username')
+    
+    # Obtener estadísticas de casos
+    total_casos = Caso.total_casos_sistema()
+    casos_enviados = Caso.casos_enviados_sistema()
+    casos_cerrados = Caso.casos_cerrados_sistema()
+    usuario = Usuario.get_user_account(user_id)
+    usuarios = Usuario.get_all_users_system()
+    usuarios_inactivos = Usuario.get_all_users_deactivate_system()
+    casos_incendio = Caso.casos_incendio_sistema()
+    casos_inundacion = Caso.casos_inundacion_sistema()
+    casos_sismo = Caso.casos_sismo_sistema() 
+
+    
+    return render_template(
+        'admin/partials/dashboard_stats.html',
+        username=username,
+        usuario=usuario,
+        total_casos=total_casos,
+        casos_enviados=casos_enviados,
+        casos_cerrados=casos_cerrados,
+        usuarios_registrados=usuarios,
+        usuarios_inactivos = usuarios_inactivos,
+        casos_incendio=casos_incendio,
+        casos_inundacion=casos_inundacion,
+        casos_sismo=casos_sismo,
+    )
 
 
 @admin_bp.route('/register_case', methods=["GET", "POST"])

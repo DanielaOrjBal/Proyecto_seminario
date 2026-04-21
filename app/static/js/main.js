@@ -1,41 +1,70 @@
-// static/js/scroll.js
-// static/js/scroll.js
-(function () {
-  const NAVBAR_OFFSET = 80; // ajusta este valor según la altura de tu navbar
+document.addEventListener("DOMContentLoaded", function () {
+  const NAVBAR_OFFSET = 120;
+  const links = document.querySelectorAll(".second-navbar a[href^='#']");
+  let animacionScroll = null;
 
-  function smoothScrollToId(id) {
-    const el = document.getElementById(id);
-    if (el) {
-      const yOffset = -NAVBAR_OFFSET; 
-      const y = el.getBoundingClientRect().top + window.scrollY + yOffset;
-
-      window.scrollTo({
-        top: y,
-        behavior: "smooth"
-      });
-
-      history.pushState(null, "", "#" + id);
+  // Función de scroll suave hacia un elemento con duración controlada (en ms)
+  function scrollToElement(element, duration = 1000, offset = NAVBAR_OFFSET) {
+    // Cancelar animación previa si existe
+    if (animacionScroll) {
+      cancelAnimationFrame(animacionScroll);
+      animacionScroll = null;
     }
+
+    if (!element) return;
+
+    const startY = window.scrollY;
+    const targetY = element.getBoundingClientRect().top + window.scrollY - offset;
+    const distance = targetY - startY;
+    const startTime = performance.now();
+
+    if (Math.abs(distance) < 1) return;
+
+    function step(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1); // 0 a 1
+
+      // Easing easeOutCubic (aceleración suave al final)
+      const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+      const newY = startY + distance * easeOutCubic;
+
+      window.scrollTo(0, newY);
+
+      if (progress < 1) {
+        animacionScroll = requestAnimationFrame(step);
+      } else {
+        animacionScroll = null;
+        window.scrollTo(0, targetY);
+      }
+    }
+
+    animacionScroll = requestAnimationFrame(step);
   }
 
-  // Manejar clicks en enlaces hash (por ejemplo <a href="#servicios">)
-  document.addEventListener("click", function (e) {
-    const a = e.target.closest("a");
-    if (!a) return;
-    const href = a.getAttribute("href") || "";
-    if (href.startsWith("#") && href.length > 1) {
+  links.forEach(link => {
+    link.addEventListener("click", function (e) {
+      const id = this.getAttribute("href").substring(1);
+      const target = document.getElementById(id);
+      if (!target) return;
+
       e.preventDefault();
-      const id = href.substring(1);
-      smoothScrollToId(id);
-    }
+      scrollToElement(target, 3000); // 3 segundos
+
+      history.replaceState(null, null, "#" + id);
+    });
   });
 
-  // Al cargar la página con hash desde una ruta externa
-  window.addEventListener("load", function () {
-    const hash = location.hash;
-    if (hash && hash.length > 1) {
-      const id = hash.substring(1);
-      setTimeout(() => smoothScrollToId(id), 150);
+  if (window.location.hash) {
+    const id = window.location.hash.substring(1);
+    const target = document.getElementById(id);
+    if (target) {
+      setTimeout(() => {
+        scrollToElement(target, 3000);
+      }, 200);
     }
-  });
-})();
+  }
+});
+
+window.addEventListener("load", function () {
+  document.documentElement.classList.add("loaded");
+});

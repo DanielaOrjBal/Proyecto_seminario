@@ -1,97 +1,361 @@
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
 {% extends "layout.html" %}
+{% block page_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+{% endblock %}
+
+{% include 'navbar.html' %}
 {% block content %}
-
-<!-- SECTION INICIO -->
-<section id="inicio" class="section mt-5">
-  <div class="container my-5">
-    <div class="row align-items-center">
-      <div class="col-md-6 text-center">
-        <h1 class="title" lan-target="InicioTitulo">De la adversidad a la prosperidad</h1>
-      </div>
-      <div class="col-md-6 text-center">
-        <img src="{{ url_for('static', filename='img/home.png') }}" alt="Imagen ilustrativa" class="img-fluid"/>
+<main>
+  <!-- SECTION INICIO -->
+  <section id="inicio" class="banner">
+    <div class="content align-items-center">
+      <div class="container">
+        <p class="title my-5">De la adversidad a la prosperidad</p>
+        <p class="title2">
+          Plataforma para el registro de emergencias por desastres naturales y notificación a las autoridades
+        </p>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- SECTION SERVICIOS -->
-<section id="servicios" class="section2">
-  <div class="container py-5">
+  <!-- MENÚ HOME -->
+  <ul class="nav justify-content-center second-navbar my-3">
+    <li class="nav-item">
+      <a class="nav-link text-nav" href="#info">Somos</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-nav" href="#funcionamiento">Funcionamiento</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-nav" href="#estadisticas">Estadísticas</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-nav" href="#desastres">Desastres</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-nav" href="#servicios">Servicios</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-nav" href="#empresa">Empresa</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-nav" href="#contacto">Contactenos</a>
+    </li>
+  </ul>
+
+  <!-- SECTION INFORMACION -->
+  <section id="info" class="section1 mb-2">
+    <h2 class="subtitle text-center">Quiénes Somos</h2>
+    <div class="container">
+      <p class="text-center text" style="text-align: justify;">Descubre cómo Vitaria SOS transforma el registro de emergencias en una experiencia
+        ágil y transparente, conectando a los ciudadanos con las entidades responsables.</p>
+    </div>
+    <div class="container mb-3 p-2">
+
+      <!-- Pestañas -->
+      <ul class="nav nav-tabs justify-content-center" id="infoTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active text-nav" id="plataforma-tab" data-bs-toggle="tab" data-bs-target="#plataforma"
+            type="button" role="tab" aria-controls="plataforma" aria-selected="true">
+            Plataforma
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link text-nav" id="autoridades-tab" data-bs-toggle="tab" data-bs-target="#autoridades"
+            type="button" role="tab" aria-controls="autoridades" aria-selected="false">
+            Conexión con autoridades
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link text-nav" id="sisben-tab" data-bs-toggle="tab" data-bs-target="#sisben" type="button"
+            role="tab" aria-controls="sisben" aria-selected="false">
+            Sisbén
+          </button>
+        </li>
+      </ul>
+
+      <!-- Contenido de las pestañas -->
+      <div class="tab-content m-auto mt-4" id="infoTabContent">
+        <!-- Pestaña Plataforma -->
+        <div class="tab-pane fade show active" id="plataforma" role="tabpanel" aria-labelledby="plataforma-tab">
+          <h3 class="text-center mb-4">Plataforma</h3>
+          <p class="text-center text mx-auto" style="max-width: 800px;" style="text-align: justify;">
+            Vitaria SOS ofrece una solución digital que permite <b>registrar, gestionar y notificar</b> a las
+            autoridades acerca de los casos de personas afectadas por desastres naturales de manera rápida, segura y
+            accesible.
+          </p>
+          <p class="text-center text mx-auto" style="max-width: 800px;" style="text-align: justify;">
+            Nuestro objetivo principal para la creación de este aplicativo web es desarrollar una herramienta de
+            fácil manejo para el registro, almacenamiento y consulta de información acerca de eventos naturales
+            desastrosos con el fin de una <b>correcta identificación de víctimas/damnificados y una atención efectiva
+              por parte de las autoridades</b>.
+          </p>
+        </div>
+
+        <!-- Pestaña Conexión con autoridades -->
+        <div class="tab-pane fade" id="autoridades" role="tabpanel" aria-labelledby="autoridades-tab">
+          <h3 class="text-center mb-4">Conexión con autoridades</h3>
+          <p class="text-center text mx-auto" style="max-width: 800px; text-align: justify;">
+            La plataforma <b>conecta a la ciudadanía con las entidades responsables</b> de brindar atención y ayuda
+            humanitaria, facilitando el registro de información de damnificados y permitiendo a las autoridades
+            consultar y gestionar los casos de forma centralizada con el fin de ingresarlos al <b>Registro Único de
+              Damnificados (RUD)</b>.
+          </p>
+        </div>
+
+        <!-- Pestaña Sisbén -->
+        <div class="tab-pane fade" id="sisben" role="tabpanel" aria-labelledby="sisben-tab">
+          <h3 class="text-center mb-4">Sisbén</h3>
+          <p class="text-center text mx-auto" style="max-width: 800px;">
+            Para garantizar que las ayudas gubernamentales lleguen a quien realmente lo necesita, <b>es indispensable
+              estar registrado en el Sisbén</b>. El sistema validará automáticamente su información para verificar la
+            ubicación registrada en la base de datos del Sisbén.
+          </p>
+        </div>
+      </div>
+
+      <!-- Recuadro Sisbén -->
+      <div class="container my-5">
+        <div class="sisben-info-box">
+          <div class="sisben-info-header">
+            <h4 class="sisben-title">
+              Requisito de Uso Estricto
+              <span class="sisben-badge">OBLIGATORIO</span>
+            </h4>
+          </div>
+          <p class="sisben-text">
+            Para garantizar que las ayudas gubernamentales y el seguimiento de casos lleguen a la población que
+            realmente
+            lo necesita,
+            <b>es indispensable estar registrado en el Sisbén.</b>
+
+            El sistema <b>validará automáticamente su información para verificar la ubicación registrada</b> en la base
+            de datos
+            del Sisbén. Esta validación permite confirmar el municipio de residencia del ciudadano y facilitar la
+            correcta
+            gestión de la emergencia por parte de las autoridades correspondientes.
+          </p>
+          <a href="https://www.sisben.gov.co/Paginas/consulta-tu-grupo.html" class="btn btn-primary" target="_blank">
+            <i class="bi bi-person-circle"></i> Consultar estado en el Sisbén
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION COMO FUNCIONA -->
+
+  <section id="funcionamiento" class="section2 mb-2">
+    <div class="container">
+      <h2 class="subtitle text-center">¿Cómo Funciona?</h2>
+      <p class="text-center text mb-5">
+        Vitaria SOS gestiona las emergencias a través de un proceso simple y eficiente en 4 pasos. Así de fácil:
+      </p>
+
     
-    <!-- 🔹 Título principal -->
-    <h2 class="navbar-title text-center my-5" lan-target="TituloDatosEstadisticos">Datos Estadísticos</h2>
+      <div class="container">
+        <div class="timeline-container d-flex">
 
-    <!-- 🔹 Primer grupo de tarjetas -->
-    <div class="container card-group">
-      <div class="row mb-5 g-4">
-        
-        <!-- Tarjeta 1 -->
-        <div class="col-md-4 d-flex">
-          <div class="card text-center h-100 w-100">
-            <div class="card-body d-flex flex-column justify-content-between">
-              <p class="text" lan-target="Texto1Dato1">
-                De acuerdo a cifras de la</p>
-                <span class="Green-text" lan-target="Greentext1">UNGRD</span>
-                <p class="text" lan-target="Texto2Dato1">
-                han habido más de
+          <!-- Línea -->
+          <div class="timeline-line"></div>
+
+          <!-- Paso 1 -->
+          <div class="timeline-item h-100">
+            <div class="timeline-number">1</div>
+            <div class="card h-100">
+              <div class="card-body">
+                <img src="../static/img/user.png" class="services-img m-auto" alt="registro">
+                <h5 class="mt-4"><b>Registro de usuario</b></h5>
+                <p class="text-muted" style="text-align: justify;">
+                  El ciudadano crea su cuenta y el sistema valida automáticamente su información con los datos
+                  almacenados
+                  en el Sisbén.
                 </p>
-                <span class="Blue-text" lan-target="Bluetext1">2 MIL</span> 
-                <p class="text" lan-target="Texto3Dato1">
-                  afectados por desastres naturales en lo que va del año
+              </div>
+            </div>
+          </div>
+
+          <!-- Paso 2 -->
+          <div class="timeline-item h-100">
+            <div class="timeline-number">2</div>
+            <div class="card h-100">
+              <div class="card-body">
+                <img src="../static/img/register.png" class="services-img m-auto" alt="caso">
+                <h5 class="mt-4"><b>Registro del caso</b></h5>
+                <p class="text-muted" style="text-align: justify;">
+                  El usuario ingresa a su cuenta y reporta el desastre, registra el número de afectados y se almacena la
+                  información.
                 </p>
-                <span class="Green-text" lan-target="Bluetext2">2025</span> <br>
-              <img src="{{ url_for('static', filename='img/Dato1.jpg') }}" alt="Dato 1" class="services-img">
+              </div>
+            </div>
+          </div>
+
+          <!-- Paso 3 -->
+          <div class="timeline-item h-100">
+            <div class="timeline-number">3</div>
+            <div class="card h-100">
+              <div class="card-body">
+                <img src="../static/img/clasified.png" class="services-img m-auto" alt="clasificacion">
+                <h5 class="mt-4 text-start"><b>Clasificación del caso</b></h5>
+                <p class="text-muted" style="text-align: justify;">
+                  El sistema clasifica la emergencia y notifica a las entidades correspondientes de acuerdo a lo establecido por los administradores.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Paso 4 -->
+          <div class="timeline-item h-100">
+            <div class="timeline-number">4</div>
+            <div class="card h-100">
+              <div class="card-body">
+                <img src="../static/img/report.png" class="services-img m-auto" alt="seguimiento">
+                <h5 class="mt-4"><b>Seguimiento del caso</b></h5>
+                <p class="text-muted" style="text-align: justify;">
+                  El usuario puede consultar el estado del caso desde su cuenta y las autoridades gestionan la atención
+                  del
+                  mismo.
+                </p>
+              </div>
             </div>
           </div>
         </div>
-
-        <!-- Tarjeta 2 -->
-        <div class="col-md-4 d-flex">
-          <div class="card text-center h-100 w-100">
-            <div class="card-body d-flex flex-column justify-content-between">
-              <img src="{{ url_for('static', filename='img/Dato2.jpg') }}" alt="Dato 2" class="services-img">
-              <p class="text">
-                <span lan-target="Texto1Dato2">Los desastres naturales más comunes son:</span><br>
-                <span class="Blue-text" lan-target="Texto2Dato2">Inundaciones Terremotos Deslizamientos de tierra</span>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tarjeta 3 -->
-        <div class="col-md-4 d-flex">
-          <div class="card text-center h-100 w-100">
-            <div class="card-body d-flex flex-column justify-content-between">
-              <p class="text">
-                <span lan-target="Texto1Dato3">Más del</span>
-                <span class="Blue-text text-md" lan-target="Texto2Dato3">62%</span><br>
-                <span lan-target="Texto3Dato3">de la población de Cundinamarca es propensa a ser víctima de</span><br>
-                <span class="Blue-text" lan-target="Texto4Dato3">eventos catastróficos</span>
-              </p>
-              <img src="{{ url_for('static', filename='img/Dato3.png') }}" alt="Dato 3" class="services-img">
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
+  </section>
+  
 
-    <!-- 🔹 Título intermedio -->
-    <h2 class="navbar-title text-center my-5" lan-target="TituloNuestrosServicios">Nuestros Servicios</h2>
+  <!-- SECTION ESTADISTICAS-->
+  <section id="estadisticas" class="section1 mb-2">
+    <h2 class="subtitle text-center">Datos Estadísticos</h2>
+    <div class="container">
+      <p class="text-center text">Conoce datos clave sobre desastres naturales en Cundinamarca, basados en reportes
+        oficiales de la UNGRD y monitoreo local. La información que impulsa nuestras acciones.</p>
+    </div>
+    <div id="carouselEstadisticas" class="carousel carousel-dark slide mx-auto" data-bs-ride="carousel">
 
-    <!-- 🔹 Segundo grupo de tarjetas -->
-    <div class="container card-group">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselEstadisticas" data-bs-slide-to="0" class="active"
+          aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselEstadisticas" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#carouselEstadisticas" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        <button type="button" data-bs-target="#carouselEstadisticas" data-bs-slide-to="3" aria-label="Slide 4"></button>
+        <button type="button" data-bs-target="#carouselEstadisticas" data-bs-slide-to="4" aria-label="Slide 5"></button>
+        <button type="button" data-bs-target="#carouselEstadisticas" data-bs-slide-to="5" aria-label="Slide 6"></button>
+      </div>
+
+      <div class="carousel-inner">
+        <!-- Slide 1 -->
+        <div class="carousel-item active" data-bs-interval="4000">
+          <div class="d-flex flex-column align-items-center p-3">
+            <h4 class="text-center fw-bold">Población damnificada</h4>
+            <img src="../static/img/grafico_1.svg" class="d-block img-fluid shadow-sm" alt="Porcentajes"
+              style="max-height: 350px; object-fit: contain;">
+            <div class="estadistica-card mt-4 p-4">
+              <p class="text-center mb-0">Más de 15.000 personas han sido afectadas por desastres en Cundinamarca en los
+                últimos 5 años, de las cuales el 70% fueron incluidas en el RUD.</p>
+            </div>
+          </div>
+        </div>
+        <!-- Slide 2 -->
+        <div class="carousel-item" data-bs-interval="4000">
+          <div class="d-flex flex-column align-items-center p-3">
+            <h4 class="text-center fw-bold">Zonas de alta vulnerabilidad</h4>
+            <img src="../static/img/map.svg" class="d-block img-fluid shadow-sm" alt="Mapa vulnerabilidades"
+              style="max-height: 350px; object-fit: contain;">
+            <div class="estadistica-card mt-4 p-4">
+              <p class="text-center mb-0">El departamento de Cundinamarca presenta el mayor riesgo por
+                deslizamientos debido a la topografía y deforestación.</p>
+            </div>
+          </div>
+        </div>
+        <!-- Slide 3 -->
+        <div class="carousel-item" data-bs-interval="4000">
+          <div class="d-flex flex-column align-items-center p-3">
+            <h4 class="text-center fw-bold">Inundaciones por cuenca</h4>
+            <img src="../static/img/map_1.svg" class="d-block img-fluid shadow-sm" alt="Nivel riesgo 1"
+              style="max-height: 350px; object-fit: contain;">
+            <div class="estadistica-card mt-4 p-4">
+              <p class="text-center mb-0">La cuenca del río Bogotá es la más afectada por desbordamientos, con 12
+                emergencias reportadas en 2023.</p>
+            </div>
+          </div>
+        </div>
+        <!-- Slide 4 -->
+        <div class="carousel-item" data-bs-interval="4000">
+          <div class="d-flex flex-column align-items-center p-3">
+            <h4 class="text-center fw-bold">Amenaza sísmica</h4>
+            <img src="../static/img/map_2.svg" class="d-block img-fluid shadow-sm" alt="Nivel riesgo 2"
+              style="max-height: 350px; object-fit: contain;">
+            <div class="estadistica-card mt-4 p-4">
+              <p class="text-center mb-0">La región del Tequendama y Sumapaz tienen una amenaza sísmica intermedia, con
+                probabilidad de sismos de magnitud >5 en los próximos 30 años.</p>
+            </div>
+
+          </div>
+        </div>
+        <!-- Slide 5 -->
+        <div class="carousel-item" data-bs-interval="4000">
+          <div class="d-flex flex-column align-items-center p-3">
+            <h4 class="text-center fw-bold">Zonas de alta vulnerabilidad en deslizamientos</h4>
+            <img src="../static/img/map_3.svg" class="d-block img-fluid shadow-sm" alt="Nivel riesgo 3"
+              style="max-height: 350px; object-fit: contain;">
+            <div class="estadistica-card mt-4 p-4">
+              <p class="text-center mb-0">Los municipios de La Mesa, Viotá y Quipile presentan el mayor riesgo por
+                deslizamientos debido a la topografía y deforestación.</p>
+            </div>
+          </div>
+        </div>
+        <!-- Slide 6 -->
+        <div class="carousel-item" data-bs-interval="4000">
+          <div class="d-flex flex-column align-items-center p-3">
+            <h4 class="text-center fw-bold">Incendios forestales</h4>
+            <img src="../static/img/map_4.svg" class="d-block img-fluid shadow-sm" alt="Nivel riesgo 4"
+              style="max-height: 350px; object-fit: contain;">
+            <div class="estadistica-card mt-4 p-4">
+              <p class="text-center mb-0">Durante la temporada seca (diciembre-marzo), los incendios aumentan un 60% en
+                zonas rurales de Gachalá y Ubalá.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselEstadisticas" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Anterior</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselEstadisticas" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Siguiente</span>
+      </button>
+    </div>
+
+    <p class="text-center text-muted mt-4">Fuentes: Departamento Nacional de Planeación (2018) - Estudios SIAC - Gestión
+      del Riesgo (2021).</p>
+  </section>
+
+  <!-- SECTION DESASTRES-->
+  <section id="desastres" class="section2 mb-2">
+    <div class="container">
+      <h2 class="subtitle text-center">Áreas De Gestión Prioritaria</h2>
+    </div>
+    <div class="container">
+      <p class="text-center text p-2">Identificamos los fenómenos naturales con mayor incidencia en la región para
+        priorizar la atención y recursos. Estos son los principales:</p>
+    </div>
+    <div class="container card-group my-3">
       <div class="row mb-5 g-4">
 
         <!-- Servicio 1 -->
         <div class="col-md-3 col-sm-6">
           <div class="card h-100 text-center">
             <div class="card-body">
-              <img src="{{ url_for('static', filename='img/Services1.png') }}" alt="Servicio 1" class="services-img">
-              <h4 class="mt-3" lan-target="Servicio1Titulo">Registro de desastre</h4>
-              <p class="text" lan-target="Servicio1Texto">Permite registrar de manera rápida el desastre ocurrido y los afectados.</p>
+              <img src="../static/img/Disaster1.png" alt="Desastre 1" class="disaster-img ">
+              <h5 class="mt-5"><b>Inundaciones</b></h5>
+              <p class="text-muted description" style="text-align: justify;" lan-target="Servicio1Texto">Desbordamiento temporal de agua que cubre
+                terrenos usualmente
+                secos, causadas por lluvias intensas, desbordamiento de ríos, marejadas costeras o fallas en
+                infraestructuras.</p>
             </div>
           </div>
         </div>
@@ -100,9 +364,10 @@
         <div class="col-md-3 col-sm-6">
           <div class="card h-100 text-center">
             <div class="card-body">
-              <img src="{{ url_for('static', filename='img/Services2.png') }}" alt="Servicio 2" class="services-img">
-              <h4 class="mt-3" lan-target="Servicio2Titulo">Clasificación de emergencias</h4>
-              <p class="text" lan-target="Servicio2Texto">Organiza las emergencias según el desastre y su prioridad.</p>
+              <img src="../static/img/Disaster2.png" alt="Desastre 2" class="disaster-img ">
+              <h5 class="mt-5" lan-target="Servicio2Titulo"><b>Deslizamientos de tierra</b></h5>
+              <p class="text-muted description" style="text-align: justify;" lan-target="Servicio2Texto">Movimiento hacia abajo de una pendiente de
+                rocas, tierra, escombros o barro, impulsado principalmente por la gravedad</p>
             </div>
           </div>
         </div>
@@ -111,9 +376,10 @@
         <div class="col-md-3 col-sm-6">
           <div class="card h-100 text-center">
             <div class="card-body">
-              <img src="{{ url_for('static', filename='img/Services3.png') }}" alt="Servicio 3" class="services-img">
-              <h4 class="mt-3" lan-target="Servicio3Titulo">Notificación a autoridades</h4>
-              <p class="text" lan-target="Servicio3Texto">Envía alertas inmediatas a las entidades competentes.</p>
+              <img src="../static/img/Disaster3.png" alt="Desastre 3" class="disaster-img ">
+              <h5 class="mt-5"><b>Sismos y terremotos</b></h5>
+              <p class="text-muted description" style="text-align: justify;">Sacudida brusca y pasajera de la corteza terrestre, causada por la
+                liberación repentina de energía acumulada en forma de ondas sísmicas.</p>
             </div>
           </div>
         </div>
@@ -122,17 +388,185 @@
         <div class="col-md-3 col-sm-6">
           <div class="card h-100 text-center">
             <div class="card-body">
-              <img src="{{ url_for('static', filename='img/Services4.png') }}" alt="Servicio 4" class="services-img">
-              <h4 class="mt-3" lan-target="Servicio4Titulo">Generación de reportes</h4>
-              <p class="text" lan-target="Servicio4Texto">Crea reportes detallados con la información de cada caso registrado.</p>
+              <img src="../static/img/Disaster4.png" alt="Desastre 4" class="disaster-img">
+              <h5 class="mt-5" lan-target="Servicio4Titulo"><b>Incendios forestales</b></h5>
+              <p class="text-muted description" style="text-align: justify;" lan-target="Servicio4Texto">Fuego descontrolado y de rápida propagación
+                que consume vegetación en bosques, pastizales o zonas rurales sin control humano.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION SERVICIOS-->
+  <section id="servicios" class="section1 mb-2">
+    <h2 class="subtitle text-center">Nuestros Servicios</h2>
+    <div class="container">
+      <p class="text-center text">En Vitaria SOS ofrecemos servicios en busca de ayudar a las víctimas de los desastres
+        naturales en Cundinamarca. Nos encargamos de llevar su caso a las entidades correspondientes y agilizar su
+        proceso de registro en el RUD para acceso a ayudas gestionadas por el gobierno.</p>
+    </div>
+    <div class="container mb-5">
+      <div class="row g-4 justify-content-center m-auto w-75">
+        <div class="col-12 col-md-6">
+          <div class="card2 h-100">
+            <div class="card-body text-start mx-2">
+              <div class="mb-3">
+                <img src="../static/img/register.png" alt="Registro" class="services-img m-2">
+              </div>
+              <h5 class="card-title fw-bold">Registro de desastres</h5>
+              <p class="card-text text-muted">
+                Reporta tu emergencia en minutos.
+              </p>
             </div>
           </div>
         </div>
 
+        <div class="col-12 col-md-6">
+          <div class="card2 h-100">
+            <div class="card-body text-start mx-2">
+              <div class="mb-3">
+                <img src="../static/img/clasified.png" alt="Clasificacion" class="services-img m-2">
+              </div>
+              <h5 class="card-title fw-bold">Clasificación de emergencias</h5>
+              <p class="card-text text-muted">
+                Tu caso es clasificado de acuerdo a su prioridad.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <div class="card2 h-100">
+            <div class="card-body text-start mx-2">
+              <div class="mb-3">
+                <img src="../static/img/notification.png" alt="Notificacion" class="services-img m-2">
+              </div>
+              <h5 class="card-title fw-bold">Notificación a autoridades</h5>
+              <p class="card-text text-muted">
+                El sistema notifica a las entidades competentes con la información de tu caso.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <div class="card2 h-100">
+            <div class="card-body text-start mx-2">
+              <div class="mb-3">
+                <img src="../static/img/report.png" alt="Generacion" class="services-img m-2">
+              </div>
+              <h5 class="card-title fw-bold">Consulta de casos</h5>
+              <p class="card-text text-muted">
+                Consulta el estado de cada uno de tus casos y su información detallada
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+  </section>
 
-  </div>
-</section>
+  <!-- SECTION EMPRESA -->
+  <section id="empresa" class="section2 mb-2">
+    <h2 class="subtitle text-center">Empresa</h2>
+    <div class="container">
+      <p class="text-center text">Conoce nuestra razón de ser y hacia dónde nos dirigimos. En Vitaria SOS trabajamos con
+        compromiso para construir un futuro más seguro y resiliente.</p>
+    </div>
+    <div class="container mb-3 p-2">
+      <div class="row g-4 m-auto w-75">
+        <div class="col-md-6">
+          <div class="card2 h-100 p-3">
+            <img src="../static/img/mision.jpg" class="rounded-4 disaster-img w-75" alt="mision">
+            <h5 class="card-title fw-bold text-center mt-2">Misión</h5>
+            <div class="card-body">
+              <p class="card-text text-center my-3" style="text-align: justify;">Optimizar la gestión de emergencias naturales en Cundinamarca
+                mediante la
+                implementación de tecnología confiable, accesible y segura que facilite la comunicación entre la
+                población afectada y las entidades gubernamentales encargadas de brindar ayuda agilizando los procesos
+                de atención humanitaria y el respectivo registro en el Registro Único de Damnificados.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card2 h-100 p-3">
+            <img src="../static/img/vision.jpg" class="rounded-4 disaster-img w-75" alt="vision">
+            <h5 class="card-title fw-bold text-center mt-2">Visión</h5>
+            <div class="card-body">
+              <p class="card-text text-center my-3" style="text-align: justify;">Consolidarse como una herramienta digital de gran relevancia en
+                Colombia para la
+                gestión digital y atención de emergencias naturales, promoviendo soluciones digitales de fácil manejo y
+                la participación ciudadana ante los diversos desastres naturales fortaleciendo la transparencia y la
+                confianza entre la comunidad, las autoridades y las instituciones gubernamentales.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <!-- BOTON VOLVER ARRIBA -->
+  <button id="btnSubir" class="btn-subir" aria-label="Volver arriba">
+    ↑
+  </button>
+</main>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const btnSubir = document.getElementById('btnSubir');
+    const seccionDesastres = document.getElementById('desastres');
+    let animacionScroll = null; // Para poder cancelar la animación si es necesario
+
+    if (!btnSubir || !seccionDesastres) return;
+
+    // Mostrar/ocultar botón al hacer scroll
+    function toggleBotonSubir() {
+      const rect = seccionDesastres.getBoundingClientRect();
+      if (rect.top <= window.innerHeight * 0.3) {
+        btnSubir.classList.add('mostrar');
+      } else {
+        btnSubir.classList.remove('mostrar');
+      }
+    }
+
+    window.addEventListener('scroll', toggleBotonSubir);
+    toggleBotonSubir();
+
+    // Función de scroll suave con duración controlada (3000ms)
+    function scrollToTop(duration = 2000) {
+      if (animacionScroll) {
+        cancelAnimationFrame(animacionScroll);
+      }
+
+      const start = window.scrollY;
+      const startTime = performance.now();
+
+      function step(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1); // valor entre 0 y 1
+
+        // Función de easing: easeOutCubic (aceleración suave al final)
+        const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+        const newY = start * (1 - easeOutCubic);
+
+        window.scrollTo(0, newY);
+
+        if (progress < 1) {
+          animacionScroll = requestAnimationFrame(step);
+        } else {
+          animacionScroll = null;
+        }
+      }
+
+      animacionScroll = requestAnimationFrame(step);
+    }
+
+    // Evento clic del botón
+    btnSubir.addEventListener('click', function () {
+      scrollToTop(3000); // 3000 ms = 3 segundos
+    });
+  });
+</script>
+{% include 'footer.html' %}
 {% endblock %}

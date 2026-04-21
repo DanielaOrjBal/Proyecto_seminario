@@ -1,4 +1,4 @@
-from flask import request, redirect, url_for, render_template,session,jsonify, send_file
+from flask import request, redirect, url_for, render_template,session,jsonify, send_file, make_response
 from flask_mail import Message
 from app.models.utils import enviar_correo_registro, enviar_correo_caso, enviar_correo_actualizacion_datos, enviar_correo_actualizacion_datos_admin, enviar_correo_recuperacion, generar_contrasena_temporal, enviar_correo_caso_entidad
 from urllib.parse import quote
@@ -8,7 +8,8 @@ from app.models.desastre import Desastre
 from app.models.utils import validar_fecha, validar_edad, validar_caracteres_consecutivos, validar_número_documento
 import re, os
 import time
-from datetime import datetime
+from flask_jwt_extended import create_access_token, set_access_cookies, unset_jwt_cookies,get_jwt_identity, get_jwt
+from datetime import datetime, timedelta
 import pandas as pd
 from io import BytesIO
 
@@ -26,50 +27,73 @@ class Login:
             
             
             user = Usuario.get_user_by_name(username)
-            print(f"Usuario: {user is not None}, Contraseña ingresada: {password}")
+    
             
             # Validar existencia de usuario en la base de datos
             if not user:
                 return jsonify({"status":"error", "msg": "Nombre de usuario no encontrado. Verifique nombre de usuario ingresado.❌"}), 400
 
             # Validar contraseña del usuario
-            if user.password != password:
-                print(f"Contraseña incorrecta para {username}")
-                return jsonify({"status":"error", "msg": "Credenciales incorrectas. Inténtelo de nuevo.❌"}), 400
+            if not user.verificar_contrasena(password):
+                return jsonify({"status": "error", "msg": "Credenciales incorrectas. ❌"}), 400
 
             
             # Validar estado del usuario
             if user.estado == "00":  # 01 activo, 00 Inactivo
-                print(f"Usuario {username} inactivo")
                 return jsonify({"status":"warning", "msg": "Usuario inactivo. Contacte al administrador.⚠"}), 400
             
-            # GUardar datos en sesión
-            session['username'] = user.username
+            access_token = create_access_token(
+                identity=str(user.id_usuario),
+                additional_claims={
+                    "username": user.username,
+                    "rol": user.rol
+                },
+                expires_delta=timedelta(minutes=int(os.getenv('JWT_ACCESS_TOKEN_EXPIRES_MINUTES')))
+            )
             
             # Obtener el rol del usuario 
             if user.rol == 'Admin':
-                return jsonify({
-                    "status":"success", 
-                    "msg": "Login exitoso para administrador ✅",
-                    "redirect":"/admin/dashboard"}), 200
+                redirect_url = "/admin/dashboard" 
+                msg = "Login exitoso para administrador ✅"
+                
+            elif user.rol== 'User':
+                redirect_url = "/user/dashboard" 
+                msg= "Login exitoso para usuario ✅"
+            
             else:
-                return jsonify({
-                    "status":"success", 
-                    "msg": "Login exitoso para usuario ✅",
-                    "redirect" : "/user/dashboard"}), 200
+                redirect_url = "/auth/login"
+                msg = "Rol no encontrado "
 
+            # construccion del response para ambos casos
+            response = make_response(jsonify({
+                "status": "success",
+                "msg": msg,
+                "access_token": access_token,
+                "redirect": redirect_url
+            }), 200)
+            Usuario.insert_historical(
+                user_id=user.id_usuario,
+                username=user.username,
+                action='INGRESAR',
+                description='Nuevo ingreso de usuario al aplicativo'
+            )
+
+            set_access_cookies(response, access_token)
+
+            return response   
+            
         # Mostrar la plantilla de login en caso de no pasar las validaciones
         return render_template('login.html')
     
     #Funcion para logout de usuario
     def logout(self):
-        # Limpiar los datos guardados en la sesión
-        session.pop('user_id', None)
-        session.pop('username', None)
-        session.pop('rol', None)
         msg = quote("Sesión cerrada exitosamente ✅") 
-        return redirect(url_for('auth.login', status="success", msg=msg)) # Redirigir a la página de login
-
+        
+        response = redirect(url_for('auth.login', status="success", msg=msg)) # Redirigir a la página de login
+        unset_jwt_cookies(response) 
+        
+        return response
+        
 class Registro:
     def __init__(self):
         pass
@@ -77,7 +101,6 @@ class Registro:
     #Funcion para registro de usuario
     def registro(self):
         if request.method == 'POST':
-            print("Datos recibidos del formulario:", request.form.to_dict())
             
             # Obtener datos del formulario
             username = request.form.get("username", "")
@@ -230,21 +253,48 @@ class Registro:
                 
             # REGISTRO DE USUARIO DESPUES DE VALIDACIONES
             try:
+                hashed_password = Usuario.hash_password(password)
+
                 Usuario.insert_user_with_details(
-                    username, password,
+                    username, hashed_password,
                     id_persona, primer_nombre, segundo_nombre,
                     primer_apellido, segundo_apellido, tipo_doc, fecha_nac,
                     edad_calculada, direccion, num_contacto, email
                 )
                 
+                id_usuario = Usuario.get_user_id(username)
+            
+                access_token = create_access_token(
+                    identity=str(id_usuario),
+                    additional_claims={
+                        "username": username,
+                        "rol": "User" 
+                    },
+                    expires_delta=timedelta(
+                        minutes=int(os.getenv(
+                            'JWT_ACCESS_TOKEN_EXPIRES_MINUTES'
+                            ))
+                        )
+                )
+                
+                Usuario.insert_historical(
+                    user_id=id_usuario,
+                    username=username,
+                    action='CREAR',
+                    description='Creación de un nuevo usuario'
+                )
                 enviar_correo_registro(primer_nombre, primer_apellido,email,username)
                 
-                session['username'] = username
-                
-                return jsonify({
+                response = make_response(jsonify({
                     "status":"success", 
                     "msg": "Usuario registrado correctamente ✅",
-                    }), 200
+                    "access_token": access_token,
+                    "redirect": "/user/dashboard" 
+                }), 200)
+                
+                # Configurar las cookies de acceso
+                set_access_cookies(response, access_token)
+                return response 
                 
             except Exception as e:
                 print("Error al ingresar el usuario", e)
@@ -256,19 +306,14 @@ class Registro:
     def registrar_caso_usuario(self):
         # Manejo de datos del formulario
         if request.method == "POST":
-            fecha = request.form ["fecha"]
-            descripcion = request.form["descripcion"]
-            direccion = request.form["direccion"]
-            personas_afectadas = request.form["personas_afectadas"]
-            fk_desastre= request.form["tipo_desastre"]
-            fk_ciudad = request.form["ciudad"]
-            radicado = None  
             
-            #  Detectar si es admin o usuario
-            if "fk_usuario" in request.form:  # caso del admin
-                fk_usuario = request.form["fk_usuario"]
-            else:  # caso del usuario autenticado
-                fk_usuario = Usuario.get_user_by_session()
+            fecha = request.form.get("fecha")
+            descripcion = request.form.get("descripcion")
+            direccion = request.form.get("direccion")
+            personas_afectadas = request.form.get("personas_afectadas")
+            fk_desastre = request.form.get("tipo_desastre")
+            fk_ciudad = request.form.get("ciudad")  
+            fk_usuario = get_jwt_identity()
             
             # VALIDACIONES ANTES DE REGISTRAR
             
@@ -291,16 +336,21 @@ class Registro:
             
             # REGISTRO DE CASO DESPUES DE VALIDACIONES
             try:
-                id_caso = Caso.insert_case(fecha, descripcion, direccion, personas_afectadas,fk_usuario, fk_desastre,fk_ciudad,radicado)
+                id_caso = Caso.insert_case(fecha, descripcion, direccion, personas_afectadas,
+                           fk_usuario, fk_desastre, fk_ciudad, fk_estado="R")
                 
                 usuario = Usuario.get_user_account(fk_usuario)
                 caso= Caso.get_case_by_id(id_caso)
                 
-                if not usuario:
-                    raise Exception("No se encontró información del usuario")
+                if not usuario or not caso:
+                    raise Exception("Datos de usuario o caso no encontrados")
                 
-                if not caso:
-                    raise Exception("No se encontró el caso recién registrado.")
+                Usuario.insert_historical(
+                    user_id=fk_usuario,
+                    username=usuario['nombre_usuario'],
+                    action='CREAR',
+                    description='Nuevo registro de un caso'
+                )
                 
                 email = usuario["email"]
                 nombre = usuario["nombres"]
@@ -315,6 +365,7 @@ class Registro:
                 print("Error al ingresar el caso", e)
                 return jsonify({"status":"error", "msg": "Error al registrar caso, inténtelo nuevamente ❌"}), 500
 
+
 class Consulta:
     def __init__(self):
         pass
@@ -322,14 +373,14 @@ class Consulta:
     def buscar_caso_usuario(self):
         try:
             # Obtener el id del usuario desde la sesión para buscar sus casos
-            fk_usuario = Usuario.get_user_by_session()
+            fk_usuario = get_jwt_identity()
             if not fk_usuario:
-                raise ValueError("No hay usuario en sesión o no existe en la base de datos.")
+                raise ValueError("No hay un usuario autenticado en el token.")
             
             # Obtener los casos asociados al usuario
             casos = Caso.get_cases_user(fk_usuario)
             if not casos:
-                raise ValueError("No se encontraron casos para este usuario.")
+                return []
             return casos
         
         #manejo de errores
@@ -349,18 +400,17 @@ class Consulta:
         except Exception as e:
             print(f"Error al consultar casos admin: {e}")
             return []
+        
     # Funcion para ver datos de usuario           
     def ver_datos_usuario(self):
         try:
-            #  Obtener el nombre de usuario desde la sesión
-            username = session.get("username")
-            if not username:
-                raise ValueError("No hay usuario en sesión.")
+            #  Obtener el id y nombre de usuario desde el token
+            claims = get_jwt()
+            username = claims.get("username")
+            fk_usuario = get_jwt_identity()
 
-            # Obtener el id del usuario desde la sesión
-            fk_usuario = Usuario.get_user_by_session()
-            if not fk_usuario:
-                raise ValueError("El usuario no existe en la base de datos.")
+            if not username or not fk_usuario:
+                raise ValueError("Credenciales inválidas en el token.")
 
             # Obtener los datos del usuario desde la base de datos
             usuario = Usuario.get_user_account(fk_usuario)
@@ -368,12 +418,6 @@ class Consulta:
             # Validar que se hayan obtenido datos del usuario
             if not usuario:
                 raise ValueError("No se encontraron datos para este usuario.") 
-
-            # Enmascarar la contraseña para mostrarla parcialmente al usuario
-            raw_password = usuario["contrasena"] or ""
-            visible_part = raw_password[-2:] 
-            masked ="••" * (len(raw_password) - 2) + visible_part 
-            usuario["contrasena_masked"] = masked
             
             print("Datos del usuario obtenidos:", usuario)
             return jsonify(usuario) # Devolver los datos del usuario en formato JSON
@@ -427,7 +471,6 @@ class Consulta:
         
         initial_date = request.form.get("FechaInicial")
         final_date = request.form.get("FechaFinal")
-        print("Fechas recibidas:", initial_date, final_date) 
         
         if not initial_date or not final_date:
             return jsonify({"status":"warning", "msg": "Faltan datos en el formulario. ⚠"}), 400
@@ -481,7 +524,7 @@ class Actualizar:
     def actualizar_datos_usuario(self):    
         try:
             # Obtener el id del usuario desde la sesión
-            fk_usuario = Usuario.get_user_by_session()
+            fk_usuario = get_jwt_identity()
             if not fk_usuario:
                 raise ValueError("Usuario no encontrado en sesión.")
 
@@ -578,16 +621,20 @@ class Actualizar:
             
             # Actualizar los datos del usuario en la base de datos
             actualizar= Usuario.update_user_account(fk_usuario, pri_nom, seg_nom, pri_ape, seg_ape, direccion, email, telefono, edad, username)
-                        
+             
+            if actualizar:
+                claims = get_jwt()
+                username = claims.get('username')
+                Usuario.insert_historical(
+                    user_id=fk_usuario,
+                    username=username,
+                    action='ACTUALIZAR/MODIFICAR',
+                    description='Actualización de datos'
+                )
+                
             # Manejo de errores en la actualización
             if not actualizar:
-                raise ValueError("No se pudo actualizar los datos del usuario.")
-            print("Datos del usuario actualizados:", actualizar)
-            
-            #Actualizar nombre de usuario en sesión si fue modificado
-            if username:
-                session['username'] = username
-                print("Nombre de usuario en sesión actualizado a:", username)
+                raise ValueError("No se pudo actualizar los datos del usuario.")    
                 
             usuario = Usuario.get_user_account(fk_usuario)
             
@@ -615,26 +662,18 @@ class Actualizar:
     def cambiar_contrasena_usuario(self):
         try:
             # Obtener el id del usuario desde la sesión
-            fk_usuario = Usuario.get_user_by_session()
+            fk_usuario = get_jwt_identity()
             if not fk_usuario:
                 raise ValueError("Usuario no encontrado en sesión.")
             print("Usuario ID en sesión:", fk_usuario)
             
             # Obtener la contraseña del usuario almacenada en la base de datos
             stored_password = Usuario.get_user_password(fk_usuario)
-            print("Contraseña almacenada :", stored_password)
             
              # Obtener los datos del formulario
             new_password = request.form.get("new_password","").strip()
             confirm_password = request.form.get("confirm_password","").strip()
-            actual_password = request.form.get("actual_password","").strip()
-
-            # Imprimir los datos recibidos para depuración
-            print("Cambio de contraseña solicitado para usuario ID:", fk_usuario
-                  , "Contraseña actual ingresada:", actual_password
-                  , "Nueva contraseña ingresada:", new_password
-                  , "Confirmación de nueva contraseña ingresada:", confirm_password
-                )
+            actual_password = request.form.get("actual_password","").strip()            
                     
             # VALIDACIONES ANTES DE ACTUALIZAR 
             
@@ -643,7 +682,8 @@ class Actualizar:
                 return jsonify({"status":"error", "msg": "No se pudo obtener la contraseña almacenada ❌"}), 400
             
              #Validar que la contraseña actual ingresada coincida con la almacenada
-            if actual_password != stored_password:
+            usuario_validador = Usuario(password=stored_password)
+            if not usuario_validador.verificar_contrasena(actual_password):
                 return jsonify({"status":"error", "msg": "La contraseña actual es incorrecta ❌"}), 400
             
             # Validar que los campos no esten vacios
@@ -669,9 +709,20 @@ class Actualizar:
             if new_password != confirm_password:
                 return jsonify({"status":"warning", "msg": "La nueva contraseña y su confirmación no coinciden ⚠"}), 400
             
-            # Actualizar la contraseña en la base de datos cuando pase todas las validaciones
-            actualizado = Usuario.change_user_password(fk_usuario, new_password)
+            hashed_new_password = Usuario.hash_password(new_password)
             
+            # Actualizar la contraseña en la base de datos cuando pase todas las validaciones
+            actualizado = Usuario.change_user_password(fk_usuario, hashed_new_password)
+            
+            if actualizado:
+                claims = get_jwt()
+                username = claims.get('username')
+                Usuario.insert_historical(
+                    user_id=fk_usuario,
+                    username=username,
+                    action='ACTUALIZAR/MODIFICAR',
+                    description='Cambio de contraseña'
+                )
             # Manejo de errores en la actualización
             if not actualizado: 
                 return jsonify({"status":"error", "msg": "No se pudo actualizar la contraseña ❌"}), 400
@@ -712,9 +763,10 @@ class Actualizar:
                     return jsonify({"status":"warning", "msg": "El correo ingresado no coincide con el correo registrado. Inténtelo nuevamente. ⚠"}), 400
                 
                 contrasena_temporal = generar_contrasena_temporal()
+                hashed_temp_password = Usuario.hash_password(contrasena_temporal)
                 try: 
                     
-                    actualizado = Usuario.change_user_password(fk_usuario, contrasena_temporal)
+                    actualizado = Usuario.change_user_password(fk_usuario, hashed_temp_password)
                     
                     # Manejo de errores en la actualización
                     if not actualizado: 
@@ -786,12 +838,18 @@ class Actualizar:
                 contrasena = contrasena_final
             )
 
+            if actualizado:
+                claims = get_jwt()
+                username = claims.get('username')
+                Usuario.insert_historical(
+                    user_id=get_jwt_identity(),
+                    username=username,
+                    action='ACTUALIZAR/MODIFICAR',
+                    description=f'Usuario {user_id} actualizado por administrador'
+                )
+                
             usuario = Usuario.get_user_account(user_id)
-            
-            raw_password = usuario["contrasena"] or ""
-            visible_part = raw_password[-2:] 
-            masked ="••" * (len(raw_password) - 2) + visible_part 
-            usuario["contrasena_masked"] = masked
+    
             
             nombre = usuario["nombres"]
             apellido = usuario["apellidos"]
@@ -843,6 +901,16 @@ class Eliminar:
             eliminado = Usuario.delete_user(user_id)
             
             if eliminado:
+                # Obtener datos del usuario que realiza la acción (admin)
+                claims = get_jwt()
+                username = claims.get('username')
+                user_id_admin = get_jwt_identity()
+                Usuario.insert_historical(
+                    user_id=user_id_admin,
+                    username=username,
+                    action='ELIMINAR',  # o 'ELIMINAR' si prefieres
+                    description=f'Usuario {user_id} desactivado'
+                )
                 return jsonify({"status": "success", "msg": "Usuario desactivado correctamente.✅"}),200
             
             else:

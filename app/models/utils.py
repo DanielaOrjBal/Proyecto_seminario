@@ -36,7 +36,7 @@ def validar_fecha(fecha):
             return "La fecha no puede ser anterior al 1 de enero del año 2000. ⚠"
         
     except ValueError:
-        return "Formato de fecha inválido. Use el formato AAAA-MM-DD. ⚠"
+        return "Formato de fecha inválido. Use el formato DD/MM/AAAA. ⚠"
     return None 
 
 def validar_edad(fecha_nac):

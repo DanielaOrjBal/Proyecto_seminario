@@ -1,147 +1,121 @@
-#root {
-  height: 100vh;
-  margin: 0;
-  padding: 0;
-  background: linear-gradient(186deg,rgba(172, 222, 235, 1) 0%, rgba(218, 231, 245, 0.43) 100%);
-  background-size: cover;
+body {
+  text-align: justify !important;
 }
+
+html {
+  visibility: hidden;
+  scroll-behavior: smooth;
+}
+
+html.loaded {
+  visibility: visible;
+}
+
 #toast {
   position: fixed !important;
   z-index: 20000 !important;
+  top: 10px;
 }
+
 .modal-backdrop {
   z-index: 1050 !important;
 }
+
 .modal {
   z-index: 1055 !important;
 }
 
+
 /* NAVBAR */
 .custom-navbar {
-  background-color: #fdfdfd; 
-  padding: 5px 20px;
+  background-color: #fdfdfd;
   box-shadow: 0px 1px 5px 2px #0000005e;
   position: fixed;
   width: 100%;
+  height: 10vh;
   top: 0;
   z-index: 1000;
   margin-bottom: 5px;
 }
-/* === Botones de idioma === */
-.language-switch {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.btn-lang {
-  background-color: #053e7a;
-  color: #fff;
-  border-radius: 8px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  transition: all 0.3s ease;
-}
-
-.flag-icon {
-  width: 28px;
-  height: auto;
-  border-radius: 2px;
-}
-
-/* Hover por idioma */
-#btn-es:hover {
-  background: linear-gradient(180deg,rgba(255, 204, 0, 0.644) 10%, rgba(52, 149, 233, 0.658) 43%, rgba(226, 0, 26, 0.64) 95%);
-  border-color: #e2001a;
-}
-
-#btn-en:hover {
-  background:  linear-gradient(180deg,rgba(12, 57, 172, 0.76) 10%, rgba(196, 216, 234, 1) 43%, rgba(226, 0, 26, 0.64) 100%);
-  border-color: #00247d;
-}
-
-#btn-fr:hover {
-  background: linear-gradient(0deg,rgba(0, 85, 164, 0.88) 0%, rgba(196, 216, 234, 1) 23%, rgba(255, 255, 255, 0.65) 45%, rgba(248, 175, 170, 1) 78%, rgba(239, 65, 53, 0.91) 100%);
-  border-color: #ef4135;
-  color: #111;
-}
-
-.btn-lang.active {
-  color: #fff;
-  transform: scale(1.05);
-}
-
-#btn-es.active {
-  background: linear-gradient(180deg,rgba(255, 204, 0, 0.644) 10%, rgba(52, 149, 233, 0.658) 43%, rgba(226, 0, 26, 0.64) 95%);
-  border-color: #d80707;
-   color: #111;
-
-}
-
-#btn-en.active {
-  background: linear-gradient(180deg,rgba(12, 57, 172, 0.76) 10%, rgba(196, 216, 234, 1) 43%, rgba(226, 0, 26, 0.64) 100%);
-  border-color: #00247d;
-    color: #111;
-
-}
-
-#btn-fr.active {
-  background: linear-gradient(0deg,rgba(0, 85, 164, 0.88) 0%, rgba(196, 216, 234, 1) 23%, rgba(255, 255, 255, 0.65) 45%, rgba(248, 175, 170, 1) 78%, rgba(239, 65, 53, 0.91) 100%);
-  border-color: #ef4135;
-  color: #111;
-}
 
 .navbar-logo {
-  width: 100px;
+  width: 5vw;
+  min-width: 55px;
   height: auto;
+  margin: auto;
 }
 
 .navbar-title {
-  font-family: 'Limelight', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Times New Roman', Times, serif;
   font-style: normal;
-  font-weight: bold;
+  font-weight: 700;
+  line-height: 1.0;
   color: #222;
+  font-size: clamp(15px, 3vw, 20px) !important;
 }
 
+
 .btn-primary {
-  background-color: #053e7a !important;
+  background-color: #569275 !important;
   border: none;
   font-weight: 500;
   padding: 8px 15px;
+  height: auto;
   transition: background-color 0.3s ease;
 }
 
 .btn-primary:hover {
-  background-color: #49AB87 !important;
+  background-color: #053e7a !important;
+}
+
+.btn-secondary {
+  background-color: #ffffff5c !important;
+  border: solid 1px;
+  border-color: #0c0b0b;
+  font-weight: 500;
+  padding: 8px 15px;
+  transition: background-color 0.3s ease;
+  color: #000000;
+}
+
+.btn-secondary:hover {
+  background-color: #053e7a !important;
+  border-color: #053e7a;
 }
 
 
 /* FOOTER */
 .custom-footer {
-  background-color: white; 
-  padding: 10px;
+  height: fit-content;
+  width: 100%;
+  height: fit-content;
+  background-color: #053e7a;
+  padding: 8px;
   margin-top: auto;
-  font-family: Arial, sans-serif;
-  box-shadow: 0px 5px 10px 2px #0000005e;
+  color: white;
 }
 
 /* Logo */
 .logo {
-  width: 10vw;
+  width: 6vw;
+  min-width: 50px;
   height: auto;
   object-fit: contain;
-  margin-left: auto;
 }
 
 /* Títulos */
 .footer-title {
+  font-family: 'Limelight', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 500;
+  color: #ffffff;
+  font-size: clamp(15px, 3vw, 20px) !important;
+}
+
+.footer-subtitle {
   font-weight: bold;
   font-size: 16px;
   margin-bottom: 5px;
-  color: #111;
+  color: #ffffff;
 }
 
 /* Links */
@@ -157,54 +131,88 @@
 
 .footer-links a {
   text-decoration: none;
-  color: #111;
   font-size: 14px;
   transition: color 0.3s;
+  color: white;
 }
 
 .footer-links a:hover {
-  color: #0056b3;
-}
-
-/* Redes sociales */
-.social-icon {
-  font-size: 20px;
-  color: #111;
-  transition: color 0.3s;
-}
-
-.social-icon:hover {
-  color: #0056b3;
+  color: #080b0f;
 }
 
 /* Copyright */
 .footer-copy {
-  font-size: 12px;
-  margin-top: 10px;
-  color: #333;
+  font-size: 11px;
+  color: #fffafa;
 }
 
-/* Contacto */
-.footer-contact {
-  font-size: 14px;
-  color: #111;
+.btn.btn-primary.d-lg-none.m-3 {
+  background-color: #053e7a !important;
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 2px 5px rgba(76, 175, 80, 0.3);
 }
+
+.btn.btn-primary.d-lg-none.m-3:hover {
+  background-color: #49AB87 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(17, 77, 19, 0.856);
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.5);
+}
+
 .modal-header {
   border-bottom: none;
   background-color: #053e7a;
   color: white;
 }
 
+.custom-toggler {
+  border: 1px solid #053e7a;
+  padding: 4px 8px;
+}
+
+.navbar-toggler {
+  border: 1px solid #053e7a;
+  padding: 4px 8px;
+}
+
+.navbar-toggler:focus {
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 123, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
 
 @media (max-width: 991px) {
-  .custom-navbar .navbar-collapse .d-flex {
+  .custom-navbar{
+    height: min-content;
+  }
+  .navbar-collapse {
+    background-color: #fdfdfd;
+    padding: 1rem;
+    border-radius: 0 0 8px 8px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  }
+  .navbar-collapse .d-flex {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
     padding: 10px 0;
   }
-  .btn-primary {
-    width: 50%; 
+   .navbar-collapse .btn {
+    width: 100%;
     text-align: center;
   }
+
 }
