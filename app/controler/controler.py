@@ -71,6 +71,7 @@ class Login:
                 "access_token": access_token,
                 "redirect": redirect_url
             }), 200)
+            
             Usuario.insert_historical(
                 user_id=user.id_usuario,
                 username=user.username,

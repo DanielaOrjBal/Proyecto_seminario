@@ -117,7 +117,6 @@ def generar_contrasena_temporal():
     # Convertir a string
     return ''.join(password)
 
-
 def enviar_correo_registro(primer_nombre,primer_apellido,email,username):
     try:
         asunto = "Bienvenido a VITARIA SOS"

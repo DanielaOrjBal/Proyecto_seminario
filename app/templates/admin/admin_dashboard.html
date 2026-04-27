@@ -7,68 +7,8 @@
 {% block content %}
 <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
 <script src="{{ url_for('static', filename='js/form.js') }}"></script>
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script><div id="dynamic-content">
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+<div id="dynamic-content">
     
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Función para cargar una sección
-    function loadSection(url) {
-        fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    // Si la respuesta no es exitosa (401, 403, etc.)
-                    return response.json().then(data => {
-                        throw new Error(data.msg || 'Sesión expirada. Por favor inicie sesión nuevamente.');
-                    });
-                }
-                return response.text();
-            })
-            .then(html => {
-                document.getElementById('dynamic-content').innerHTML = html;
-                // Ejecutar scripts insertados
-                const scripts = document.querySelectorAll('#dynamic-content script');
-                scripts.forEach(script => {
-                    const newScript = document.createElement('script');
-                    if (script.src) {
-                        newScript.src = script.src;
-                    } else {
-                        newScript.textContent = script.textContent;
-                    }
-                    document.body.appendChild(newScript);
-                    script.remove();
-                });
-            })
-            .catch(err => {
-                console.error('Error cargando sección:', err);
-                if (typeof showToast === 'function') {
-                    showToast(err.message, 'error');
-                } else {
-                    alert(err.message);
-                }
-                setTimeout(() => {
-                    window.location.href = '/auth/login';
-                }, 2000);
-            });
-    }
-
-    // Cargar la sección inicial (dashboard por defecto)
-    loadSection('/admin/dashboard/stats');
-
-    // Asignar eventos a los enlaces del navbar
-    document.querySelectorAll('.nav-link[data-section]').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const section = this.getAttribute('data-section');
-            let url = '';
-            if (section === 'dashboard') url = '/user/dashboard/stats';
-            else if (section === 'register') url = '/user/register/form';
-            else if (section === 'consult') url = '/user/consult/list';
-            else if (section === 'account') url = '/user/account/info';
-            if (url) loadSection(url);
-        });
-    });
-});
-</script>
 {% endblock %}

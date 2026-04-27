@@ -96,63 +96,93 @@ def dashboard_stats():
         casos_sismo=casos_sismo,
     )
 
+@admin_bp.route('/consult/cases')
+@admin_api_required
+def register_form():
+    return render_template('admin/partials/consult_cases.html')
 
-@admin_bp.route('/register_case', methods=["GET", "POST"])
-def register_case():
-    return Registro().registrar_caso_usuario()
+@admin_bp.route('/consult/users')
+@admin_api_required
+def consult_list():
+    return render_template('admin/partials/consult_users.html')
+
+@admin_bp.route('/report/form')
+@admin_api_required
+def report():
+    return render_template('admin/partials/reports.html')
+
+@admin_bp.route('/account/info')
+@admin_api_required
+def account_info():
+    user_id = get_jwt_identity()
+    usuario = Usuario.get_user_account(user_id)
+    return render_template('admin/partials/account_info.html', usuario=usuario)
 
 @admin_bp.route('/query_cases')
+@admin_api_required                          
 def query_cases():
     casos = Consulta().buscar_casos_admin()
     return jsonify(casos)
 
 @admin_bp.route('/enviar_correo_caso', methods=['POST'])
+@admin_api_required                          
 def send_case():
     return Enviar().enviar_registro_caso()
 
 @admin_bp.route('/generate_report', methods=["GET", "POST"])
+@admin_api_required                          
 def generate_report():
     return Consulta().generar_reporte()
 
 @admin_bp.route('/manage-account', methods=["GET"])
+@admin_api_required                          
 def manage_account():
     return Consulta().ver_datos_usuario()
 
 @admin_bp.route('/update_account', methods=['POST'])
+@admin_api_required                          
 def update_account():
     return Actualizar().actualizar_datos_usuario()
 
 @admin_bp.route('/change_password', methods=['POST'])
+@admin_api_required                          
 def change_password():
     return Actualizar().cambiar_contrasena_usuario()
 
 @admin_bp.route('/select_users')
+@admin_api_required                          
 def select():
     return Consulta().obtener_usuarios()
 
 @admin_bp.route('/query_users')
+@admin_api_required                          
 def query_users():
     return Consulta().obtener_usuarios()
 
 @admin_bp.route('/query_disasters')
+@admin_api_required                          
 def query_disasters():
     desastres = Consulta().buscar_desastres()
     return jsonify(desastres)
 
 @admin_bp.route('/manage_users')
+@admin_api_required                          
 def manage_users():
     usuarios = Consulta().gestionar_usuarios()
     return jsonify(usuarios)
 
 @admin_bp.route('/get_data_user/<user_id>')
+@admin_api_required                          
 def get_data_user(user_id):
     return Consulta().ver_data_usuario_admin(user_id)
 
 @admin_bp.route('/update_user', methods=['POST'])
+@admin_api_required                          
 def update_user():
     return Actualizar().actualizar_usuario_admin()
 
 @admin_bp.route('/delete_user',methods=['DELETE'] )
+@admin_api_required                          
 def delete_user():
     return Eliminar().eliminar_usuario()
 

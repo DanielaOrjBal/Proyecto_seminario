@@ -1,0 +1,335 @@
+<section class="section p-5 h-100">
+    <div class="container">
+        <div class="card shadow-sm">
+
+            <!-- Header -->
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="subtitle2 mb-1">Gestión de casos</h2>
+                        <p class="text-muted mb-0">
+                            Visualice, administre y envíe a las autoridades los casos registrados por los usuarios.
+                        </p>
+                    </div>
+                    <button class="btn btn-outline-secondary btn-sm" id="refreshBtn">
+                        <i class="bi bi-arrow-repeat"></i> Actualizar
+                    </button>
+                </div>
+
+                <!-- Buscador -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-search"></i></span>
+                            <input type="text" class="form-control" id="searchInput"
+                                placeholder="Buscar por municipio, tipo o usuario">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla -->
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>FECHA DEL CASO</th>
+                                <th>Nº CASO</th>
+                                <th>USUARIO</th>
+                                <th>EMAIL</th>
+                                <th>TIPO DE DESASTRE</th>
+                                <th>UBICACIÓN</th>
+                                <th>ESTADO</th>
+                                <th class="text-center">ACCIONES</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="AdmincasosTableBody">
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Paginación -->
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div id="paginationInfo" class="text-muted small"></div>
+                    <nav>
+                        <ul class="pagination pagination-sm mb-0" id="paginationControls"></ul>
+                    </nav>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal para Enviar Correo a Entidad -->
+<div class="modal fade" id="modalEnviarCorreo" tabindex="-1" aria-labelledby="modalEnviarCorreoLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEnviarCorreoLabel" lan-target="TituloEnviarCorreo">Enviar caso a
+                    entidad responsable</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <span lan-target="TextoInfoCorreo">Se enviará la información de este caso a la entidad
+                        correspondiente para su debida atención.</span>
+                </div>
+
+                <div class="container">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Número de caso:</strong>
+                            <p id="correo-caso-id"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Fecha del evento:</strong>
+                            <p id="correo-caso-fecha"></p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Tipo de desastre:</strong>
+                            <p id="correo-caso-desastre"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Municipio:</strong>
+                            <p id="correo-caso-municipio"></p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Dirección:</strong>
+                            <p id="correo-caso-direccion"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Usuario reportante:</strong>
+                            <p id="correo-caso-usuario"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="hidden" id="casoIdEnviar">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnConfirmarEnvioCorreo">
+                    Confirmar Envío
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        let todosLosCasos = [];
+        let casosFiltrados = [];
+        let currentPage = 1;
+        const rowsPerPage = 5;
+
+        // ids
+        const tbody = document.getElementById('AdmincasosTableBody');
+        const searchInput = document.getElementById('searchInput');
+        const paginationInfo = document.getElementById('paginationInfo');
+        const paginationControls = document.getElementById('paginationControls');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const btnConfirmarEnvio = document.getElementById('btnConfirmarEnvioCorreo');
+
+        if (!tbody) {
+            console.warn("No existe AdmincasosTableBody");
+            return;
+        }
+
+        const estadoColors = {
+            'Enviado': 'bg-info',
+            'Cerrado': 'bg-secondary',
+            'Pendiente': 'bg-warning',
+            'Registrado': 'bg-primary',
+        };
+
+        function renderTable() {
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const pageCasos = casosFiltrados.slice(start, end);
+
+            if (pageCasos.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center">No se encontraron casos.</td></tr>';
+                paginationInfo.innerText = '';
+                paginationControls.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+
+            pageCasos.forEach(caso => {
+                const estado = caso.estado || 'Registrado';
+                const badgeClass = estadoColors[estado] || 'bg-secondary';
+
+                html += `
+                <tr>
+                     <td><strong>${caso.fecha}</strong></td>
+                    <td>#${caso.id}</td>
+                    <td>${caso.usuario || ''}</td>
+                    <td>${caso.email || ''}</td>
+                    <td>${caso.desastre}</td>
+                    <td>
+                        <strong>${caso.municipio}</strong><br>
+                        <small>${caso.direccion || ''}</small>
+                    </td>
+                    <td><span class="badge ${badgeClass}">${estado}</span></td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-primary btn-enviar" data-id="${caso.id}">
+                            Enviar
+                        </button>
+                    </td>
+                </tr>
+            `;
+            });
+
+            tbody.innerHTML = html;
+
+            // 📌 Eventos botones ENVIAR
+            document.querySelectorAll('.btn-enviar').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const casoId = btn.dataset.id;
+                    const caso = todosLosCasos.find(c => c.id == casoId);
+
+                    if (!caso) return;
+                    casoSeleccionado = caso;
+
+
+                    // llenar modal
+                    document.getElementById('correo-caso-id').innerText = '#' + caso.id;
+                    document.getElementById('correo-caso-fecha').innerText = caso.fecha;
+                    document.getElementById('correo-caso-desastre').innerText = caso.desastre;
+                    document.getElementById('correo-caso-municipio').innerText = caso.municipio;
+                    document.getElementById('correo-caso-direccion').innerText = caso.direccion;
+                    document.getElementById('correo-caso-usuario').innerText = caso.usuario;
+
+                    document.getElementById('casoIdEnviar').value = caso.id;
+
+                    const modal = new bootstrap.Modal(document.getElementById('modalEnviarCorreo'));
+                    modal.show();
+                });
+            });
+
+            // paginación
+            const total = casosFiltrados.length;
+            const totalPages = Math.ceil(total / rowsPerPage);
+
+            paginationInfo.innerText = `Mostrando ${start + 1} a ${Math.min(end, total)} de ${total} casos`;
+
+            paginationControls.innerHTML = '';
+            for (let i = 1; i <= totalPages; i++) {
+                paginationControls.innerHTML += `
+                <li class="page-item ${i === currentPage ? 'active' : ''}">
+                    <a class="page-link" href="#" data-page="${i}">${i}</a>
+                </li>
+            `;
+            }
+
+            document.querySelectorAll('.page-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    currentPage = parseInt(link.dataset.page);
+                    renderTable();
+                });
+            });
+        }
+
+        function aplicarFiltro() {
+            const term = searchInput.value.toLowerCase();
+
+            casosFiltrados = todosLosCasos.filter(caso =>
+                caso.id.toString().includes(term) ||
+                (caso.municipio && caso.municipio.toLowerCase().includes(term)) ||
+                (caso.usuario && caso.usuario.toLowerCase().includes(term)) ||
+                (caso.desastre && caso.desastre.toLowerCase().includes(term))
+            );
+
+            currentPage = 1;
+            renderTable();
+        }
+
+        async function cargarCasos() {
+            try {
+                tbody.innerHTML = `
+                <tr>
+                    <td colspan="8" class="text-center">
+                        <div class="spinner-border text-primary"></div> Cargando...
+                    </td>
+                </tr>
+            `;
+
+
+                const casos = await Auth.fetchJSON('/admin/query_cases');
+
+                console.log("ADMIN casos:", casos);
+
+                if (!casos) return;
+
+                todosLosCasos = casos;
+                casosFiltrados = [...casos];
+
+                aplicarFiltro();
+
+            } catch (error) {
+                console.error(error);
+                tbody.innerHTML = '<tr><td colspan="8" class="text-danger text-center">Error al cargar</td></tr>';
+            }
+        }
+
+        async function manejarEnvioCorreo() {
+            if (!casoSeleccionado) return;
+
+            const button = btnConfirmarEnvio;
+            const originalText = button.innerHTML;
+
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Enviando...';
+            button.disabled = true;
+
+            try {
+                const result = await Auth.fetchJSON('/admin/enviar_correo_caso', {
+                    method: 'POST',
+                    body: JSON.stringify({ caso_id: casoSeleccionado.id })
+                });
+
+                console.log(result);
+
+                if (result?.status === "success") {
+                    showToast("Correo enviado correctamente", "success");
+
+                    // cerrar modal
+                    const modalEl = document.getElementById('modalEnviarCorreo');
+                    const modal = bootstrap.Modal.getInstance(modalEl);
+                    modal.hide();
+
+                    // 🔄 recargar tabla
+                    cargarCasos();
+
+                } else {
+                    showToast(result?.msg || "Error al enviar", "error");
+                }
+
+            } catch (error) {
+                console.error(error);
+                showToast("Error al enviar el correo", "error");
+            } finally {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }
+        }
+        searchInput.addEventListener('input', aplicarFiltro);
+        btnConfirmarEnvio.addEventListener('click', manejarEnvioCorreo);
+        refreshBtn.addEventListener('click', () => {
+            cargarCasos();
+        });
+
+        cargarCasos();
+    })();
+</script>

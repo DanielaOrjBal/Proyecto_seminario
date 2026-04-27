@@ -90,7 +90,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="editDataForm" method="POST" action="{{ url_for('user.update_account') }}">
+                    <form id="editDataForm" method="POST" action="{{ url_for('admin.update_account') }}">
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Primer nombre</label>
@@ -151,7 +151,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="UserchangePasswordForm" method="POST" action="{{ url_for('user.change_password') }}">
+                    <form id="UserchangePasswordForm" method="POST" action="{{ url_for('admin.change_password') }}">
                         <div class="mb-3">
                             <label class="form-label">Contraseña actual</label>
                             <input type="password" class="form-control" name="actual_password" required>
@@ -195,7 +195,7 @@
         // Cargar datos desde API
         async function cargarDatosCuenta() {
             try {
-                const usuario = await Auth.fetchJSON('/user/manage-account');
+                const usuario = await Auth.fetchJSON('/admin/manage-account');
                 if (!usuario) return;
                 renderUserData(usuario);
             } catch (error) {

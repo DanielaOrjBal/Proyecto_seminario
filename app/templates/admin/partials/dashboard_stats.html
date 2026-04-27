@@ -114,7 +114,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h3 class="subtitle2">Estadísticas de casos</h3>
-                        <div id="casosChart" width="400" height="200"></div>
+                        <canvas id="casosChart" width="200" height="200"></canvas>
                     </div>
                 </div>
             </div>
@@ -124,7 +124,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h3 class="subtitle2">Estadísticas de usuarios</h3>
-                        <div id="usuariosChart" width="400" height="200"></div>
+                        <canvas id="usuariosChart" width="200" height="200"></canvas>
                     </div>
                 </div>
             </div>
@@ -135,130 +135,30 @@
                 <div class="card">
                     <div class="card-body">
                         <h3 class="subtitle2">Estadísticas de reportes</h3>
-                        <div id="reportesChart" width="400" height="200"></div>
+                        <canvas id="reportesChart" width="200" height="200"></canvas>
                     </div>
                 </div>
             </div>
 
         </div>
-
-
+    </div>
 </section>
 <script>
-(function () {
-
-    function crearPieChart(id, labels, data, titulo) {
-        const options = {
-            chart: {
-                type: 'pie',
-                height: 300
-            },
-            series: data,
-            labels: labels,
-            title: {
-                text: titulo,
-                align: 'center'
-            },
-            legend: {
-                position: 'bottom'
-            },
-            tooltip: {
-                y: {
-                    formatter: function (val) {
-                        return val + " registros";
-                    }
-                }
-            },
-            dataLabels: {
-                enabled: true,
-                formatter: function (val) {
-                    return val.toFixed(1) + "%";
-                }
-            }
-        };
-
-        const chart = new ApexCharts(document.querySelector("#" + id), options);
-        chart.render();
-    }
-
-    function crearBarChart(id, labels, data, titulo) {
-        const options = {
-            chart: {
-                type: 'bar',
-                height: 300
-            },
-            series: [{
-                name: titulo,
-                data: data
-            }],
-            xaxis: {
-                categories: labels
-            },
-            title: {
-                text: titulo,
-                align: 'center'
-            },
-            plotOptions: {
-                bar: {
-                    borderRadius: 6,
-                    columnWidth: '50%'
-                }
-            },
-            dataLabels: {
-                enabled: true
-            },
-            tooltip: {
-                y: {
-                    formatter: function (val) {
-                        return val + " registros";
-                    }
-                }
-            }
-        };
-
-        const chart = new ApexCharts(document.querySelector("#" + id), options);
-        chart.render();
-    }
-
-    function initCharts() {
-
-        // 🔥 1. CASOS (PIE)
-        crearPieChart(
-            "casosChart",
-            ['Incendio', 'Inundación', 'Sismo'],
-            [
-                {{ casos_incendio }},
-                {{ casos_inundacion }},
-                {{ casos_sismo }}
-            ],
-            "Tipos de desastre"
-        );
-
-        // 🔥 2. USUARIOS (PIE)
-        crearPieChart(
-            "usuariosChart",
-            ['Activos', 'Inactivos'],
-            [
-                {{ usuarios_registrados }},
-                {{ usuarios_inactivos }}
-            ],
-            "Estado de usuarios"
-        );
-
-        // 🔥 3. REPORTES (BAR)
-        crearBarChart(
-            "reportesChart",
-            ['Enviados', 'Cerrados', 'Total'],
-            [
-                {{ casos_enviados }},
-                {{ casos_cerrados }},
-                {{ total_casos }}
-            ],
-            "Estado de reportes"
-        );
-    }
-
-    document.addEventListener("DOMContentLoaded", initCharts);
-
-})();
+window.statsData = {{ {
+    "casos": [
+        casos_incendio|default(0),
+        casos_inundacion|default(0),
+        casos_sismo|default(0)
+    ],
+    "usuarios": [
+        usuarios_registrados|default(0),
+        usuarios_inactivos|default(0)
+    ],
+    "reportes": [
+        casos_enviados|default(0),
+        casos_cerrados|default(0),
+        total_casos|default(0)
+    ]
+} | tojson }};
 </script>
+

@@ -104,20 +104,17 @@ class Caso:
         rows = db.execute_query(sql, fetchall=True)
         casos = []
         for row in rows:
-            fecha = row[1]
+            fecha = row[3]
             fecha_formateada = formatear_fecha(fecha)
             casos.append({
                 "id": row[0],
+                "usuario": row[1],
+                "email" : row [2],
                 "fecha": fecha_formateada,
-                "descripcion": row[2],
-                "direccion": row[3],
-                "personas_afectadas": row[4],
-                "desastre": row[5],
+                "desastre": row[4],
+                "direccion": row[5],
                 "municipio": row[6],
-                "estado": row[7],
-                "id_usuario": row[8],
-                "nombre_usuario": row[9],
-                "nombre_completo": row[10]
+                "estado": row[7]
             })
         return casos
 

@@ -109,7 +109,6 @@ def account_info():
     return render_template('usuario/partials/account_info.html', usuario=usuario)
 
 # Cambiado a api_required porque devuelve JSON. 
-# Si necesitas que devuelva HTML en GET, avísame y te muestro cómo separarlas.
 @user_bp.route("/register_case", methods=["POST"])
 @user_api_required                          
 def register_case():

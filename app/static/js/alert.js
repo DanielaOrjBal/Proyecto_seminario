@@ -1,7 +1,4 @@
-// Verificar que Bootstrap esté disponible
-if (typeof bootstrap === 'undefined') {
-    console.error('Bootstrap JS no está cargado. La funcionalidad de toasts no funcionará.');
-}
+
 
 // Asegura que el elemento toast exista en el DOM
 function ensureToastElement() {
@@ -82,6 +79,11 @@ function hideToast() {
 
 // Detectar parámetros en la URL al cargar la página
 document.addEventListener("DOMContentLoaded", () => {
+
+    if (typeof bootstrap === 'undefined') {
+        console.error('Bootstrap JS no está cargado...');
+    }
+
     const params = new URLSearchParams(window.location.search);
     const status = params.get("status");
     const msg = params.get("msg");

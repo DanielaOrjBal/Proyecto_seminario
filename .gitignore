@@ -2,6 +2,5 @@ __pycache__/
 *.pyc
 env/
 app/.env
-*.env
 .pytest_cache/
 .vscode/
