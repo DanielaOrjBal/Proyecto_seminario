@@ -29,12 +29,12 @@
                     <table class="table table-hover align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th>Nº CASO</th>
-                                <th>FECHA DEL EVENTO</th>
-                                <th>DESASTRE OCURRIDO</th>
-                                <th>MUNICIPIO / DIRECCIÓN</th>
-                                <th>AFECTADOS</th>
-                                <th>ESTADO</th>
+                                <th>Nº Caso</th>
+                                <th>Fecha</th>
+                                <th>Desastre ocurrido</th>
+                                <th>Ubicación</th>
+                                <th>Afectados</th>
+                                <th>Estado</th>
                             </tr>
                         </thead>
                         <tbody id="casosTableBody">
@@ -72,10 +72,10 @@
         const refreshBtn = document.getElementById('refreshBtn');
 
         const estadoColors = {
-            'Enviado': 'bg-info',
-            'Cerrado': 'bg-secondary',
-            'Pendiente': 'bg-warning',
-            'Registrado': 'bg-primary',
+            'Enviado': 'bg-success text-white bg-gradient',
+            'Cerrado': 'bg-dark text-white bg-gradient',
+            'Pendiente': 'bg-secondary bg-gradient',
+            'Registrado': 'bg-primary bg-gradient',
         };
 
         // Función para renderizar la tabla

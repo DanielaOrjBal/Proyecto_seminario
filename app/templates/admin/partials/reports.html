@@ -1,0 +1,138 @@
+<section class="section p-5 h-100">
+    <div class="container">
+        <div class="card shadow-sm">
+
+            <!-- Header -->
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="subtitle2 mb-1">Generación de reportes</h2>
+                        <p class="text-muted mb-0">
+                            Descargue reportes con información detallada de cada caso y usuario registrado en el sistema
+                            durante las fechas seleccionadas a continuación.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Tabla -->
+                <form id="generatereportForm">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <span>El reporte ha generar contiene datos e
+                            información confidencial, no la comparta con personal no autorizado.</span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="FechaInicial" class="form-label">Fecha
+                            Inicial</label>
+                        <br>
+                        <small id="fechahelp" class="form-text text-muted">Ingrese la
+                            fecha desde la que desea generar el reporte</small>
+                        <input type="date" name="FechaInicial" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="FechaFinal" class="form-label">Fecha Final</label>
+                        <br>
+                        <small id="fechahelp" class="form-text text-muted">Ingrese la fecha
+                            hasta la que desea generar el reporte</small>
+                        <input type="date" name="FechaFinal" class="form-control" required>
+                    </div>
+                    <!-- Footer -->
+                    <div class="modal-footer">
+                        <button type="submit" id="btnGenerarReporte" class="btn btn-primary mx-3">Generar
+                            Reporte</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    (function () {
+        const inicializarReporte = () => {
+            const form = document.getElementById("generatereportForm");
+
+            if (!form) return;
+
+            // Limpieza de eventos para evitar duplicidad
+            form.onsubmit = null;
+
+            form.addEventListener("submit", async function (e) {
+                // Detención garantizada del envío tradicional
+                e.preventDefault();
+                e.stopPropagation();
+
+                const btn = document.getElementById("btnGenerarReporte");
+                const originalText = btn.innerHTML;
+
+                try {
+                    // Estado de carga
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Generando...';
+
+                    const formData = new FormData(this);
+
+                    // Realizamos la petición
+                    const response = await fetch("/admin/generate_report", {
+                        method: "POST",
+                        body: formData
+                    });
+
+                    // Verificamos si la respuesta es un error (JSON) o el archivo (Blob)
+                    const contentType = response.headers.get("Content-Type");
+
+                    if (!response.ok || (contentType && contentType.includes("application/json"))) {
+                        const result = await response.json();
+
+                        // Uso de showToast para errores/advertencias del servidor
+                        if (typeof showToast === "function") {
+                            showToast(result.msg || "Error al generar el reporte", result.status || "error");
+                        } else {
+                            console.error("showToast no está definida:", result.msg);
+                        }
+                        return;
+                    }
+
+                    // Si llegamos aquí, la respuesta es exitosa y es el archivo
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+
+                    // Configuración de la descarga
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = "Reporte_Casos.xlsx"; // Nombre por defecto
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+
+                    // Liberar memoria
+                    window.URL.revokeObjectURL(url);
+
+                    // Toast de éxito
+                    if (typeof showToast === "function") {
+                        showToast("Reporte descargado correctamente ✅", "success");
+                    }
+
+                } catch (err) {
+                    console.error("❌ Error en el proceso del reporte:", err);
+                    if (typeof showToast === "function") {
+                        showToast("Error de conexión o fallo en el sistema", "error");
+                    }
+                } finally {
+                    // Restaurar interfaz
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                }
+            });
+        };
+
+        // Asegurar ejecución según el estado del DOM
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", inicializarReporte);
+        } else {
+            inicializarReporte();
+        }
+    })();
+</script>

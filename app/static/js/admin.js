@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Sesión expirada, ingrese nuevamente');
-                     window.location.href = `/auth/login?status=warning&msg=${msg}`;
+                    window.location.href = `/auth/login?status=warning&msg=${msg}`;
                     return null;
                 }
                 return response.text();
@@ -58,9 +58,46 @@ document.addEventListener('DOMContentLoaded', () => {
             data: {
                 labels: ['Incendio', 'Inundación', 'Sismo'],
                 datasets: [{
-                    data: window.statsData.casos
+                    data: window.statsData.casos,
+                    backgroundColor: ['#f56a5b', '#65baf3', '#f8d95d'],
                 }]
-            }
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        labels: {
+                            generateLabels: function (chart) {
+                                const data = chart.data;
+                                return data.labels.map((label, i) => {
+                                    const value = data.datasets[0].data[i];
+                                    return {
+                                        text: `${label} (${value})`,
+                                        fillStyle: data.datasets[0].backgroundColor[i],
+                                        index: i
+                                    };
+                                });
+                            }
+                        }
+
+                    },
+                    datalabels: {
+                        color: '#053e7a',
+                        font: {
+                            weight: 'bold',
+                            size: 14
+                        },
+                        formatter: (value, context) => {
+                            const data = context.chart.data.datasets[0].data;
+
+                            const total = data.reduce((a, b) => a + b, 0);
+                            const percentage = ((value / total) * 100).toFixed(1);
+
+                            return percentage + '%';
+                        }
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
         });
 
         new Chart(document.getElementById("usuariosChart"), {
@@ -68,19 +105,46 @@ document.addEventListener('DOMContentLoaded', () => {
             data: {
                 labels: ['Activos', 'Inactivos'],
                 datasets: [{
-                    data: window.statsData.usuarios
+                    data: window.statsData.usuarios,
+                    backgroundColor: ['#65f384', '#f56a5b' ],
                 }]
-            }
-        });
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        labels: {
+                            generateLabels: function (chart) {
+                                const data = chart.data;
+                                return data.labels.map((label, i) => {
+                                    const value = data.datasets[0].data[i];
+                                    return {
+                                        text: `${label} (${value})`,
+                                        fillStyle: data.datasets[0].backgroundColor[i],
+                                        index: i
+                                    };
+                                });
+                            }
+                        }
 
-        new Chart(document.getElementById("reportesChart"), {
-            type: 'pie',
-            data: {
-                labels: ['Enviados', 'Cerrados', 'Total'],
-                datasets: [{
-                    data: window.statsData.reportes
-                }]
-            }
+                    },
+                    datalabels: {
+                        color: '#053e7a',
+                        font: {
+                            weight: 'bold',
+                            size: 14
+                        },
+                        formatter: (value, context) => {
+                            const data = context.chart.data.datasets[0].data;
+
+                            const total = data.reduce((a, b) => a + b, 0);
+                            const percentage = ((value / total) * 100).toFixed(1);
+
+                            return percentage + '%';
+                        }
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
         });
     }
 
@@ -89,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (section === 'dashboard') return '/admin/dashboard/stats';
         if (section === 'consult_cases') return '/admin/consult/cases';
         if (section === 'consult_users') return '/admin/consult/users';
-        if (section === 'report') return '/admin/report/form';
+        if (section === 'reports') return '/admin/report/form';
         if (section === 'account') return '/admin/account/info';
         return null;
     }

@@ -1,16 +1,29 @@
 <section class="section p-5">
     <h2 class="subtitle">Panel de control</h2>
-    <div class="container mx-2 my-2">
+    <p class="text-muted">Resumen general de los casos del usuario y sus movimientos.</p>
         <div class="row mb-5 g-4 justify-content-center">
+
+            
+            <!-- grafico -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="subtitle2">Gestion de los casos</h3>
+                        <p class="text-muted">Datos estadísticos de los casos registrados</p>
+                        <canvas id="casosChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+
             <!-- info 1 -->
-            <div class="col-md-4 col-sm-6">
+            <div class="col-md-2 col-sm-6">
                 <div class="card text-center">
                     <div class="card-body">
                         <div class="row justify-content-between">
                             <div class="col-6 d-flex align-middle">
                                 <h5><b>Total de casos</b></h5>
                             </div>
-                            <div class="col-4">
+                            <div class="col-6">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="#053e7a" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round"
@@ -20,22 +33,22 @@
                                 </svg>
                             </div>
                         </div>
-                        <h2 class="text-start mt-2">
+                        <h4 class="text-start mt-3">
                             {{ total_casos }}
-                        </h2>
+                        </h4>
                     </div>
                 </div>
             </div>
 
             <!-- info 2 -->
-            <div class="col-md-4 col-sm-6">
+            <div class="col-md-2 col-sm-6">
                 <div class="card text-center">
                     <div class="card-body">
                         <div class="row justify-content-between">
                             <div class="col-6 d-flex align-middle">
                                 <h5><b>Total de casos enviados</b></h5>
                             </div>
-                            <div class="col-4">
+                            <div class="col-6">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="#053e7a" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round"
@@ -46,23 +59,23 @@
                                 </svg>
                             </div>
                         </div>
-                        <h2 class="text-start mt-2">
+                        <h4 class="text-start mt-2">
                             {{ casos_enviados }}
-                        </h2>
+                        </h4>
                     </div>
                 </div>
             </div>
 
 
             <!-- info 3 -->
-            <div class="col-md-4 col-sm-6">
+            <div class="col-md-2 col-sm-6">
                 <div class="card text-center">
                     <div class="card-body">
                         <div class="row justify-content-between">
                             <div class="col-6 d-flex align-middle">
                                 <h5><b>Total de casos cerrados</b></h5>
                             </div>
-                            <div class="col-4">
+                            <div class="col-6">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="#053e7a" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round"
@@ -73,62 +86,14 @@
                                 </svg>
                             </div>
                         </div>
-                        <h2 class="text-start mt-2">
+                        <h4 class="text-start mt-2">
                             {{ casos_cerrados }}
-                        </h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container my-3">
-        <div class="row mb-5 g-4">
-
-            <!-- info 1 -->
-            <div class="col-md-7">
-                <div class="card">
-                    <div class="card-body">
-                        <h3 class="subtitle2">Gestion de los casos</h3>
-                        <canvas id="casosChart" width="400" height="200"></canvas>
+                        </h4>
                     </div>
                 </div>
             </div>
 
-            <!-- info 2 -->
-            <div class="col-md-5">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="align-items-center mb-3">
-                            <h3 class="subtitle2 mb-0">Actividad reciente</h3>
-                            <p class="text-muted">Últimos movimientos de la cuenta registrados </p>
-                        </div>
-                        <div class="card2">
-                            <div class="activity-list">
-                            {% if actividades %}
-                                {% for act in actividades %}
-                                <div class="card mb-3 bg-light border-0">
-                                    <div class="card-body py-2">
-                                        <div class="d-flex align-items-start">
-                                            <div class="flex-grow-1">
-                                                <div class="fw-semibold subtitle2">{{ act.descripcion }}</div>
-                                                <div class="small text-muted text-lowercase">{{ act.accion }}</div>
-                                            </div>
-                                            <div class="text-end">
-                                                <small class="text-muted">{{ act.created_at }}</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endfor %}
-                            {% else %}
-                                <p class="text-muted">No hay actividad reciente.</p>
-                            {% endif %}
-                            </div>
-                        </div>                    
-                    </div>
-                </div>
 
-            </div>
         </div>
 </section>
 

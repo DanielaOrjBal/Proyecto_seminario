@@ -136,7 +136,7 @@ class Usuario:
 
             usuarios = []
             for row in rows:
-                # La vista devuelve 13 campos (sin Id_Rol)
+                # La vista devuelve 13 campos 
                 usuario = {
                     "documento": row[0],
                     "nombres": row[1],
@@ -306,13 +306,13 @@ class Usuario:
             return False
 
     @classmethod
-    def update_user_admin(cls, user_id, username=None, fk_rol=None, contrasena=None):
+    def update_user_admin(cls, user_id, username=None, fk_rol=None):
         """Actualiza usuario desde administración usando procedimiento."""
         db = Conexion()
         try:
             # El procedimiento sp_update_user_admin acepta NULL para campos que no se actualizan
-            sql = "CALL sp_update_user_admin(%s, %s, %s, %s)"
-            db.execute_query(sql, (user_id, username, fk_rol, contrasena), commit=True)
+            sql = "CALL sp_update_user_admin(%s, %s, %s)"
+            db.execute_query(sql, (user_id, username, fk_rol), commit=True)
             print(f"Usuario {user_id} actualizado exitosamente")
             return True
         except Exception as e:

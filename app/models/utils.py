@@ -218,11 +218,11 @@ def enviar_correo_actualizacion_datos(nombre,apellido, direccion, correo,telefon
         traceback.print_exc()
         print(f" Error al enviar correo de registro: {e}")
  
-def enviar_correo_actualizacion_datos_admin(nombre, apellido, correo, username,fk_rol, contrasena):
+def enviar_correo_actualizacion_datos_admin(nombre, apellido, correo, username,fk_rol):
     try:
         asunto = "Actualización de datos administrativos"
         cuerpo = render_template('correos/correo_actualizacion_ad.html',
-                        nombre = nombre, apellido = apellido, username=username,fk_rol = fk_rol, contrasena = contrasena
+                        nombre = nombre, apellido = apellido, username=username,fk_rol = fk_rol
                         )
         
         msg = Message(
@@ -296,7 +296,7 @@ def enviar_correo_caso_entidad(correo_entidad, caso, nombre_entidad):
         asunto = "Caso de desastre natural registrado en VITARIA SOS"
         cuerpo = render_template('correos/correo_entidad.html',
                             caso=caso,
-                             entidad=nombre_entidad
+                            entidad=nombre_entidad
                             )
         
         msg = Message(

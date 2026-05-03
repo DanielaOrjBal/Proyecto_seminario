@@ -29,17 +29,16 @@
 
                 <!-- Tabla -->
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
+                    <table class="table table-hover align-middle custom-table">
                         <thead class="table-light">
                             <tr>
-                                <th>FECHA DEL CASO</th>
-                                <th>Nº CASO</th>
-                                <th>USUARIO</th>
-                                <th>EMAIL</th>
-                                <th>TIPO DE DESASTRE</th>
-                                <th>UBICACIÓN</th>
-                                <th>ESTADO</th>
-                                <th class="text-center">ACCIONES</th>
+                                <th>Nº</th>
+                                <th>Fecha</th>
+                                <th>Usuario</th>
+                                <th>Desastre ocurrido</th>
+                                <th>Ubicación</th>
+                                <th>Estado</th>
+                                <th class="text-center">Acciones</th>
                             </tr>
                         </thead>
 
@@ -60,6 +59,60 @@
         </div>
     </div>
 </section>
+
+<!-- Modal para cambiar estado de caso -->
+<div class="modal fade" id="modalCambiarEstado" tabindex="-1" aria-labelledby="modalCambiarEstadoLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCambiarEstadoLabel">Editar estado de caso</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <span>El caso cambiará al estado que quede seleccionado para su manejo en el sistema.</span>
+                </div>
+
+                <div class="container">
+                    <div class="container">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="estadoCaso" id="estadoCerrado" value="C">
+                            <label class="form-check-label" for="estadoCerrado">
+                                Cerrar caso
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="estadoCaso" id="estadoPendiente"
+                                value="P">
+                            <label class="form-check-label" for="estadoPendiente">
+                                Dejar caso pendiente
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="estadoCaso" id="estadoActivo" value="R">
+                            <label class="form-check-label" for="estadoActivo">
+                                Activar caso nuevamente
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="hidden" id="casoIdCambiar">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnConfirmarCambioEstado">
+                    Confirmar cambios
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!-- Modal para Enviar Correo a Entidad -->
 <div class="modal fade" id="modalEnviarCorreo" tabindex="-1" aria-labelledby="modalEnviarCorreoLabel"
@@ -111,6 +164,11 @@
                             <p id="correo-caso-usuario"></p>
                         </div>
                     </div>
+                    <div class="row mb-3">
+                        <strong>Descripción del caso:</strong>
+                        <small></small>
+                        <p id="correo-caso-descripcion" class="mt-1"></p>
+                    </div>
                 </div>
 
                 <input type="hidden" id="casoIdEnviar">
@@ -118,7 +176,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" id="btnConfirmarEnvioCorreo">
-                    Confirmar Envío
+                    Confirmar envío
                 </button>
             </div>
         </div>
@@ -131,6 +189,7 @@
         let casosFiltrados = [];
         let currentPage = 1;
         const rowsPerPage = 5;
+        let casoSeleccionado = null;
 
         // ids
         const tbody = document.getElementById('AdmincasosTableBody');
@@ -139,6 +198,7 @@
         const paginationControls = document.getElementById('paginationControls');
         const refreshBtn = document.getElementById('refreshBtn');
         const btnConfirmarEnvio = document.getElementById('btnConfirmarEnvioCorreo');
+        const btnConfirmarCambioEstado = document.getElementById('btnConfirmarCambioEstado')
 
         if (!tbody) {
             console.warn("No existe AdmincasosTableBody");
@@ -146,10 +206,10 @@
         }
 
         const estadoColors = {
-            'Enviado': 'bg-info',
-            'Cerrado': 'bg-secondary',
-            'Pendiente': 'bg-warning',
-            'Registrado': 'bg-primary',
+            'Enviado': 'bg-success text-white bg-gradient',
+            'Cerrado': 'bg-dark text-white bg-gradient',
+            'Pendiente': 'bg-secondary bg-gradient',
+            'Registrado': 'bg-primary bg-gradient'
         };
 
         function renderTable() {
@@ -167,33 +227,57 @@
             let html = '';
 
             pageCasos.forEach(caso => {
-                const estado = caso.estado || 'Registrado';
-                const badgeClass = estadoColors[estado] || 'bg-secondary';
+                const estado = (caso.estado || 'Registrado').toString()
+                    .trim()
+                    .toLowerCase();
+                const estadoCapitalizado = estado.charAt(0).toUpperCase() + estado.slice(1);
+
+                const badgeClass = estadoColors[estadoCapitalizado] || 'bg-info';
+                // 👇 estados que NO permiten envío
+                const deshabilitado = ['cerrado', 'enviado'].includes(estado);
+
+                const btnClass = deshabilitado
+                    ? 'btn-secondary text-black'
+                    : 'btn-primary';
+
 
                 html += `
                 <tr>
-                     <td><strong>${caso.fecha}</strong></td>
-                    <td>#${caso.id}</td>
+                    <td><strong>#${caso.id}</strong></td>
+                    <td>${caso.fecha}</td>
                     <td>${caso.usuario || ''}</td>
-                    <td>${caso.email || ''}</td>
                     <td>${caso.desastre}</td>
                     <td>
                         <strong>${caso.municipio}</strong><br>
                         <small>${caso.direccion || ''}</small>
                     </td>
-                    <td><span class="badge ${badgeClass}">${estado}</span></td>
+                    <td><span class="badge ${badgeClass}">${estadoCapitalizado}</span></td>
                     <td class="text-center">
-                        <button class="btn btn-sm btn-primary btn-enviar" data-id="${caso.id}">
-                            Enviar
-                        </button>
+                        <div class="acciones-container">
+                            <button 
+                                class="btn btn-sm ${btnClass} btn-enviar"
+                                data-id="${caso.id}"
+                                ${deshabilitado ? 'disabled' : ''}
+                            >
+                                ${deshabilitado ? estadoCapitalizado : 'Enviar'}
+                            </button>
+
+                            <button 
+                                class="btn btn-sm btn-warning btn-estado"
+                                data-id="${caso.id}"
+                            >
+                                Editar
+                            </button>
+                        </div>
                     </td>
                 </tr>
-            `;
+                `;
             });
 
             tbody.innerHTML = html;
 
-            // 📌 Eventos botones ENVIAR
+            // Eventos botones 
+
             document.querySelectorAll('.btn-enviar').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const casoId = btn.dataset.id;
@@ -210,10 +294,31 @@
                     document.getElementById('correo-caso-municipio').innerText = caso.municipio;
                     document.getElementById('correo-caso-direccion').innerText = caso.direccion;
                     document.getElementById('correo-caso-usuario').innerText = caso.usuario;
+                    document.getElementById('correo-caso-descripcion').innerText = caso.descripcion;
 
                     document.getElementById('casoIdEnviar').value = caso.id;
 
                     const modal = new bootstrap.Modal(document.getElementById('modalEnviarCorreo'));
+                    modal.show();
+                });
+            });
+
+            document.querySelectorAll('.btn-estado').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const casoId = btn.dataset.id;
+                    const caso = todosLosCasos.find(c => c.id == casoId);
+
+                    if (!caso) return;
+
+                    casoSeleccionado = caso;
+
+                    // guardar id en hidden
+                    document.getElementById('casoIdCambiar').value = caso.id;
+
+                    // limpiar selección previa
+                    document.querySelectorAll('input[name="estadoCaso"]').forEach(r => r.checked = false);
+
+                    const modal = new bootstrap.Modal(document.getElementById('modalCambiarEstado'));
                     modal.show();
                 });
             });
@@ -294,12 +399,13 @@
             button.disabled = true;
 
             try {
-                const result = await Auth.fetchJSON('/admin/enviar_correo_caso', {
-                    method: 'POST',
+                const result = await Auth.fetchJSON("/admin/enviar_correo_caso", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                     body: JSON.stringify({ caso_id: casoSeleccionado.id })
                 });
-
-                console.log(result);
 
                 if (result?.status === "success") {
                     showToast("Correo enviado correctamente", "success");
@@ -313,7 +419,7 @@
                     cargarCasos();
 
                 } else {
-                    showToast(result?.msg || "Error al enviar", "error");
+                    showToast(result?.msg);
                 }
 
             } catch (error) {
@@ -324,8 +430,60 @@
                 button.disabled = false;
             }
         }
+
+        async function manejarCambioEstado() {
+            const casoId = document.getElementById('casoIdCambiar').value;
+            const estadoSeleccionado = document.querySelector('input[name="estadoCaso"]:checked');
+
+            if (!estadoSeleccionado) {
+                showToast("Selecciona un estado", "warning");
+                return;
+            }
+
+            const nuevoEstado = estadoSeleccionado.value;
+
+            const button = document.getElementById('btnConfirmarCambioEstado');
+            const originalText = button.innerHTML;
+
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Actualizando estado...';
+            button.disabled = true;
+
+            try {
+                const result = await Auth.fetchJSON("/admin/update_case", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        caso_id: casoId,
+                        estado: nuevoEstado
+                    })
+                });
+
+                if (result?.status === "success") {
+                    showToast("Estado actualizado correctamente", "success");
+
+                    const modalEl = document.getElementById('modalCambiarEstado');
+                    const modal = bootstrap.Modal.getInstance(modalEl);
+                    modal.hide();
+
+                    cargarCasos();
+                } else {
+                    showToast(result?.msg);
+                }
+
+            } catch (error) {
+                console.error(error);
+                showToast("Error al cambiar estado", "error");
+            } finally {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }
+        }
+
         searchInput.addEventListener('input', aplicarFiltro);
         btnConfirmarEnvio.addEventListener('click', manejarEnvioCorreo);
+        btnConfirmarCambioEstado.addEventListener('click', manejarCambioEstado);
         refreshBtn.addEventListener('click', () => {
             cargarCasos();
         });

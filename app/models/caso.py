@@ -114,7 +114,8 @@ class Caso:
                 "desastre": row[4],
                 "direccion": row[5],
                 "municipio": row[6],
-                "estado": row[7]
+                "estado": row[7],
+                "descripcion": row[8]
             })
         return casos
 
@@ -245,4 +246,17 @@ class Caso:
         db = Conexion()
         row = db.execute_query(sql, fetchone=True)
         return row[0] if row else 0       
+    
+    
+    @classmethod
+    def actualizar_caso(cls, id_caso, fk_estado):
+        try:
+            sql = "CALL sp_change_state(%s,%s)"
+            db = Conexion()
+            db.execute_query(sql, (id_caso, fk_estado,), commit=True)
+            print("Estado de caso actualizado correctamente")
+            return True
+        except Exception as e:
+            print(f"Error al actualizar estado de caso: {e}")
+            return False
     

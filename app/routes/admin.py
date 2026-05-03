@@ -129,6 +129,12 @@ def query_cases():
 def send_case():
     return Enviar().enviar_registro_caso()
 
+@admin_bp.route('/update_case', methods=['POST'])
+@admin_api_required                          
+def update_cases():
+    return Actualizar().actualizar_estado_caso()
+
+
 @admin_bp.route('/generate_report', methods=["GET", "POST"])
 @admin_api_required                          
 def generate_report():

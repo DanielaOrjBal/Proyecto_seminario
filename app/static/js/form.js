@@ -45,7 +45,7 @@ function calcularEdad(fechaNacimiento) {
 
 // ========== PATRONES ==========
 const patrones = {
-    nombres: /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{4,}$/,
+    nombres: /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{2,}$/,
     direccion: /^[A-Za-zÁÉÍÓÚáéíóúÑñ0-9\s#\-.,]+$/,
     email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|co)$/,
     password: /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.,;:\-_])[A-Za-z\d@$!%*?&.,;:\-_]{8,}$/
@@ -55,16 +55,16 @@ const patrones = {
 function validarPrimerNombre(valor) {
     valor = valor.trim();
     if (!valor) return "Este campo es obligatorio";
-    if (!patrones.nombres.test(valor)) return "Debe contener solo letras y espacios, con mínimo 4 caracteres";
-    if (tieneCaracteresConsecutivos(valor)) return "No puede tener 4 o más letras iguales consecutivas";
+    if (!patrones.nombres.test(valor)) return "Debe contener solo letras y espacios, con mínimo 3 caracteres";
+    if (tieneCaracteresConsecutivos(valor)) return "No puede tener 3 o más letras iguales consecutivas";
     return null;
 }
 
 function validarSegundoNombre(valor) {
     valor = valor.trim();
     if (!valor) return null;
-    if (!patrones.nombres.test(valor)) return "Debe contener solo letras y espacios, con mínimo 4 caracteres";
-    if (tieneCaracteresConsecutivos(valor)) return "No puede tener 4 o más letras iguales consecutivas";
+    if (!patrones.nombres.test(valor)) return "Debe contener solo letras y espacios, con mínimo 3 caracteres";
+    if (tieneCaracteresConsecutivos(valor)) return "No puede tener 3 o más letras iguales consecutivas";
     return null;
 }
 
@@ -148,13 +148,13 @@ function validarDocumentoLocal(valor, tipoDoc) {
  */
 function validarFechaCaso(valor) {
     if (!valor) return "Este campo es obligatorio";
-    
+
     const fechaIngresada = new Date(valor);
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0); // Normalizar a medianoche para comparar solo fechas
-    
+
     const fechaMinima = new Date("2000-01-01");
-    
+
     if (isNaN(fechaIngresada.getTime())) {
         return "La fecha no es válida";
     }
@@ -208,30 +208,48 @@ function validarCiudad(selectElement) {
     const selectedOptions = selectElement.selectedOptions;
     if (selectedOptions.length === 0) {
         return "Debe seleccionar un municipio";
-    }if (selectedOptions.length > 1 ) {
+    } if (selectedOptions.length > 1) {
         return "Debe seleccionar UNA SOLA OPCIÓN";
     }
+    return null;
+}
+
+// ========== VALIDACIONES PARA FORMULARIO DE REPORTES ==========
+function validarRangoFechas(fechaInicio, fechaFin) {
+    if (!fechaInicio || !fechaFin) return null;
+
+    const inicio = new Date(fechaInicio);
+    const fin = new Date(fechaFin);
+
+    if (isNaN(inicio.getTime()) || isNaN(fin.getTime())) {
+        return "Las fechas no son válidas";
+    }
+
+    if (inicio > fin) {
+        return "La fecha inicial no puede ser mayor a la fecha final";
+    }
+
     return null;
 }
 
 // ========== MANEJO DE ERRORES EN FORMULARIO ==========
 function mostrarErroresFormulario(errores) {
     limpiarErroresFormulario();
-    
+
     Object.keys(errores).forEach(campo => {
         const input = document.querySelector(`[name="${campo}"]`);
         if (input) {
             input.classList.add('is-invalid');
-            
+
             let errorElement = input.parentNode.querySelector('.invalid-feedback');
             if (!errorElement) {
                 errorElement = document.createElement('div');
                 errorElement.className = 'invalid-feedback';
                 input.parentNode.appendChild(errorElement);
             }
-            
+
             errorElement.textContent = errores[campo];
-            
+
             if (Object.keys(errores)[0] === campo) {
                 input.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
@@ -243,7 +261,7 @@ function limpiarErroresFormulario() {
     document.querySelectorAll('.is-invalid').forEach(element => {
         element.classList.remove('is-invalid');
     });
-    
+
     document.querySelectorAll('.invalid-feedback').forEach(element => {
         element.remove();
     });
@@ -283,7 +301,7 @@ function configurarValidacionTiempoReal() {
         const input = form.querySelector(`[name="${nombreCampo}"]`);
         if (!input) return;
 
-        input.addEventListener('input', function() {
+        input.addEventListener('input', function () {
             const valor = this.value;
             const fnValidar = campos[nombreCampo];
             const errorMsg = fnValidar(valor);
@@ -293,7 +311,7 @@ function configurarValidacionTiempoReal() {
 
     const tipoDocSelect = form.querySelector('select[name="tipo_documento"]');
     if (tipoDocSelect) {
-        tipoDocSelect.addEventListener('change', function() {
+        tipoDocSelect.addEventListener('change', function () {
             const errorMsg = this.value ? null : "Este campo es obligatorio";
             mostrarErrorCampo(this, errorMsg);
             const docInput = form.querySelector('[name="documento"]');
@@ -302,6 +320,24 @@ function configurarValidacionTiempoReal() {
                 mostrarErrorCampo(docInput, errorDoc);
             }
         });
+    }
+
+    const fechaInicioInput = form.querySelector('[name="FechaInicial"]');
+    const fechaFinInput = form.querySelector('[name="FechaFinal"]');
+
+    function validarFechasRelacionadas() {
+        const error = validarRangoFechas(
+            fechaInicioInput.value,
+            fechaFinInput.value
+        );
+
+        mostrarErrorCampo(fechaInicioInput, error);
+        mostrarErrorCampo(fechaFinInput, error);
+    }
+
+    if (fechaInicioInput && fechaFinInput) {
+        fechaInicioInput.addEventListener('change', validarFechasRelacionadas);
+        fechaFinInput.addEventListener('change', validarFechasRelacionadas);
     }
 }
 
@@ -340,8 +376,8 @@ function configurarValidacionTiempoRealCaso() {
         if (!input) return;
 
         const eventType = (input.tagName === 'SELECT' && input.multiple) ? 'change' : 'input';
-        
-        input.addEventListener(eventType, function() {
+
+        input.addEventListener(eventType, function () {
             let errorMsg;
             if (nombreCampo === 'ciudad') {
                 errorMsg = campos[nombreCampo](null, this);

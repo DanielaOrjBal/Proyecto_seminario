@@ -110,7 +110,7 @@
     <div class="container my-3">
         <div class="row mb-5 g-4">
             <!-- info 1 -->
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
                         <h3 class="subtitle2">Estadísticas de casos</h3>
@@ -120,7 +120,7 @@
             </div>
 
             <!-- info 2 -->
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
                         <h3 class="subtitle2">Estadísticas de usuarios</h3>
@@ -128,18 +128,6 @@
                     </div>
                 </div>
             </div>
-
-
-            <!-- info 3 -->
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h3 class="subtitle2">Estadísticas de reportes</h3>
-                        <canvas id="reportesChart" width="200" height="200"></canvas>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </div>
 </section>
@@ -154,11 +142,6 @@ window.statsData = {{ {
         usuarios_registrados|default(0),
         usuarios_inactivos|default(0)
     ],
-    "reportes": [
-        casos_enviados|default(0),
-        casos_cerrados|default(0),
-        total_casos|default(0)
-    ]
 } | tojson }};
 </script>
 

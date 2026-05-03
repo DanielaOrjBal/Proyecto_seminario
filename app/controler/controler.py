@@ -160,16 +160,16 @@ class Registro:
                 
                 #VALIDACIONES NOMBRES - APELLIDOS
                 # Validacion de nombres con letras y espacios
-                patron_nombres = r'^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{4,}$'
+                patron_nombres = r'^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{2,}$'
                 if not re.fullmatch(patron_nombres, primer_nombre.strip()):
-                    errores["primer_nombre"] = "Debe contener solo letras y espacios, con mínimo 4 caracteres"
+                    errores["primer_nombre"] = "Debe contener solo letras y espacios, con mínimo 2 caracteres"
                     
                 if not validar_caracteres_consecutivos(primer_nombre.strip()):
                     errores["primer_nombre"] = "No puede tener 4 o más letras iguales consecutivas"
                 
                 if segundo_nombre and segundo_nombre.strip():
                     if not re.fullmatch(patron_nombres, segundo_nombre.strip()):
-                        errores["segundo_nombre"] = "Debe contener solo letras y espacios, con mínimo 4 caracteres"
+                        errores["segundo_nombre"] = "Debe contener solo letras y espacios, con mínimo 2 caracteres"
                         
                     elif len(segundo_nombre.strip()) < 4:
                         errores["segundo_nombre"] = "Debe tener mínimo 4 caracteres"
@@ -507,6 +507,16 @@ class Consulta:
             df.to_excel(output, index=False, engine='openpyxl')
             output.seek(0)
             
+            claims = get_jwt()
+            user_id= get_jwt_identity()
+            username = claims.get('username')
+            Usuario.insert_historical(
+                    user_id= user_id,
+                    username=username,
+                    action='GENERAR',
+                    description=f'Nuevo reporte generado por {username}'
+            )
+            
             return send_file(
             output,
             as_attachment=True,
@@ -521,6 +531,49 @@ class Actualizar:
     def __init__(self):
         pass
     
+    def actualizar_estado_caso(self):
+        try:
+            data = request.get_json()
+
+            id_caso = data.get("caso_id")
+            estado = data.get("estado")
+
+            if not id_caso or not estado:
+                return jsonify({
+                    "status": "error",
+                    "msg": "Datos incompletos"
+                }), 400
+
+            estado = estado.upper().strip()
+            
+
+            actualizado = Caso.actualizar_caso(id_caso, estado)
+
+            if actualizado:
+                Usuario.insert_historical(
+                    user_id=get_jwt_identity(),
+                    username=get_jwt().get("username"),
+                    action="ACTUALIZAR/MODIFICAR",
+                    description=f"Se cambió estado del caso {id_caso} a {estado}"
+                )
+                return jsonify({
+                    "status": "success",
+                    "msg": "Estado actualizado correctamente"
+                })
+            else:
+                return jsonify({
+                    "status": "error",
+                    "msg": "No se pudo actualizar el estado"
+                }), 500
+
+        except Exception as e:
+            print(f"Error en actualizar_estado_caso: {e}")
+            return jsonify({
+                "status": "error",
+                "msg": "Error interno del servidor"
+            }), 500
+        
+        
     # Funcion para actualizar datos de usuario
     def actualizar_datos_usuario(self):    
         try:
@@ -549,20 +602,20 @@ class Actualizar:
             
             #VALIDACIONES NOMBRES - APELLIDOS
             # Validacion de nombres con letras y espacios
-            patron_nombres = r'^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{4,}$'
+            patron_nombres = r'^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{3,}$'
             if pri_nom is not None:
                 if not re.fullmatch(patron_nombres, pri_nom.strip()):
-                    return jsonify({"status":"warning", "msg": "El primer nombre debe contener solo letras y espacios, con mínimo 4 caracteres. ⚠"}), 400
+                    return jsonify({"status":"warning", "msg": "El primer nombre debe contener solo letras y espacios, con mínimo 3 caracteres. ⚠"}), 400
                         
                 if not validar_caracteres_consecutivos(pri_nom.strip()):
                     return jsonify({"status":"warning", "msg": "El primer nombre no puede tener 4 o más letras iguales consecutivas. ⚠"}), 400
                     
             if seg_nom is not None:
                 if not re.fullmatch(patron_nombres, seg_nom.strip()):
-                    return jsonify({"status":"warning", "msg": "El segundo nombre debe contener solo letras y espacios, con mínimo 4 caracteres. ⚠"}), 400
+                    return jsonify({"status":"warning", "msg": "El segundo nombre debe contener solo letras y espacios, con mínimo 3 caracteres. ⚠"}), 400
                         
                 elif len(seg_nom.strip()) < 4:
-                    return jsonify({"status":"warning", "msg": "El segundo nombre debe tener mínimo 4 caracteres. ⚠"}), 400
+                    return jsonify({"status":"warning", "msg": "El segundo nombre debe tener mínimo 3 caracteres. ⚠"}), 400
                         
                 elif not validar_caracteres_consecutivos(seg_nom.strip()):
                     return jsonify({"status":"warning", "msg": "El segundo nombre no puede tener 4 o más letras iguales consecutivas. ⚠"}), 400
@@ -798,7 +851,6 @@ class Actualizar:
             user_id = request.form.get('user_id')
             username = (request.form.get("nombre_usuario") or "").strip() or None
             rol = request.form.get("rol")
-            contrasena = request.form.get("password")
             
             # Validar que el usuario existe
             usuario_existente = Usuario.get_user_by_id(user_id)
@@ -810,8 +862,7 @@ class Actualizar:
                 campos_para_actualizar.append("username")
             if rol and rol.strip():
                 campos_para_actualizar.append("rol") 
-            if contrasena and contrasena.strip():
-                campos_para_actualizar.append("contraseña")
+
             
             if not campos_para_actualizar:
                 return jsonify({"status": "warning", "msg": "Debe proporcionar al menos un campo para actualizar. ⚠"}), 400
@@ -823,20 +874,12 @@ class Actualizar:
                 if Usuario.username_exists_excluding_current(username, user_id):
                     return jsonify({"status": "error", "msg": "El nombre de usuario ya está en uso. Por favor, elegir otro. ❌"}), 400
             
-            if contrasena:
-                patron_password = r'^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.,;:\-_])[A-Za-z\d@$!%*?&.,;:\-_]{8,}$'
-
-                if not re.fullmatch(patron_password, contrasena):
-                    return jsonify({"status": "error", "msg": "La contraseña debe tener mínimo 8 caracteres, una mayúscula, un número y un caracter especial. ❌"}), 400
-            
-            contrasena_final = contrasena if (contrasena and contrasena.strip()) else None
             fk_rol = rol if (rol and rol.strip()) else None
             
             actualizado = Usuario.update_user_admin(
                 user_id=user_id,
                 username=username,
                 fk_rol=fk_rol,
-                contrasena = contrasena_final
             )
 
             if actualizado:
@@ -857,12 +900,9 @@ class Actualizar:
             correo = usuario["email"]
             username = usuario["nombre_usuario"]
             fk_rol = usuario["rol_usuario"]
-            contrasena = usuario["contrasena_masked"]
             
-            enviar_correo_actualizacion_datos_admin(nombre, apellido, correo, username,fk_rol, contrasena)
-            
-            print(f"DEBUG - Resultado de actualización: {actualizado}")
-            
+            enviar_correo_actualizacion_datos_admin(nombre, apellido, correo, username,fk_rol)
+                        
             if actualizado:
                 return jsonify({
                     "status": "success", 
@@ -909,7 +949,7 @@ class Eliminar:
                 Usuario.insert_historical(
                     user_id=user_id_admin,
                     username=username,
-                    action='ELIMINAR',  # o 'ELIMINAR' si prefieres
+                    action='ELIMINAR',  
                     description=f'Usuario {user_id} desactivado'
                 )
                 return jsonify({"status": "success", "msg": "Usuario desactivado correctamente.✅"}),200
@@ -928,6 +968,9 @@ class Enviar:
         try:
             data = request.get_json()
             caso_id = data.get('caso_id')
+            fk_usuario = get_jwt_identity()
+            claims = get_jwt()
+            username = claims.get("username")
             
             #Obtener los datos del caso desde la base de datos
             caso = Caso.get_case_by_id(caso_id)  
@@ -959,13 +1002,32 @@ class Enviar:
                     "msg": "No se encontró la información de la entidad responsable para este desastre"
                 }), 404
             
-            # Enviar el correo
-            enviar_correo_caso_entidad(
-                entidad['correo'],
-                caso,
-                entidad['nombre_entidad']
-            )
-            
+            try:
+                # Enviar el correo
+                enviar_correo_caso_entidad(
+                    entidad['correo'],
+                    caso,
+                    entidad['nombre_entidad']
+                )
+                
+                Caso.actualizar_caso(
+                    id_caso= caso_id,
+                    fk_estado= "E"
+                    )      
+                
+                Usuario.insert_historical(
+                        user_id=fk_usuario,
+                        username=username,
+                        action='ENVIAR',
+                        description=f"Registro de caso {caso_id} enviado a entidad"
+                    )
+            except Exception as e:
+                print(f"Error al enviar correo del caso: {e}")
+                return jsonify({
+                    "status": "error", 
+                    "msg": "Error al enviar el correo"
+                }), 500
+                
             return jsonify({
                 "status": "success", 
                 "msg": "Correo enviado correctamente a la entidad responsable ✅"
