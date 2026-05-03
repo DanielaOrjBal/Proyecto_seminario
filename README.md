@@ -39,16 +39,17 @@ El aplicativo está desarrollado en Python con el framework Flask, librerías co
 
 
 
-*DESCARGA*<br>
-Para que hacer uso del sistema y personalizarlo deben seguir las instrucciones a contiuación:
-1. Clonar el repositorio
-2. Crear el entorno virtual (al mismo nivel de la carpeta app)
+<h3 class="text">DESCARGA</h3>
+<ul>
+<p>Para que hacer uso del sistema y personalizarlo deben seguir las instrucciones a contiuación:</p>
+<li>Clonar el repositorio</li>
+<li>Crear el entorno virtual (al mismo nivel de la carpeta app)</li>
 <img width="200" height="auto" alt="image" src="https://github.com/user-attachments/assets/4c439cd9-8195-44c2-b90f-d47d7f1ced41" />
-3. Instalar las dependencias necesarias (pip install -r app/requirements.txt)
-4. Modificar la conexión a la base de datos con los datos de la base local
-5. Modificar archivo .env con lo valores del correo a enlazar (correo desde donde serán enviados)
-6. Correr el proyecto con python run.py (estar en la carpeta raiz)
-*Recuerda tener ya la base de datos montada en workbench*
+<li>Instalar las dependencias necesarias (pip install -r app/requirements.txt)</li>
+<li>Modificar la conexión a la base de datos con los datos de la base local</li>
+<li>Modificar archivo .env con lo valores del correo a enlazar (correo desde donde serán enviados)</li>
+<li>Correr el proyecto con python run.py (estar en la carpeta raiz)</li>
+<li>*Recuerda tener ya la base de datos montada en workbench*</li>
 
 
 
