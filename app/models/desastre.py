@@ -1,4 +1,5 @@
 from app.db import Conexion
+from app.models.ColaDesastres import ColaDesastres
 
 class Desastre:
     def __init__(self, id_desastre=None, Desastre=None, fk_prioridad=None):
@@ -9,14 +10,18 @@ class Desastre:
     # ======================== Métodos de Consulta ========================
     @classmethod
     def get_disasters(cls):
-        """Obtiene la lista de desastres usando la vista vw_desastres."""
+        """Obtiene la lista de desastres usando la vista vw_desastres y retorna una ColaDesastres."""
         sql = "SELECT * FROM vw_desastres"
         db = Conexion()
         rows = db.execute_query(sql, fetchall=True)
+        
+        # Crear una nueva cola de desastres
+        cola_desastres = ColaDesastres()
+        
         if not rows:
             print("No se encontró información de desastres")
-            return []
-        desastres = []
+            return cola_desastres  # Retorna cola vacía
+        
         for row in rows:
             desastre = {
                 "id_desastre": row[0],
@@ -27,8 +32,10 @@ class Desastre:
                 "numero_contacto": row[5],
                 "correo": row[6]
             }
-            desastres.append(desastre)
-        return desastres
+            # Encolar cada desastre en la cola
+            cola_desastres.encolar(desastre)
+        
+        return cola_desastres
 
     @classmethod
     def get_entidad_by_desastre_id(cls, id_desastre):

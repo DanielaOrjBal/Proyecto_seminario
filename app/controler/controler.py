@@ -1,6 +1,6 @@
 from flask import request, redirect, url_for, render_template,session,jsonify, send_file, make_response
 from flask_mail import Message
-from app.models.utils import enviar_correo_registro, enviar_correo_caso, enviar_correo_actualizacion_datos, enviar_correo_actualizacion_datos_admin, enviar_correo_recuperacion, generar_contrasena_temporal, enviar_correo_caso_entidad
+from app.models.utils import enviar_correo_registro, enviar_correo_caso, enviar_correo_actualizacion_datos, enviar_correo_actualizacion_datos_admin, enviar_correo_recuperacion, generar_contrasena_temporal, enviar_correo_caso_entidad, enviar_correo_contacto
 from urllib.parse import quote
 from app.models.usuario import Usuario
 from app.models.caso import Caso
@@ -13,6 +13,7 @@ from datetime import datetime, timedelta
 import pandas as pd
 from io import BytesIO
 
+from app.models.ColaUsuarios import ColaUsuarios
 
 class Login:
     def __init__(self):
@@ -368,6 +369,8 @@ class Registro:
 
 
 class Consulta:
+    
+    
     def __init__(self):
         pass
     # Funcion para consultar casos de usuario
@@ -378,11 +381,15 @@ class Consulta:
             if not fk_usuario:
                 raise ValueError("No hay un usuario autenticado en el token.")
             
-            # Obtener los casos asociados al usuario
-            casos = Caso.get_cases_user(fk_usuario)
-            if not casos:
+            # Obtener la cola de casos asociados al usuario
+            cola_casos = Caso.get_cases_user(fk_usuario)
+            
+            # Verificar si la cola está vacía
+            if cola_casos.esta_vacia():
                 return []
-            return casos
+            
+            # Convertir la cola a lista para mantener compatibilidad
+            return cola_casos.a_lista()
         
         #manejo de errores
         except Exception as e:
@@ -391,11 +398,15 @@ class Consulta:
             
     def buscar_casos_admin(self):
         try:
-            # Obtener los casos asociados al usuario
-            casos = Caso.get_cases_admin()
-            if not casos:
+            # Obtener la cola de casos (para admin)
+            cola_casos = Caso.get_cases_admin()
+            
+            # Verificar si la cola está vacía
+            if cola_casos.esta_vacia():
                 raise ValueError("No se encontraron casos registrados.")
-            return casos
+            
+            # Convertir la cola a lista para mantener compatibilidad
+            return cola_casos.a_lista()
         
         #manejo de errores
         except Exception as e:
@@ -441,17 +452,30 @@ class Consulta:
             return jsonify({"status": "error", "msg": "Error al obtener datos del usuario"}), 500
         
     def obtener_usuarios(self):
-        usuarios = Usuario.get_all_users()
-        usuarios_json = [{"id": u[0], "nombre": u[1]} for u in usuarios]
-        print("Resultado de usuarios:", usuarios)
+        # Obtener la cola de usuarios desde el modelo
+        cola_usuarios = Usuario.get_all_users()
+        
+        # Verificar si la cola está vacía usando el atributo primero
+        if cola_usuarios.primero is None:
+            return jsonify([])
+        
+        # Convertir la cola a lista para iterar
+        usuarios_lista = cola_usuarios.a_lista()
+        usuarios_json = [{"id": u["id"], "nombre": u["nombre"]} for u in usuarios_lista]
+        print("Resultado de usuarios:", usuarios_json)
         return jsonify(usuarios_json)
 
     def gestionar_usuarios(self):
         try: 
-            usuarios = Usuario.get_data_all_users()
-            if not usuarios:
+            # Obtener la cola de usuarios desde el modelo
+            cola_usuarios = Usuario.get_data_all_users()
+            
+            # Verificar si la cola está vacía usando el atributo primero
+            if cola_usuarios.primero is None:
                 raise ValueError("No se encontraron usuarios registrados")
-            return usuarios
+            
+            # Retornar la lista de usuarios (convertir la cola a lista)
+            return cola_usuarios.a_lista()
         
         except Exception as e:
             print(f"Error al encontrar usuarios: {e}")
@@ -459,10 +483,15 @@ class Consulta:
     
     def buscar_desastres(self):
         try: 
-            desastres = Desastre.get_disasters()
-            if not desastres:
+            # Obtener la cola de desastres desde el modelo
+            cola_desastres = Desastre.get_disasters()
+            
+            # Verificar si la cola está vacía
+            if cola_desastres.esta_vacia():
                 raise ValueError("No se encontró la información de los desastres")
-            return desastres
+            
+            # Convertir la cola a lista para mantener compatibilidad
+            return cola_desastres.a_lista()
         
         except Exception as e:
             print(f"Error al encontrar información de desastres: {e}")
@@ -526,6 +555,8 @@ class Consulta:
         except Exception as e:
             print(f"Error al generar el reporte:{e}")
             return jsonify({"status": "error", "msg": "Error al generar el reporte ❌"}), 500
+        
+      
     
 class Actualizar:
     def __init__(self):
@@ -1039,7 +1070,33 @@ class Enviar:
                 "status": "error", 
                 "msg": "Error al enviar el correo"
             }), 500
-            
+    
+    def enviar_contacto(self):
+        try:
+            nombre = request.form.get("nombre")
+            email = request.form.get("email")
+            mensaje = request.form.get("mensaje")
+
+            if not nombre or not email or not mensaje:
+                return jsonify({
+                    "status": "warning",
+                    "msg": "Todos los campos son obligatorios ⚠"
+                }), 400
+
+            # Llamar función de correo
+            enviar_correo_contacto(nombre, email, mensaje)
+
+            return jsonify({
+                "status": "success",
+                "msg": "Mensaje enviado correctamente ✅"
+            }), 200
+
+        except Exception as e:
+            print("Error enviando contacto:", e)
+            return jsonify({
+                "status": "error",
+                "msg": "Error al enviar el mensaje ❌"
+            }), 500
     
         
             

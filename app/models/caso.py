@@ -1,5 +1,6 @@
 from app.db import Conexion
 from app.models.utils import formatear_fecha
+from app.models.ColaCasos import ColaCasos
 
 class Caso:
     def __init__(self, id_caso=None, fecha=None, descripcion=None, personas_afectadas=None, direccion=None,
@@ -75,15 +76,18 @@ class Caso:
 
     @classmethod
     def get_cases_user(cls, fk_usuario):
-        """Obtiene los casos de un usuario usando sp_get_cases_user."""
+        """Obtiene los casos de un usuario usando sp_get_cases_user y retorna una ColaCasos."""
         sql = "CALL sp_get_cases_user(%s)"
         db = Conexion()
         rows = db.execute_query(sql, (fk_usuario,), fetchall=True)
-        casos = []
+        
+        # Crear una nueva cola de casos
+        cola_casos = ColaCasos()
+        
         for row in rows:
             fecha = row[1]
             fecha_formateada = formatear_fecha(fecha)
-            casos.append({
+            caso = {
                 "id": row[0],
                 "fecha": fecha_formateada,
                 "descripcion": row[2],
@@ -92,32 +96,41 @@ class Caso:
                 "desastre": row[5],
                 "municipio": row[6],
                 "estado": row[7]
-            })
-        return casos
+            }
+            # Encolar cada caso en la cola
+            cola_casos.encolar(caso)
+        
+        return cola_casos
 
     
     @classmethod
     def get_cases_admin(cls):
-        """Obtiene todos los casos (para admin) usando sp_get_cases_admin."""
+        """Obtiene todos los casos (para admin) usando sp_get_cases_admin y retorna una ColaCasos."""
         sql = "CALL sp_get_cases_admin()"
         db = Conexion()
         rows = db.execute_query(sql, fetchall=True)
-        casos = []
+        
+        # Crear una nueva cola de casos
+        cola_casos = ColaCasos()
+        
         for row in rows:
             fecha = row[3]
             fecha_formateada = formatear_fecha(fecha)
-            casos.append({
+            caso = {
                 "id": row[0],
                 "usuario": row[1],
-                "email" : row [2],
+                "email": row[2],
                 "fecha": fecha_formateada,
                 "desastre": row[4],
                 "direccion": row[5],
                 "municipio": row[6],
                 "estado": row[7],
                 "descripcion": row[8]
-            })
-        return casos
+            }
+            # Encolar cada caso en la cola
+            cola_casos.encolar(caso)
+        
+        return cola_casos
 
     @classmethod
     def generate_report(cls, initial_date, final_date):
@@ -258,5 +271,4 @@ class Caso:
             return True
         except Exception as e:
             print(f"Error al actualizar estado de caso: {e}")
-            return False
-    
+            return False    

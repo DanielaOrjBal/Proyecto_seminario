@@ -327,3 +327,64 @@ def enviar_correo_caso_entidad(correo_entidad, caso, nombre_entidad):
         traceback.print_exc()
         print(f" Error al enviar correo de registro: {e}")
 
+def enviar_correo_contacto(nombre, email_usuario, mensaje):
+    try:
+        logo_path = os.path.join("app", "static", "img", "logo_correo.png")
+        logo_data = None
+        
+        if os.path.exists(logo_path):
+            with open(logo_path, "rb") as f:
+                logo_data = f.read()
+
+        # --- CORREO PARA LA EMPRESA ---
+        asunto_empresa = "Nuevo ticket desde el formulario de contacto"
+        cuerpo_empresa = render_template(
+            "correos/correo_contacto_empresa.html",
+            nombre=nombre,
+            email=email_usuario,
+            mensaje=mensaje
+        )
+
+        msg_empresa = Message(
+            subject=asunto_empresa,
+            recipients=["danielaorjbal@gmail.com"], 
+            html=cuerpo_empresa
+        )
+
+        if logo_data:
+            msg_empresa.attach(
+                filename="logo_vitaria.png",
+                content_type="image/png",
+                data=logo_data,
+                headers={"Content-ID": "<logo_vitaria>"}
+            )
+
+        mail.send(msg_empresa)
+
+        # --- CORREO PARA EL USUARIO ---
+        cuerpo_usuario = render_template(
+            "correos/correo_contacto_usuario.html",
+            nombre=nombre,
+            mensaje=mensaje
+        )
+
+        msg_usuario = Message(
+            subject="Nuevo ticket creado en Vitaria SOS",
+            recipients=[email_usuario],
+            html=cuerpo_usuario
+        )
+        if logo_data:
+            msg_usuario.attach(
+                filename="logo_vitaria.png",
+                content_type="image/png",
+                data=logo_data,
+                headers={"Content-ID": "<logo_vitaria>"}
+            )
+
+        mail.send(msg_usuario) 
+
+        print(f"Correo de contacto enviado correctamente a {email_usuario}")
+
+    except Exception as e:
+        print("Error enviando correo de contacto:", e)
+        raise e
