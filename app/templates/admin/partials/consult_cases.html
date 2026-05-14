@@ -25,6 +25,9 @@
                                 placeholder="Buscar por municipio, tipo o usuario">
                         </div>
                     </div>
+                    <div class="col-md-6 m-auto">
+                        <div id="paginationInfo" class="text-muted small"></div>
+                    </div>
                 </div>
 
                 <!-- Tabla -->
@@ -48,8 +51,7 @@
                 </div>
 
                 <!-- Paginación -->
-                <div class="d-flex justify-content-between align-items-center mt-3">
-                    <div id="paginationInfo" class="text-muted small"></div>
+                <div class="d-flex justify-content-start align-items-center mt-3">
                     <nav>
                         <ul class="pagination pagination-sm mb-0" id="paginationControls"></ul>
                     </nav>
@@ -188,7 +190,7 @@
         let todosLosCasos = [];
         let casosFiltrados = [];
         let currentPage = 1;
-        const rowsPerPage = 5;
+        const rowsPerPage = 10;
         let casoSeleccionado = null;
 
         // ids
@@ -240,6 +242,9 @@
                     ? 'btn-secondary text-black'
                     : 'btn-primary';
 
+                const btnClass2 = deshabilitado
+                    ? 'btn-secondary text-black'
+                    : 'btn-warning';
 
                 html += `
                 <tr>
@@ -263,8 +268,9 @@
                             </button>
 
                             <button 
-                                class="btn btn-sm btn-warning btn-estado"
+                                class="btn btn-sm ${btnClass2} btn-estado"
                                 data-id="${caso.id}"
+                                ${deshabilitado ? 'disabled' : ''}
                             >
                                 Editar
                             </button>

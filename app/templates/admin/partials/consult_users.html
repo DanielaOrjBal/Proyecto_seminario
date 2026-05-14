@@ -25,6 +25,9 @@
                                 placeholder="Buscar por usuario, email o rol">
                         </div>
                     </div>
+                    <div class="col-md-6 m-auto">
+                        <div id="paginationInfo" class="text-muted small"></div>
+                    </div>
                 </div>
 
                 <!-- Tabla -->
@@ -48,7 +51,6 @@
 
                 <!-- Paginación -->
                 <div class="d-flex justify-content-between align-items-center mt-3">
-                    <div id="paginationInfo" class="text-muted small"></div>
                     <nav>
                         <ul class="pagination pagination-sm mb-0" id="paginationControls"></ul>
                     </nav>
@@ -126,7 +128,7 @@
         let todosLosUsuarios = [];
         let usuariosFiltrados = [];
         let currentPage = 1;
-        const rowsPerPage = 5;
+        const rowsPerPage = 30;
 
         const tbody = document.getElementById('AdminusersTableBody');
         const searchInput = document.getElementById('searchInput');
@@ -172,6 +174,9 @@
                     ? 'btn-secondary text-black'
                     : 'btn-primary';
 
+                const btnClass2 = deshabilitado
+                    ? 'btn-secondary text-black'
+                    : 'btn-warning';
 
                 const estadoClass = estadoColors[estadoCapitalizado] || 'bg-dark';
 
@@ -205,7 +210,7 @@
 
                 <td class="text-center">
                     <div class="acciones-container">
-                        <button class="btn btn-sm btn-warning btn-editar" data-id="${user.id_usuario}">
+                        <button class="btn btn-sm ${btnClass2} btn-editar" data-id="${user.id_usuario}" ${deshabilitado ? 'disabled' : ''}>
                             Editar
                         </button>
 
