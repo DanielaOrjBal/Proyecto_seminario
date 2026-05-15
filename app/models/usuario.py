@@ -124,7 +124,7 @@ class Usuario:
     def get_data_all_users(cls):
         """Retorna ColaUsuarios con datos completos de todos los usuarios."""
         try:
-            sql = "SELECT * FROM vw_datos_completos_usuarios ORDER BY Id_Usuario"
+            sql = "SELECT * FROM vw_datos_completos_usuarios ORDER BY Id_Usuario DESC"
             db = Conexion()
             rows = db.execute_query(sql, fetchall=True)
             if not rows:
